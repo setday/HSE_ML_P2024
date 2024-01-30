@@ -1,2 +1,4 @@
+from src.ui.game_screen import run_game
+
 if __name__ == '__main__':
-    print('Hello World!')
+    run_game()
