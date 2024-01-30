@@ -1,0 +1,14 @@
+# Ignore virtual environment
+/ultimate_parking/
+
+# Ignore Python cache files
+__pycache__/
+
+# Ignore environment variables
+.env
+.mypy_cache/
+.idea/
+
+# building packages
+build/
+dist/
