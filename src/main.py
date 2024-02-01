@@ -1,4 +1,6 @@
-from src.ui.game_screen import run_game
+from src.game_engine.Core import Core
 
 if __name__ == '__main__':
-    run_game()
+    core = Core()
+    core.run()
+    # run_game()
