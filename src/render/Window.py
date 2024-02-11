@@ -4,7 +4,7 @@ from src.render.RenderGroup import RenderGroup
 
 
 class Window:
-    def __init__(self, width, height):
+    def __init__(self, width: int, height: int) -> None:
         self.width = width
         self.height = height
 
@@ -15,11 +15,18 @@ class Window:
 
         self.__render_group = None
 
-    def set_render_group(self, render_group):
+    def get_screen(self):
+        return self.__screen
+
+    def set_render_group(self, render_group: RenderGroup) -> None:
+        """
+        @summary Sets the render group to draw
+        @param render_group: The render group to draw
+        """
         self.__render_group = render_group
 
     def draw_frame(self):
-        self.__screen.fill((255, 0, 0))
+        # self.__screen.fill((255, 0, 0))
 
         if self.__render_group is not None:
             self.__render_group.update()

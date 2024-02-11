@@ -2,8 +2,8 @@ import pymunk
 
 
 class CarPhysicsModel:
-    def __init__(self, position):
-        self.body = pymunk.Body(1, pymunk.moment_for_box(1, (50, 100)))
+    def __init__(self, position, size=(50, 100)):
+        self.body = pymunk.Body(1, pymunk.moment_for_box(1, size))
         self.body.position = position
 
         self.shape = pymunk.Poly.create_box(self.body, (50, 100))
@@ -11,7 +11,10 @@ class CarPhysicsModel:
         self.shape.friction = 1
 
     def apply_friction(self, friction):
-        self.body.velocity /= friction
+        local_velocity = self.body.velocity.rotated(-self.body.angle)
+        local_velocity = pymunk.Vec2d(local_velocity.x / (friction * 1.003), local_velocity.y / friction)
+        self.body.velocity = local_velocity.rotated(self.body.angle)
+        self.body.angular_velocity /= friction * 1.003
 
     def update_position(self, position):
         self.body.position = position
