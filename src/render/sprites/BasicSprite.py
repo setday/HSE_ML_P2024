@@ -4,8 +4,8 @@ from src.render.sprites.BasicDrawable import BasicDrawable
 
 
 class BasicSprite(BasicDrawable):
-    def __init__(self, image, position, group):
-        super().__init__(position, group)
+    def __init__(self, image, position):
+        super().__init__(position)
 
         self.cnt1 = 0
         self.cnt2 = 0

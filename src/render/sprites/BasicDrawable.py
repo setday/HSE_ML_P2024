@@ -2,8 +2,8 @@ import pygame
 
 
 class BasicDrawable(pygame.sprite.Sprite):
-    def __init__(self, position, group):
-        super().__init__(group)
+    def __init__(self, position):
+        super().__init__()
 
         self.rect = pygame.Rect(0, 0, 0, 0)
         self.rect.center = position
@@ -34,5 +34,5 @@ class BasicDrawable(pygame.sprite.Sprite):
 
     def draw_to(self, screen, position, size):
         local_pos = pygame.math.Vector2(self.position) * size
-        self.rect.move(local_pos - position)
-        screen.blit(self.surface, self.rect)
+        global_rect = self.rect.move(local_pos - position)
+        screen.blit(self.surface, global_rect)

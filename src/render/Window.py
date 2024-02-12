@@ -26,7 +26,7 @@ class Window:
         self.__render_group = render_group
 
     def draw_frame(self):
-        # self.__screen.fill((255, 0, 0))
+        self.__screen.fill((255, 0, 0))
 
         if self.__render_group is not None:
             self.__render_group.update()

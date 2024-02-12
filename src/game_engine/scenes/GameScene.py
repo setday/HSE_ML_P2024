@@ -26,9 +26,11 @@ class GameScene:
         h = self.space.add_collision_handler(0, 0)
         h.begin = collision_detecter
 
-        self.background = BasicSprite("assets/Map.jpg", (400, 400), self.render_group)
+        self.background = BasicSprite("assets/Map.jpg", (300, 400))
 
-        self.car = Car(self.render_group, self.space, (0, 0))
+        self.render_group.add(self.background)
+
+        self.car = Car(self.render_group, self.space, (400, 350))
         self.car_2 = Car(self.render_group, self.space, (400, 300))
         self.render_group.snap_camera_to_sprite(self.car.car_view)
 
@@ -58,9 +60,10 @@ class GameScene:
         # self.render_group.set_camera_zoom(1 / (1 + self.car.car_model.body.velocity.get_length_sqrd() / 10000))
 
     def draw(self):
-        self.cnt += 1
-        if self.cnt % 30 == 0:
-            print(str(self.clock.get_fps()))
+        pass
+        # self.cnt += 1
+        # if self.cnt % 30 == 0:
+            # print(str(self.clock.get_fps()))
         # self.window.get_screen().blit(
         #     self.font.render(
         #         str(int(self.clock.get_fps())),

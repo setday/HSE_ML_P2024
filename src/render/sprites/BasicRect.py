@@ -4,8 +4,8 @@ from src.render.sprites.BasicDrawable import BasicDrawable
 
 
 class BasicRect(BasicDrawable, pygame.Surface):
-    def __init__(self, width, height, position, group):
-        super().__init__(position, group)
+    def __init__(self, width, height, position):
+        super().__init__(position)
 
         self.rect = pygame.Rect(0, 0, width, height)
 
