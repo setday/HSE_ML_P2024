@@ -9,7 +9,7 @@ class Window:
         self.height = height
 
         self.__screen = pygame.display.set_mode((width, height))
-        pygame.display.set_icon(pygame.image.load("assets/icon.png"))
+        pygame.display.set_icon(pygame.image.load("../assets/icon.png"))
 
         pygame.display.set_caption("Park Me")
 
@@ -32,4 +32,4 @@ class Window:
             self.__render_group.update()
             self.__render_group.custom_draw(self.__screen)
 
-        pygame.display.update()
+        #pygame.display.update()

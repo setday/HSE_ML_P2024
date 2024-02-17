@@ -37,6 +37,7 @@ class Core:
         self.scene.update()
 
     def draw(self):
+        self.window.draw_frame()
         self.scene.draw()
 
-        self.window.draw_frame()
+

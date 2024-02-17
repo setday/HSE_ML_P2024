@@ -7,7 +7,7 @@ from src.render.sprites.BasicSprite import BasicSprite
 
 class Car:
     def __init__(self, render_group, space, position=(300,300)):
-        self.car_view = BasicSprite("assets/car_2.png", position)
+        self.car_view = BasicSprite("../assets/car_2.png", position)
         self.car_boundary = BasicRect(50, 100, position)
         self.car_model = CarPhysicsModel(position)
 
