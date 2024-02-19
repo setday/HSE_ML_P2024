@@ -26,12 +26,12 @@ class GameScene:
         h = self.space.add_collision_handler(0, 0)
         h.begin = collision_detecter
 
-        self.background = BasicSprite("assets/Map.jpg", (300, 400))
+        self.background = BasicSprite("assets/Map.jpg", (0, 0))
 
         self.render_group.add(self.background)
 
-        self.car = Car(self.render_group, self.space, (400, 350))
-        self.car_2 = Car(self.render_group, self.space, (400, 300))
+        self.car = Car(self.render_group, self.space, (100, -50))
+        self.car_2 = Car(self.render_group, self.space, (100, -100))
         self.render_group.snap_camera_to_sprite(self.car.car_view)
 
     def update(self):

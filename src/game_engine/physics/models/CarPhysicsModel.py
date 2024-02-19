@@ -12,9 +12,9 @@ class CarPhysicsModel:
 
     def apply_friction(self, friction):
         local_velocity = self.body.velocity.rotated(-self.body.angle)
-        local_velocity = pymunk.Vec2d(local_velocity.x / (friction * 1.003), local_velocity.y / friction)
+        local_velocity = pymunk.Vec2d(local_velocity.x / (friction * friction), local_velocity.y / friction)
         self.body.velocity = local_velocity.rotated(self.body.angle)
-        self.body.angular_velocity /= friction * 1.003
+        self.body.angular_velocity /= friction * friction
 
     def update_position(self, position):
         self.body.position = position
@@ -27,16 +27,20 @@ class CarPhysicsModel:
             angle = -angle
 
         # at speed 10 1 angle turn
-        angle = angle * self.body.velocity.length / 10
+        angle_coefficient = self.body.velocity.length / 10
+        if not hold_brake:
+            angle_coefficient = min(1.0, angle_coefficient)
+        angle = angle * angle_coefficient
 
         if not hold_brake and self.body.velocity.length < 40:
             self.body.velocity = self.body.velocity.rotated(angle)
         else:
-            self.body.velocity = self.body.velocity.rotated(angle / 10)
+            self.body.velocity = self.body.velocity.rotated(angle / 4)
         self.update_angle(self.body.angle + angle)
 
     def accelerate(self, force):
-        if self.body.velocity.rotated(-self.body.angle).dot((0, -force)) < 0 and self.body.velocity.length > 100:
+        is_accel = self.body.velocity.rotated(-self.body.angle).dot((0, -force)) > 0
+        if is_accel and self.body.velocity.length > 40:
             return
         self.body.apply_force_at_local_point((0, -force), (0, 0))
 

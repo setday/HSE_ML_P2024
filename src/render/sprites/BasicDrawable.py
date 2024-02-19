@@ -23,16 +23,16 @@ class BasicDrawable(pygame.sprite.Sprite):
 
         self.surface = pygame.transform.rotate(self.src_surface, self.angle)
         self.surface = pygame.transform.scale_by(self.surface, self.scale)
-        self.rect = self.surface.get_rect()
+        self.rect = self.surface.get_rect(center=self.position)
 
     def update_scale(self, scale):
         self.scale = scale
 
         self.surface = pygame.transform.rotate(self.src_surface, self.angle)
         self.surface = pygame.transform.scale_by(self.surface, self.scale)
-        self.rect = self.surface.get_rect()
+        self.rect = self.surface.get_rect(center=self.position)
 
     def draw_to(self, screen, position, size):
-        local_pos = pygame.math.Vector2(self.position) * size
-        global_rect = self.rect.move(local_pos - position)
-        screen.blit(self.surface, global_rect)
+        rect_cpy = self.rect.copy()
+        rect_cpy.center = pygame.math.Vector2(self.position) * size - position
+        screen.blit(self.surface, rect_cpy)

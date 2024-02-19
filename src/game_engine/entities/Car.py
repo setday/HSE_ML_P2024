@@ -12,6 +12,7 @@ class Car:
         self.car_model = CarPhysicsModel(position)
 
         render_group.add(self.car_view)
+        render_group.add(self.car_boundary)
 
         self.space = space
         self.render_group = render_group
