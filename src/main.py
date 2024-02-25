@@ -1,5 +1,5 @@
 import arcade
-from Window import Window
+from render.Window import Window
 
 
 def main():
