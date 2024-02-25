@@ -1,6 +1,6 @@
 import pygame
 
-from src.game_engine.scenes.GameScene import GameScene
+from src.game_engine.scenes.game_scene.GameScene import GameScene
 from src.render.Window import Window
 
 

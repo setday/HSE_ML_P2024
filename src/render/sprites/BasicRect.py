@@ -9,8 +9,10 @@ class BasicRect(BasicDrawable, pygame.Surface):
 
         self.rect = pygame.Rect(0, 0, width, height)
 
+        self.color = (0, 255, 0)
+
         self.src_surface = pygame.Surface((width, height))
-        self.src_surface.fill((0, 255, 0))
+        self.src_surface.fill(self.color)
         self.src_surface.set_colorkey((0, 0, 0))
 
         self.src_surface_inner = pygame.Surface((width - 4, height - 4))
@@ -21,3 +23,10 @@ class BasicRect(BasicDrawable, pygame.Surface):
         self.update_position(position)
         self.update_angle(0)
         self.update_scale(1)
+
+    def update_color(self, color):
+        self.color = color
+        self.src_surface.fill(self.color)
+        self.src_surface.blit(self.src_surface_inner, (2, 2))
+        self.update_angle(self.angle)
+        self.update_scale(self.scale)
