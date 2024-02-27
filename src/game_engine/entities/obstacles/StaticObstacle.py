@@ -1,3 +1,4 @@
+import random
 from math import radians, degrees
 
 from src.physics.models.StaticObstacle import StaticObstaclePhysicsModel
@@ -11,8 +12,8 @@ class StaticObstacle:
         self.obstacle_boundary = BasicRect(20, 20, position)
         self.obstacle_model = StaticObstaclePhysicsModel(position, (20, 20))
 
-        render_group.add(self.obstacle_view)
-        render_group.add(self.obstacle_boundary)
+        render_group.add_sprite("ov" + random.randint(0, 100000).__str__(), self.obstacle_view)
+        render_group.add_sprite("ob" + random.randint(0, 100000).__str__(), self.obstacle_boundary)
 
         self.space = space
         self.render_group = render_group

@@ -1,3 +1,4 @@
+import random
 from math import radians, degrees
 
 from src.physics.models.MovableObstacle import MovableObstaclePhysicsModel
@@ -11,8 +12,8 @@ class MovableObstacle:
         self.obstacle_boundary = BasicRect(16, 16, position)
         self.obstacle_model = MovableObstaclePhysicsModel(position, (16, 16))
 
-        render_group.add(self.obstacle_view)
-        render_group.add(self.obstacle_boundary)
+        render_group.add_sprite("ov" + random.randint(0, 100000).__str__(), self.obstacle_view)
+        render_group.add_sprite("ob" + random.randint(0, 100000).__str__(), self.obstacle_boundary)
 
         self.space = space
         self.render_group = render_group

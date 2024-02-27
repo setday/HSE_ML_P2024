@@ -1,9 +1,10 @@
 import arcade
 from render.Window import Window
+from src.game_engine.Core import Core
 
 
 def main():
-    Window(1024, 1024, "Park me")
+    Core()
     arcade.run()
 
 

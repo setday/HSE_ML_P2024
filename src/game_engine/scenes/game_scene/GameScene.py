@@ -1,6 +1,6 @@
 import time
 
-import pygame
+import arcade
 import pymunk
 
 from src.game_engine.entities.Car import Car
@@ -16,10 +16,8 @@ class GameScene:
 
         self.window = window
 
-        self.render_group = RenderGroup(window.width, window.height)
+        self.render_group = arcade.Scene()
         self.space = pymunk.Space()
-
-        self.clock = pygame.time.Clock()
 
         # self.font = pygame.font.SysFont('Consolas', 18, bold=True)
         self.score = 10000
@@ -53,10 +51,10 @@ class GameScene:
         h = self.space.add_collision_handler(10, 30)
         h.begin = collision_car_with_O
 
-        self.background = BasicSprite("assets/Map.jpg", (0, 0))
+        self.background = BasicSprite("assets/Map2.jpg", (0, 0))
         self.background.update_scale(10)
 
-        self.render_group.add(self.background)
+        self.render_group.add_sprite("bg", self.background)
 
         self.car_m = Car(self.render_group, self.space, (0, -100), 0)
         self.cars = [self.car_m]
@@ -80,22 +78,21 @@ class GameScene:
         for i in range(-5, 5):
             StaticObstacle(self.render_group, self.space, (70 * i, -10))
 
-        self.render_group.snap_camera_to_sprite(self.car_m.car_view)
+        self.window.camera.snap_to_sprite(self.car_m.car_view)
 
-    def update(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            self.car_m.turn_left(keys[pygame.K_SPACE])
-        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            self.car_m.turn_right(keys[pygame.K_SPACE])
-        if keys[pygame.K_UP] or keys[pygame.K_w]:
+    def update(self, keys):
+        if keys.get(arcade.key.LEFT, False) or keys.get(arcade.key.A, False):
+            self.car_m.turn_left(keys.get(arcade.key.SPACE, False))
+        if keys.get(arcade.key.RIGHT, False) or keys.get(arcade.key.D, False):
+            self.car_m.turn_right(keys.get(arcade.key.SPACE, False))
+        if keys.get(arcade.key.UP, False) or keys.get(arcade.key.W, False):
             self.car_m.accelerate()
-        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
+        if keys.get(arcade.key.DOWN, False) or keys.get(arcade.key.S, False):
             self.car_m.brake()
-        if keys[pygame.K_r]:
+        if keys.get(arcade.key.R, False):
             self.car_m.car_model.body.velocity = (0, 0)
 
-        if keys[pygame.K_SPACE]:
+        if keys.get(arcade.key.SPACE, False):
             self.car_m.hand_brake()
 
         for car in self.cars:
@@ -110,7 +107,6 @@ class GameScene:
         delta_time *= 16
 
         self.space.step(delta_time)
-        self.clock.tick(delta_time * 60000)
 
         for car in self.cars:
             car.apply_friction()

@@ -8,17 +8,17 @@ from src.render.sprites.BasicSprite import BasicSprite
 
 class Car:
     def __init__(self, render_group, space, position=(300, 300), skin_id=-1):
-        skins = ["assets/car_2.png", "assets/car_3.png"]  # , "assets/car_1.png"]
+        skins = ["assets/car_2.png"]#, "assets/car_3.png"]  # , "assets/car_1.png"]
         if skin_id == -1:
             skin_id = random.randint(0, len(skins) - 1)
-        skin = skins[skin_id]
+        skin = skins[skin_id % len(skins)]
 
         self.car_view = BasicSprite(skin, position)
         self.car_boundary = BasicRect(50, 100, position)
         self.car_model = CarPhysicsModel(position)
 
-        render_group.add(self.car_view)
-        render_group.add(self.car_boundary)
+        render_group.add_sprite("cv" + random.randint(0, 100000).__str__(), self.car_view)
+        render_group.add_sprite("cb" + random.randint(0, 100000).__str__(), self.car_boundary)
 
         self.space = space
         self.render_group = render_group
