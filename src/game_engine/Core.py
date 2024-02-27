@@ -4,20 +4,21 @@ from src.game_engine.scenes.game_scene.GameScene import GameScene
 from src.render.Window import Window
 
 
-class Core(Window):
+class Core:
     def __init__(self):
-        super().__init__(800, 800, "Park me")
+        self.window = Window(800, 800, "Park me")
 
-        # self.window = Window(800, 800)
-        self.scene = GameScene(self)
+        self.scene = GameScene()
+
+        self.window.set_update_hook(self.on_update)
+        self.window.set_draw_hook(self.on_draw)
         # self.window.set_render_group(self.scene.render_group)
 
-    def on_update(self, delta_time):
-        super().on_update(delta_time)
+    def run(self):
+        arcade.run()
 
-        self.scene.update(self.keyboard, delta_time)
+    def on_update(self, keys, delta_time):
+        self.scene.update(keys, delta_time)
 
     def on_draw(self):
-        super().on_draw()
-
         self.scene.draw()

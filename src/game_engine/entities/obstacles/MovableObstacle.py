@@ -1,7 +1,6 @@
-import random
-from math import radians, degrees
+from math import degrees
 
-from pymunk import Vec2d
+from pymunk import Vec2d as Vector2D
 
 from src.physics.models.MovableObstacle import MovableObstaclePhysicsModel
 from src.render.sprites.BasicRect import BasicRect
@@ -32,8 +31,8 @@ class MovableObstacle:
         self.obstacle_model.apply_friction()
 
     def sync(self):
-        def inverse_y(pos):
-            return Vec2d(pos.x, -pos.y)
+        def inverse_y(pos: Vector2D) -> Vector2D:
+            return Vector2D(pos.x, -pos.y)
 
         self.obstacle_view.update_position(inverse_y(self.obstacle_model.body.position))
         self.obstacle_view.update_angle(-degrees(self.obstacle_model.body.angle))

@@ -11,11 +11,7 @@ from src.render.sprites.BasicSprite import BasicSprite
 
 
 class GameScene:
-    def __init__(self, window):
-        self.cnt = 0
-
-        self.window = window
-
+    def __init__(self):
         self.render_group = RenderGroup()
         self.space = pymunk.Space()
 
@@ -107,7 +103,7 @@ class GameScene:
             cone.apply_friction()
             cone.sync()
 
-        # self.render_group.set_camera_zoom(1 / (1 + self.car.car_model.body.velocity.get_length_sqrd() / 10000))
+        self.render_group.camera.set_zoom(1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000)
 
     def draw(self):
         self.render_group.draw()

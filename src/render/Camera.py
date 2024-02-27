@@ -1,42 +1,34 @@
 import arcade
-import pyglet
-from pyglet.math import Vec2
+from pyglet.math import Vec2 as Vector2D
 
 
 class Camera(arcade.Camera):
     def __init__(self):
         super().__init__()
 
-        self.real_position = pyglet.math.Vec2(0, 0)
-        self.zoom = 1
+        self._screen_shift = Vector2D(self.viewport_width / 2, self.viewport_height / 2)
 
-        self.target_position = pyglet.math.Vec2(0, 0)
-        self.target_zoom = 1
+        self._target_position = -self._screen_shift
+        self._target_zoom = 1
 
-        self.screen_shift = pyglet.math.Vec2(self.viewport_width / 2, self.viewport_height / 2)
-
-        self.snapped_sprite = None
+        self._snapped_sprite = None
 
     def snap_to_sprite(self, sprite) -> None:
-        self.snapped_sprite = sprite
+        self._snapped_sprite = sprite
 
-    def set_position(self, position: pyglet.math.Vec2) -> None:
-        self.target_position = position
+    def set_position(self, position: Vector2D) -> None:
+        self._target_position = position
 
     def set_zoom(self, zoom: float) -> None:
-        self.target_zoom = zoom
-
-        # for sprite in self.sprites():
-        #     sprite.update_scale(zoom)
+        self._target_zoom = zoom
 
     def update(self):
-        if self.snapped_sprite is not None:
-            x, y = self.snapped_sprite.position
-            self.set_position(pyglet.math.Vec2(x, y))
+        if self._snapped_sprite is not None:
+            x, y = self._snapped_sprite.position
+            self.set_position(Vector2D(x, y))
 
-        self.real_position += (self.target_position - self.real_position) * Vec2(0.03, 0.03)
-        self.zoom += (self.target_zoom - self.zoom) * 0.003
+        self.scale += (self._target_zoom - self.scale) * 0.05
 
-        self.move(self.real_position - self.screen_shift)
-        
+        self.move_to(self._target_position - self._screen_shift, 0.05)
+
         super().update()

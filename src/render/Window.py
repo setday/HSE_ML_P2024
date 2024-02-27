@@ -1,29 +1,39 @@
 import arcade
 
-from src.render.Camera import Camera
-
 
 class Window(arcade.Window):
     def __init__(self, width, height, title):
         super().__init__(width, height, title)
 
+        self._update_hook = None
+        self._draw_hook = None
+
         self.background_color = arcade.color.AMAZON
 
-        self.camera = Camera()
+        self._keyboard = {}
 
-        self.keyboard = {}
+    def set_update_hook(self, hook):
+        self._update_hook = hook
+
+    def set_draw_hook(self, hook):
+        self._draw_hook = hook
 
     def on_draw(self):
         super().on_draw()
 
         self.clear()
-        # arcade.draw_texture_rectangle(self.width / 2, self.height / 2, self.width, self.height, self.scene.background)
+
+        if self._draw_hook is not None:
+            self._draw_hook()
 
     def on_update(self, delta_time):
         super().on_update(delta_time)
 
+        if self._update_hook is not None:
+            self._update_hook(self._keyboard, delta_time)
+
     def on_key_press(self, symbol, modifiers):
-        self.keyboard[symbol] = True
+        self._keyboard[symbol] = True
 
     def on_key_release(self, symbol, modifiers):
-        self.keyboard[symbol] = False
+        self._keyboard[symbol] = False
