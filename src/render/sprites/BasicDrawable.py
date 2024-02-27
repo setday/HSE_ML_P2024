@@ -5,15 +5,11 @@ class BasicDrawable(arcade.Sprite):
     def __init__(self, position):
         super().__init__()
 
-        # self.rect = arcade.Rect(0, 0, 0, 0)
-        # self.rect.center = position
+        self.texture = arcade.Texture.create_empty("WT", (1, 1))
 
         self.angle = 0
         self.position = position
         self.scale = 1
-
-        # self.src_surface = None
-        # self.surface = self.src_surface
 
     def update_position(self, position):
         self.position = position

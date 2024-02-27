@@ -19,8 +19,8 @@ class Car:
         self.car_boundary = BasicRect(50, 100, position)
         self.car_model = CarPhysicsModel(position)
 
-        render_group.add_sprite("cv" + random.randint(0, 100000).__str__(), self.car_view)
-        render_group.add_sprite("cb" + random.randint(0, 100000).__str__(), self.car_boundary)
+        render_group.add(self.car_view)
+        render_group.add(self.car_boundary)
 
         self.space = space
         self.render_group = render_group
@@ -31,8 +31,10 @@ class Car:
 
         self.health = 100
 
+        self.sync()
+
     def apply_friction(self):
-        self.car_model.apply_friction(1.02)
+        self.car_model.apply_friction()
 
     def turn_left(self, hold_brake=False):
         self.car_model.turn_left(-radians(1), hold_brake)
@@ -43,12 +45,12 @@ class Car:
     def accelerate(self):
         if self.health <= 0:
             return
-        self.car_model.accelerate(3)
+        self.car_model.accelerate(4)
 
     def brake(self):
         if self.health <= 0:
             return
-        self.car_model.accelerate(-3)
+        self.car_model.accelerate(-4)
 
     def hand_brake(self):
         self.car_model.brake()
@@ -62,6 +64,8 @@ class Car:
 
         self.car_boundary.update_position(inverse_y(self.car_model.body.position))
         self.car_boundary.update_angle(-degrees(self.car_model.body.angle))
+
+        self.car_boundary.update_color((0, int(max(self.health, 1) * 2.55), 0))
 
     def turn_debug_view(self, mode=True):
         pass

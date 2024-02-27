@@ -34,7 +34,6 @@ class Camera(arcade.Camera):
             x, y = self.snapped_sprite.position
             self.set_position(pyglet.math.Vec2(x, y))
 
-        print(self.real_position, self.target_position, self.zoom, self.target_zoom)
         self.real_position += (self.target_position - self.real_position) * Vec2(0.03, 0.03)
         self.zoom += (self.target_zoom - self.zoom) * 0.003
 

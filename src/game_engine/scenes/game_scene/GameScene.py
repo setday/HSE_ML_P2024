@@ -16,7 +16,7 @@ class GameScene:
 
         self.window = window
 
-        self.render_group = arcade.Scene()
+        self.render_group = RenderGroup()
         self.space = pymunk.Space()
 
         self.score = 10000
@@ -49,7 +49,7 @@ class GameScene:
         self.background = BasicSprite("assets/Map2.jpg", (0, 0))
         self.background.update_scale(10)
 
-        self.render_group.add_sprite("bg", self.background)
+        self.render_group.add(self.background)
 
         self.car_m = Car(self.render_group, self.space, (0, -100), 0)
         self.cars = [self.car_m]
@@ -73,7 +73,7 @@ class GameScene:
         for i in range(-5, 5):
             StaticObstacle(self.render_group, self.space, (70 * i, -10))
 
-        self.window.camera.snap_to_sprite(self.car_m.car_view)
+        self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
     def update(self, keys, delta_time):
         if keys.get(arcade.key.LEFT, False) or keys.get(arcade.key.A, False):
@@ -111,3 +111,5 @@ class GameScene:
 
     def draw(self):
         self.render_group.draw()
+
+        self.render_group.camera.use()

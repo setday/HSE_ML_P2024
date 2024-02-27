@@ -19,8 +19,6 @@ class Window(arcade.Window):
         self.clear()
         # arcade.draw_texture_rectangle(self.width / 2, self.height / 2, self.width, self.height, self.scene.background)
 
-        self.camera.use()
-
     def on_update(self, delta_time):
         super().on_update(delta_time)
 

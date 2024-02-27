@@ -11,7 +11,7 @@ class MovableObstaclePhysicsModel:
         self.shape.friction = 1
         self.shape.collision_type = 20
 
-    def apply_friction(self, friction):
+    def apply_friction(self, friction=1.02):
         local_velocity = self.body.velocity.rotated(-self.body.angle)
         local_velocity = pymunk.Vec2d(local_velocity.x / (friction * friction), local_velocity.y / friction)
         self.body.velocity = local_velocity.rotated(self.body.angle)

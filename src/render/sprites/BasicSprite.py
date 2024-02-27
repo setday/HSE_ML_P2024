@@ -7,9 +7,6 @@ class BasicSprite(BasicDrawable):
     def __init__(self, image, position):
         super().__init__(position)
 
-        self.cnt1 = 0
-        self.cnt2 = 0
-
         self.texture = arcade.load_texture(image)
 
         self.update_position(position)

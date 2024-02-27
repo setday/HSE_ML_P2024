@@ -11,7 +11,7 @@ class CarPhysicsModel:
         self.shape.friction = 1
         self.shape.collision_type = 10
 
-    def apply_friction(self, friction_f, friction_s=1.006):
+    def apply_friction(self, friction_f=1.02, friction_s=1.06):
         local_velocity = self.body.velocity.rotated(-self.body.angle)
         local_velocity = pymunk.Vec2d(local_velocity.x / friction_s, local_velocity.y / friction_f)
         self.body.velocity = local_velocity.rotated(self.body.angle)

@@ -14,8 +14,8 @@ class MovableObstacle:
         self.obstacle_boundary = BasicRect(16, 16, position)
         self.obstacle_model = MovableObstaclePhysicsModel(position, (16, 16))
 
-        render_group.add_sprite("ov" + random.randint(0, 100000).__str__(), self.obstacle_view)
-        render_group.add_sprite("ob" + random.randint(0, 100000).__str__(), self.obstacle_boundary)
+        render_group.add(self.obstacle_view)
+        render_group.add(self.obstacle_boundary)
 
         self.space = space
         self.render_group = render_group
@@ -26,8 +26,10 @@ class MovableObstacle:
 
         self.health = 100
 
+        self.sync()
+
     def apply_friction(self):
-        self.obstacle_model.apply_friction(1.002)
+        self.obstacle_model.apply_friction()
 
     def sync(self):
         def inverse_y(pos):
