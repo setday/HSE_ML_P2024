@@ -1,5 +1,7 @@
 from math import degrees
 
+from pymunk import Vec2d as Vector2D
+
 from src.physics.models.MovableObstacle import MovableObstaclePhysicsModel
 from src.render.sprites.BasicRect import BasicRect
 from src.render.sprites.BasicSprite import BasicSprite
