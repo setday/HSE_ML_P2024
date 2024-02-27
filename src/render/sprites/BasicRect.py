@@ -1,24 +1,19 @@
-import pygame
+import arcade
 
 from src.render.sprites.BasicDrawable import BasicDrawable
 
 
-class BasicRect(BasicDrawable, pygame.Surface):
-    def __init__(self, width, height, position):
+class BasicRect(BasicDrawable):
+    def __init__(self, width: int, height: int, position):
         super().__init__(position)
 
-        self.rect = pygame.Rect(0, 0, width, height)
+        self.width = int(width)
+        self.height = int(height)
 
-        self.color = (0, 255, 0)
+        self.border_width = 2
 
-        self.src_surface = pygame.Surface((width, height))
-        self.src_surface.fill(self.color)
-        self.src_surface.set_colorkey((0, 0, 0))
-
-        self.src_surface_inner = pygame.Surface((width - 4, height - 4))
-        self.src_surface_inner.fill((0, 0, 0))
-
-        self.src_surface.blit(self.src_surface_inner, (2, 2))
+        self.src_surface = arcade.Texture.create_filled(hash(self).__str__(), (self.width, self.height), (0, 0, 0, 0))
+        self.update_color((0, 255, 0))
 
         self.update_position(position)
         self.update_angle(0)
@@ -26,7 +21,16 @@ class BasicRect(BasicDrawable, pygame.Surface):
 
     def update_color(self, color):
         self.color = color
-        self.src_surface.fill(self.color)
-        self.src_surface.blit(self.src_surface_inner, (2, 2))
-        self.update_angle(self.angle)
-        self.update_scale(self.scale)
+
+        top_bottom_skip = int(self.width * self.border_width)
+        center_horizontal_skip = int(self.width - 2 * self.border_width)
+        center_vertical_skip = int(self.height - 2 * self.border_width)
+
+        data = [color] * top_bottom_skip + (
+                [color] * self.border_width +
+                [(0, 0, 0, 0)] * max(0, center_horizontal_skip) +
+                [color] * self.border_width
+        ) * max(0, center_vertical_skip) + [color] * top_bottom_skip
+
+        self.src_surface.image.putdata(data)
+        self.texture = self.src_surface

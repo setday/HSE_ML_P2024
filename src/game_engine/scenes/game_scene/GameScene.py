@@ -1,6 +1,6 @@
 import time
 
-import pygame
+import arcade
 import pymunk
 
 from src.game_engine.entities.Car import Car
@@ -11,20 +11,11 @@ from src.render.sprites.BasicSprite import BasicSprite
 
 
 class GameScene:
-    def __init__(self, window):
-        self.cnt = 0
-
-        self.window = window
-
-        self.render_group = RenderGroup(window.width, window.height)
+    def __init__(self):
+        self.render_group = RenderGroup()
         self.space = pymunk.Space()
 
-        self.clock = pygame.time.Clock()
-
-        # self.font = pygame.font.SysFont('Consolas', 18, bold=True)
         self.score = 10000
-
-        self.prev_time = time.time()
 
         def collision_car_with_car(arbiter, space, data):
             car1: Car = arbiter.shapes[0].super
@@ -40,8 +31,6 @@ class GameScene:
             return True
 
         def collision_car_with_O(arbiter, space, data):
-            car: Car = arbiter.shapes[0].super
-
             self.score -= 10
 
             return True
@@ -80,37 +69,31 @@ class GameScene:
         for i in range(-5, 5):
             StaticObstacle(self.render_group, self.space, (70 * i, -10))
 
-        self.render_group.snap_camera_to_sprite(self.car_m.car_view)
+        self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
-    def update(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            self.car_m.turn_left(keys[pygame.K_SPACE])
-        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            self.car_m.turn_right(keys[pygame.K_SPACE])
-        if keys[pygame.K_UP] or keys[pygame.K_w]:
+    def update(self, keys, delta_time):
+        if keys.get(arcade.key.LEFT, False) or keys.get(arcade.key.A, False):
+            self.car_m.turn_left(keys.get(arcade.key.SPACE, False))
+        if keys.get(arcade.key.RIGHT, False) or keys.get(arcade.key.D, False):
+            self.car_m.turn_right(keys.get(arcade.key.SPACE, False))
+        if keys.get(arcade.key.UP, False) or keys.get(arcade.key.W, False):
             self.car_m.accelerate()
-        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
+        if keys.get(arcade.key.DOWN, False) or keys.get(arcade.key.S, False):
             self.car_m.brake()
-        if keys[pygame.K_r]:
+        if keys.get(arcade.key.R, False):
             self.car_m.car_model.body.velocity = (0, 0)
 
-        if keys[pygame.K_SPACE]:
+        if keys.get(arcade.key.SPACE, False):
             self.car_m.hand_brake()
 
         for car in self.cars:
             if car == self.car_m:
                 continue
-            # car.hand_brake()
-
-        current_time = time.time()
-        delta_time = current_time - self.prev_time
-        self.prev_time = current_time
+            car.hand_brake()
 
         delta_time *= 16
 
         self.space.step(delta_time)
-        self.clock.tick(delta_time * 60000)
 
         for car in self.cars:
             car.apply_friction()
@@ -120,16 +103,9 @@ class GameScene:
             cone.apply_friction()
             cone.sync()
 
-        # self.render_group.set_camera_zoom(1 / (1 + self.car.car_model.body.velocity.get_length_sqrd() / 10000))
+        self.render_group.camera.set_zoom(1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000)
 
     def draw(self):
-        pass
-        # self.cnt += 1
-        # if self.cnt % 30 == 0:
-            # print(str(self.clock.get_fps()))
-        # self.window.get_screen().blit(
-        #     self.font.render(
-        #         str(int(self.clock.get_fps())),
-        #         1, pygame.Color("GREEN")
-        #     ), (0, 0)
-        # )
+        self.render_group.draw()
+
+        self.render_group.camera.use()

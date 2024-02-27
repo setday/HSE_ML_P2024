@@ -1,4 +1,6 @@
-from math import radians, degrees
+from math import degrees
+
+from pymunk import Vec2d as Vector2D
 
 from src.physics.models.StaticObstacle import StaticObstaclePhysicsModel
 from src.render.sprites.BasicRect import BasicRect
@@ -20,11 +22,16 @@ class StaticObstacle:
         self.obstacle_model.shape.super = self
         self.space.add(self.obstacle_model.body, self.obstacle_model.shape)
 
+        self.sync()
+
     def sync(self):
-        self.obstacle_view.update_position(self.obstacle_model.body.position)
+        def inverse_y(pos: Vector2D) -> Vector2D:
+            return Vector2D(pos.x, -pos.y)
+
+        self.obstacle_view.update_position(inverse_y(self.obstacle_model.body.position))
         self.obstacle_view.update_angle(-degrees(self.obstacle_model.body.angle))
 
-        self.obstacle_boundary.update_position(self.obstacle_model.body.position)
+        self.obstacle_boundary.update_position(inverse_y(self.obstacle_model.body.position))
         self.obstacle_boundary.update_angle(-degrees(self.obstacle_model.body.angle))
 
     def turn_debug_view(self, mode=True):

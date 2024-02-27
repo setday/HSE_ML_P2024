@@ -1,4 +1,4 @@
-import pygame
+import arcade
 
 from src.game_engine.scenes.game_scene.GameScene import GameScene
 from src.render.Window import Window
@@ -6,37 +6,19 @@ from src.render.Window import Window
 
 class Core:
     def __init__(self):
-        pygame.init()
+        self.window = Window(800, 800, "Park me")
 
-        self.window = Window(800, 800)
-        self.scene = GameScene(self.window)
-        self.window.set_render_group(self.scene.render_group)
+        self.scene = GameScene()
 
-        self.is_running = False
-
-    def stop(self):
-        self.is_running = False
+        self.window.set_update_hook(self.on_update)
+        self.window.set_draw_hook(self.on_draw)
+        # self.window.set_render_group(self.scene.render_group)
 
     def run(self):
-        self.is_running = True
+        arcade.run()
 
-        self.update_loop()
+    def on_update(self, keys, delta_time):
+        self.scene.update(keys, delta_time)
 
-    def update_loop(self):
-        while self.is_running:
-            self.handle_events()
-            self.update()
-            self.draw()
-
-    def handle_events(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.stop()
-
-    def update(self):
-        self.scene.update()
-
-    def draw(self):
+    def on_draw(self):
         self.scene.draw()
-
-        self.window.draw_frame()

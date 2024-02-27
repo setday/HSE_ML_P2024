@@ -1,4 +1,4 @@
-from math import radians, degrees
+from math import degrees
 
 from src.physics.models.MovableObstacle import MovableObstaclePhysicsModel
 from src.render.sprites.BasicRect import BasicRect
@@ -23,14 +23,19 @@ class MovableObstacle:
 
         self.health = 100
 
+        self.sync()
+
     def apply_friction(self):
-        self.obstacle_model.apply_friction(1.002)
+        self.obstacle_model.apply_friction()
 
     def sync(self):
-        self.obstacle_view.update_position(self.obstacle_model.body.position)
+        def inverse_y(pos: Vector2D) -> Vector2D:
+            return Vector2D(pos.x, -pos.y)
+
+        self.obstacle_view.update_position(inverse_y(self.obstacle_model.body.position))
         self.obstacle_view.update_angle(-degrees(self.obstacle_model.body.angle))
 
-        self.obstacle_boundary.update_position(self.obstacle_model.body.position)
+        self.obstacle_boundary.update_position(inverse_y(self.obstacle_model.body.position))
         self.obstacle_boundary.update_angle(-degrees(self.obstacle_model.body.angle))
 
     def turn_debug_view(self, mode=True):

@@ -1,35 +1,39 @@
-import pygame
-
-from src.render.RenderGroup import RenderGroup
+import arcade
 
 
-class Window:
-    def __init__(self, width: int, height: int) -> None:
-        self.width = width
-        self.height = height
+class Window(arcade.Window):
+    def __init__(self, width, height, title):
+        super().__init__(width, height, title)
 
-        self.__screen = pygame.display.set_mode((width, height))
-        pygame.display.set_icon(pygame.image.load("assets/icon.png"))
+        self._update_hook = None
+        self._draw_hook = None
 
-        pygame.display.set_caption("Park Me")
+        self.background_color = arcade.color.AMAZON
 
-        self.__render_group = None
+        self._keyboard = {}
 
-    def get_screen(self):
-        return self.__screen
+    def set_update_hook(self, hook):
+        self._update_hook = hook
 
-    def set_render_group(self, render_group: RenderGroup) -> None:
-        """
-        @summary Sets the render group to draw
-        @param render_group: The render group to draw
-        """
-        self.__render_group = render_group
+    def set_draw_hook(self, hook):
+        self._draw_hook = hook
 
-    def draw_frame(self):
-        self.__screen.fill((255, 0, 0))
+    def on_draw(self):
+        super().on_draw()
 
-        if self.__render_group is not None:
-            self.__render_group.update()
-            self.__render_group.custom_draw(self.__screen)
+        self.clear()
 
-        pygame.display.update()
+        if self._draw_hook is not None:
+            self._draw_hook()
+
+    def on_update(self, delta_time):
+        super().on_update(delta_time)
+
+        if self._update_hook is not None:
+            self._update_hook(self._keyboard, delta_time)
+
+    def on_key_press(self, symbol, modifiers):
+        self._keyboard[symbol] = True
+
+    def on_key_release(self, symbol, modifiers):
+        self._keyboard[symbol] = False
