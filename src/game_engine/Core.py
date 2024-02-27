@@ -15,9 +15,9 @@ class Core(Window):
     def on_update(self, delta_time):
         super().on_update(delta_time)
 
-        self.scene.update(self.keyboard)
+        self.scene.update(self.keyboard, delta_time)
 
     def on_draw(self):
-        self.scene.draw()
-
         super().on_draw()
+
+        self.scene.draw()

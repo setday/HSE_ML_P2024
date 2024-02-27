@@ -19,10 +19,7 @@ class GameScene:
         self.render_group = arcade.Scene()
         self.space = pymunk.Space()
 
-        # self.font = pygame.font.SysFont('Consolas', 18, bold=True)
         self.score = 10000
-
-        self.prev_time = time.time()
 
         def collision_car_with_car(arbiter, space, data):
             car1: Car = arbiter.shapes[0].super
@@ -38,8 +35,6 @@ class GameScene:
             return True
 
         def collision_car_with_O(arbiter, space, data):
-            car: Car = arbiter.shapes[0].super
-
             self.score -= 10
 
             return True
@@ -80,7 +75,7 @@ class GameScene:
 
         self.window.camera.snap_to_sprite(self.car_m.car_view)
 
-    def update(self, keys):
+    def update(self, keys, delta_time):
         if keys.get(arcade.key.LEFT, False) or keys.get(arcade.key.A, False):
             self.car_m.turn_left(keys.get(arcade.key.SPACE, False))
         if keys.get(arcade.key.RIGHT, False) or keys.get(arcade.key.D, False):
@@ -98,11 +93,7 @@ class GameScene:
         for car in self.cars:
             if car == self.car_m:
                 continue
-            # car.hand_brake()
-
-        current_time = time.time()
-        delta_time = current_time - self.prev_time
-        self.prev_time = current_time
+            car.hand_brake()
 
         delta_time *= 16
 
@@ -119,13 +110,4 @@ class GameScene:
         # self.render_group.set_camera_zoom(1 / (1 + self.car.car_model.body.velocity.get_length_sqrd() / 10000))
 
     def draw(self):
-        pass
-        # self.cnt += 1
-        # if self.cnt % 30 == 0:
-            # print(str(self.clock.get_fps()))
-        # self.window.get_screen().blit(
-        #     self.font.render(
-        #         str(int(self.clock.get_fps())),
-        #         1, pygame.Color("GREEN")
-        #     ), (0, 0)
-        # )
+        self.render_group.draw()

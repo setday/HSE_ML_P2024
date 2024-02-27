@@ -10,7 +10,7 @@ class BasicSprite(BasicDrawable):
         self.cnt1 = 0
         self.cnt2 = 0
 
-        self.src_surface = arcade.load_texture(image)
+        self.texture = arcade.load_texture(image)
 
         self.update_position(position)
         self.update_angle(0)

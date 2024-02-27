@@ -12,8 +12,8 @@ class BasicDrawable(arcade.Sprite):
         self.position = position
         self.scale = 1
 
-        self.src_surface = None
-        self.surface = self.src_surface
+        # self.src_surface = None
+        # self.surface = self.src_surface
 
     def update_position(self, position):
         self.position = position
@@ -33,7 +33,4 @@ class BasicDrawable(arcade.Sprite):
         # self.rect = self.surface.get_rect(center=self.position)
 
     def draw_to(self, screen, position, size):
-        # rect_cpy = self.rect.copy()
-        # rect_cpy.center = pygame.math.Vector2(self.position) * size - position
-        # screen.blit(self.surface, rect_cpy)
-        pass
+        arcade.draw_scaled_texture_rectangle(self.position[0], self.position[1], self.texture, self.scale, self.angle)
