@@ -9,7 +9,7 @@ from src.render.sprites.BasicSprite import BasicSprite
 
 class StaticObstacle:
     def __init__(self, render_group, space, position):
-        self.obstacle_view = BasicSprite("assets/Tree_1.png", position)
+        self.obstacle_view = BasicSprite("../assets/Tree_1.png", position)
         self.obstacle_boundary = BasicRect(20, 20, position)
         self.obstacle_model = StaticObstaclePhysicsModel(position, (20, 20))
 

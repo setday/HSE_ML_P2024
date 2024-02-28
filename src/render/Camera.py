@@ -22,6 +22,9 @@ class Camera(arcade.Camera):
     def set_zoom(self, zoom: float) -> None:
         self._target_zoom = zoom
 
+    def get_zoom(self) -> float:
+        return self._target_zoom
+
     def update(self):
         if self._snapped_sprite is not None:
             x, y = self._snapped_sprite.position

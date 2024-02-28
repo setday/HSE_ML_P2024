@@ -9,7 +9,7 @@ from src.render.sprites.BasicSprite import BasicSprite
 
 class MovableObstacle:
     def __init__(self, render_group, space, position):
-        self.obstacle_view = BasicSprite("assets/Traffic_Cone.png", position)
+        self.obstacle_view = BasicSprite("../assets/Traffic_Cone.png", position)
         self.obstacle_boundary = BasicRect(16, 16, position)
         self.obstacle_model = MovableObstaclePhysicsModel(position, (16, 16))
 
