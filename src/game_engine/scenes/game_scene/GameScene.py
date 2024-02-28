@@ -8,6 +8,7 @@ from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
 from src.render.RenderGroup import RenderGroup
 from src.render.sprites.BasicSprite import BasicSprite
+from src.game_engine.controllers.Controller import KeyboardController, RandomController
 
 
 class GameScene:
@@ -48,6 +49,7 @@ class GameScene:
         self.render_group.add(self.background)
 
         self.car_m = Car(self.render_group, self.space, (0, -100), 0)
+        self.car_m.switch_controller(RandomController())
         self.cars = [self.car_m]
         for i in range(-5, 5):
             if i == 0:
@@ -72,19 +74,7 @@ class GameScene:
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
     def update(self, keys, delta_time):
-        if keys.get(arcade.key.LEFT, False) or keys.get(arcade.key.A, False):
-            self.car_m.turn_left(keys.get(arcade.key.SPACE, False))
-        if keys.get(arcade.key.RIGHT, False) or keys.get(arcade.key.D, False):
-            self.car_m.turn_right(keys.get(arcade.key.SPACE, False))
-        if keys.get(arcade.key.UP, False) or keys.get(arcade.key.W, False):
-            self.car_m.accelerate()
-        if keys.get(arcade.key.DOWN, False) or keys.get(arcade.key.S, False):
-            self.car_m.brake()
-        if keys.get(arcade.key.R, False):
-            self.car_m.car_model.body.velocity = (0, 0)
-
-        if keys.get(arcade.key.SPACE, False):
-            self.car_m.hand_brake()
+        self.car_m.controlling(keys)
 
         for car in self.cars:
             if car == self.car_m:
