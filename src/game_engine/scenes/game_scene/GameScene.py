@@ -21,7 +21,6 @@ class GameScene:
         def collision_car_with_car(arbiter, space, data):
             car1: Car = arbiter.shapes[0].super
             car2: Car = arbiter.shapes[1].super
-
             delta_score = (car1.car_model.body.velocity - car2.car_model.body.velocity).get_length_sqrd() / 30
             self.score -= delta_score
 
@@ -38,16 +37,20 @@ class GameScene:
             delta_score = car.car_model.body.velocity.get_length_sqrd() / 50
             self.score -= delta_score
             health_decreation = max(0, delta_score - 1)
-            car.health -= health_decreation
             if isinstance(cone, StaticObstacle):
-                self.make_emitter(cone.obstacle_view.center_x, cone.obstacle_view.center_y)
+                self.make_emitter(
+                    cone.obstacle_view.center_x, #+ arbiter.contact_point_set.points[0].point_a[0],
+                    cone.obstacle_view.center_y #+ arbiter.contact_point_set.points[0].point_a[1]
+                )
+                car.health -= health_decreation
                 return True
             cone.health -= health_decreation
             if cone.health <= 0:
-                self.make_emitter(cone.obstacle_view.center_x, cone.obstacle_view.center_y)
-                cone.obstacle_view.remove_from_sprite_lists()
-                cone.obstacle_boundary.remove_from_sprite_lists()
-                self.space.remove(cone.obstacle_model.body, cone.obstacle_model.shape)
+                self.make_emitter(
+                    cone.obstacle_view.center_x, # + arbiter.contact_point_set.points[0].point_a[0],
+                    cone.obstacle_view.center_y #+ arbiter.contact_point_set.points[0].point_a[0]
+                )
+                cone.remove()
             return True
 
         h = self.space.add_collision_handler(10, 10)
@@ -57,7 +60,7 @@ class GameScene:
         h = self.space.add_collision_handler(10, 30)
         h.begin = collision_car_with_O
 
-        self.background = BasicSprite("../assets/Map.jpg", (0, 0))
+        self.background = BasicSprite("assets/Map.jpg", (0, 0))
         self.background.update_scale(10)
 
         self.render_group.add(self.background)
@@ -122,10 +125,10 @@ class GameScene:
             (self.render_group.camera.position[0] + 700 * self.render_group.camera.scale,
              self.render_group.camera.position[1] + 700 * self.render_group.camera.scale)
         )
-        self.car_m.indicator.set_fullness(self.car_m.health / 100)
         self.render_group.camera.set_zoom(1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000)
         if self.emitter:
             self.emitter.update()
+        self.car_m.indicator.update_bar(self.car_m.health)
 
     def draw(self):
         self.render_group.draw()
@@ -139,10 +142,10 @@ class GameScene:
             filenames_and_textures=(":resources:images/pinball/pool_cue_ball.png",
                                     ":resources:images/space_shooter/meteorGrey_big2.png"),
             emit_interval=0.001,
-            emit_duration=0.1,
+            emit_duration=0.5,
             particle_speed=4,
             particle_lifetime_min=0.1,
             particle_lifetime_max=0.3,
-            particle_scale=0.2,
+            particle_scale=0.05,
             fade_particles=True
         )
