@@ -63,3 +63,16 @@ class RandomController(Controller):
         else:
             self.car.hand_brake()
         self.timer -= 1
+
+
+class BrakeController(Controller):
+    def __init__(self):
+        super().__init__()
+
+    def handle_input(self, keys):
+        self.car.brake()
+
+
+class AIController(BrakeController):
+    def __init__(self):
+        super().__init__()

@@ -1,3 +1,4 @@
+import random
 import time
 
 import arcade
@@ -8,7 +9,7 @@ from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
 from src.render.RenderGroup import RenderGroup
 from src.render.sprites.BasicSprite import BasicSprite
-from src.game_engine.controllers.Controller import KeyboardController, RandomController
+from src.game_engine.controllers.Controller import *
 
 
 class GameScene:
@@ -49,12 +50,14 @@ class GameScene:
         self.render_group.add(self.background)
 
         self.car_m = Car(self.render_group, self.space, (0, -100), 0)
-        self.car_m.switch_controller(RandomController())
+        self.car_m.switch_controller(KeyboardController())
         self.cars = [self.car_m]
         for i in range(-5, 5):
             if i == 0:
                 continue
-            self.cars.append(Car(self.render_group, self.space, (70 * i, -100), 1))
+            car = Car(self.render_group, self.space, (70 * i, -100), 1)
+            car.switch_controller(random.choice([RandomController(), AIController(), BrakeController()]))
+            self.cars.append(car)
 
         self.traffic_cones = []
         for i in range(-5, 5):
@@ -79,7 +82,7 @@ class GameScene:
         for car in self.cars:
             if car == self.car_m:
                 continue
-            car.hand_brake()
+            car.controlling(keys)
 
         delta_time *= 16
 
