@@ -10,7 +10,7 @@ from src.render.sprites.BasicSprite import BasicSprite
 
 class Car:
     def __init__(self, render_group, space, position=(300, 300), skin_id=-1):
-        skins = ["../assets/car_2.png", "../assets/car_3.png"]  # , "assets/car_1.png"]
+        skins = ["assets/car_2.png", "assets/car_3.png"]  # , "assets/car_1.png"]
         if skin_id == -1:
             skin_id = random.randint(0, len(skins) - 1)
         skin = skins[skin_id % len(skins)]
@@ -59,14 +59,11 @@ class Car:
         self.car_model.brake()
 
     def sync(self):
-        def inverse_y(pos):
-            return Vec2d(pos.x, -pos.y)
+        self.car_view.update_position(self.car_model.body.position)
+        self.car_view.update_angle(degrees(self.car_model.body.angle))
 
-        self.car_view.update_position(inverse_y(self.car_model.body.position))
-        self.car_view.update_angle(-degrees(self.car_model.body.angle))
-
-        self.car_boundary.update_position(inverse_y(self.car_model.body.position))
-        self.car_boundary.update_angle(-degrees(self.car_model.body.angle))
+        self.car_boundary.update_position(self.car_model.body.position)
+        self.car_boundary.update_angle(degrees(self.car_model.body.angle))
 
         self.car_boundary.update_color((0, int(max(self.health, 1) * 2.55), 0))
 

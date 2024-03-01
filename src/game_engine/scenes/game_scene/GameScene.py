@@ -1,7 +1,10 @@
+import random
 import time
 
 import arcade
 import pymunk
+
+from pyglet.math import Vec2 as Vector2D
 
 from src.game_engine.entities.Car import Car
 from src.game_engine.entities.Indicator import Indicator
@@ -15,7 +18,7 @@ class GameScene:
     def __init__(self):
         self.render_group = RenderGroup()
         self.space = pymunk.Space()
-        self.emitter = None
+        self.emitter = []
         self.score = 10000
 
         def collision_car_with_car(arbiter, space, data):
@@ -23,6 +26,9 @@ class GameScene:
             car2: Car = arbiter.shapes[1].super
             delta_score = (car1.car_model.body.velocity - car2.car_model.body.velocity).get_length_sqrd() / 30
             self.score -= delta_score
+
+            if car1.car_model.body.velocity.get_length_sqrd() > 10:
+                self.create_debris_effect(random.choice(arbiter.contact_point_set.points).point_a)
 
             health_decreation = max(0, delta_score - 1)
             car1.health -= health_decreation
@@ -38,18 +44,12 @@ class GameScene:
             self.score -= delta_score
             health_decreation = max(0, delta_score - 1)
             if isinstance(cone, StaticObstacle):
-                self.make_emitter(
-                    cone.obstacle_view.center_x, #+ arbiter.contact_point_set.points[0].point_a[0],
-                    cone.obstacle_view.center_y #+ arbiter.contact_point_set.points[0].point_a[1]
-                )
+                self.create_debris_effect(arbiter.contact_point_set.points[0].point_a)
                 car.health -= health_decreation
                 return True
             cone.health -= health_decreation
             if cone.health <= 0:
-                self.make_emitter(
-                    cone.obstacle_view.center_x, # + arbiter.contact_point_set.points[0].point_a[0],
-                    cone.obstacle_view.center_y #+ arbiter.contact_point_set.points[0].point_a[0]
-                )
+                self.create_debris_effect(arbiter.contact_point_set.points[0].point_a)
                 cone.remove()
             return True
 
@@ -122,30 +122,32 @@ class GameScene:
             cone.apply_friction()
             cone.sync()
         self.car_m.indicator.set_position(
-            (self.render_group.camera.position[0] + 700 * self.render_group.camera.scale,
-             self.render_group.camera.position[1] + 700 * self.render_group.camera.scale)
+            self.render_group.camera.get_position(1, 1) - Vector2D(200, 100)
         )
         self.render_group.camera.set_zoom(1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000)
-        if self.emitter:
-            self.emitter.update()
+        for emitter in self.emitter:
+            emitter.update()
+        while len(self.emitter) > 0 and self.emitter[0].get_count() == 0:
+            self.emitter.pop(0)
         self.car_m.indicator.update_bar(self.car_m.health)
 
     def draw(self):
         self.render_group.draw()
-        if self.emitter:
-            self.emitter.draw()
+        for emitter in self.emitter:
+            emitter.draw()
         self.render_group.camera.use()
 
-    def make_emitter(self, center_x, center_y):
-        self.emitter = arcade.make_interval_emitter(
-            center_xy=(center_x, center_y),
+    def create_debris_effect(self, center):
+        x, y = center
+
+        self.emitter.append(arcade.make_burst_emitter(
+            center_xy=(x, -y),
             filenames_and_textures=(":resources:images/pinball/pool_cue_ball.png",
                                     ":resources:images/space_shooter/meteorGrey_big2.png"),
-            emit_interval=0.001,
-            emit_duration=0.5,
-            particle_speed=4,
-            particle_lifetime_min=0.1,
-            particle_lifetime_max=0.3,
-            particle_scale=0.05,
+            particle_count=5,
+            particle_speed=0.3,
+            particle_lifetime_min=0.75,
+            particle_lifetime_max=1.25,
+            particle_scale=0.13,
             fade_particles=True
-        )
+        ))

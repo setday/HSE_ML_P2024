@@ -6,7 +6,7 @@ from src.render.Window import Window
 
 class Core:
     def __init__(self):
-        self.window = Window(800, 800, "Park me")
+        self.window = Window(1920, 1080, "Park me")
 
         self.scene = GameScene()
 
