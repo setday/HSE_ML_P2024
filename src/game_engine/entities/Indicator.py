@@ -13,16 +13,15 @@ class Indicator:
             height: int = 4,
             border_size: int = 4,
     ) -> None:
-
         self.owner = owner
         self.sprite_list = sprite_list
-
+        self.target_health = 100
+        self.current_health = 100
         self.box_width = width
         self.box_height = height
         self.half_box_width = self.box_width // 2
         self.center_x: float = 0.0
         self.center_y: float = 0.0
-        self.fullness: float = 0.0
 
         self.background_box = arcade.SpriteSolidColor(
             self.box_width + border_size,
@@ -34,20 +33,23 @@ class Indicator:
             self.box_height,
             full_color,
         )
+        self.middle_box = arcade.SpriteSolidColor(
+            self.box_width,
+            self.box_height,
+            (255, 100, 0)
+        )
         self.sprite_list.add(self.background_box)
+        self.sprite_list.add(self.middle_box)
         self.sprite_list.add(self.full_box)
-
-        self.fullness = 1.0
+        self.change_speed = 1
         self.position = position
 
-    def set_fullness(self, new_fullness: float):
-        self.fullness = new_fullness
-        if new_fullness == 0.0:
-            self.full_box.visible = False
-        else:
-            self.full_box.visible = True
-            self.full_box.width = self.box_width * new_fullness
-            self.full_box.left = self.center_x - (self.box_width // 2)
+    def update_bar(self, new_health) -> None:
+        self.target_health = max(0, new_health)
+        self.current_health -= (self.current_health - self.target_health) * 0.03
+        self.full_box.width = self.target_health
+        self.middle_box.width = self.current_health
+        self.middle_box.color = (255, 255, 0)
 
     def set_position(self, new_position) -> None:
         if new_position != self.position:
@@ -55,3 +57,5 @@ class Indicator:
             self.background_box.position = new_position
             self.full_box.position = new_position
             self.full_box.left = self.center_x - (self.box_width // 2)
+            self.middle_box.position = new_position
+            self.middle_box.left = self.center_x - (self.box_width // 2)
