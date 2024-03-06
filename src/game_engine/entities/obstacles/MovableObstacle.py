@@ -39,3 +39,8 @@ class MovableObstacle:
 
     def turn_debug_view(self, mode=True):
         pass
+
+    def remove(self):
+        self.obstacle_view.remove_from_sprite_lists()
+        self.obstacle_boundary.remove_from_sprite_lists()
+        self.space.remove(self.obstacle_model.body, self.obstacle_model.shape)
