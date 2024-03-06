@@ -1,5 +1,7 @@
 import arcade
 
+from src.render.sprites.BasicSprite import BasicSprite
+
 
 class Indicator:
     def __init__(
@@ -9,14 +11,15 @@ class Indicator:
             position=(300, 300),
             full_color: arcade.Color = arcade.color.GREEN,
             background_color: arcade.Color = arcade.color.BLACK,
-            width: int = 100,
-            height: int = 4,
-            border_size: int = 2,
+            width: int = 200,
+            height: int = 21,
+            border_size: int = 5,
+            icon: str = "assets/heart.png"
     ) -> None:
         self.owner = owner
         self.sprite_list = sprite_list
-        self.target_health = 100
-        self.current_health = 100
+        self.target_health = 200
+        self.current_health = 200
         self.box_width = width
         self.box_height = height
         self.half_box_width = self.box_width // 2
@@ -38,6 +41,8 @@ class Indicator:
             self.box_height,
             (255, 100, 0)
         )
+        self.icon = BasicSprite(icon, position)
+        self.sprite_list.add(self.icon)
         self.sprite_list.add(self.background_box)
         self.sprite_list.add(self.middle_box)
         self.sprite_list.add(self.full_box)
@@ -45,14 +50,14 @@ class Indicator:
         self.position = position
 
     def update_bar(self, new_health) -> None:
-        self.target_health = max(0, new_health)
+        self.target_health = 2 * max(0, new_health)
         self.current_health -= (self.current_health - self.target_health) * self.change_speed
         self.full_box.width = self.target_health
         self.middle_box.width = self.current_health
-        self.middle_box.color = (255, 255, 0)
 
     def set_position(self, new_position) -> None:
         if new_position != self.position:
             self.center_x, self.center_y = new_position
             self.background_box.position = self.middle_box.position = self.full_box.position = new_position
             self.middle_box.left = self.full_box.left = self.center_x - (self.box_width // 2)
+            self.icon.position = self.full_box.left - self.icon.width / 2 + 1, self.center_y

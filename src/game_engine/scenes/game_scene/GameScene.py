@@ -24,13 +24,13 @@ class GameScene:
         def collision_car_with_car(arbiter, space, data):
             car1: Car = arbiter.shapes[0].super
             car2: Car = arbiter.shapes[1].super
-            delta_score = (car1.car_model.body.velocity - car2.car_model.body.velocity).get_length_sqrd() / 30
+            delta_score = 10 #(car1.car_model.body.velocity - car2.car_model.body.velocity).get_length_sqrd() / 30
             self.score -= delta_score
 
             if car1.car_model.body.velocity.get_length_sqrd() > 10:
                 self.create_debris_effect(random.choice(arbiter.contact_point_set.points).point_a)
 
-            health_decreation = max(0, delta_score - 1)
+            health_decreation = delta_score
             car1.health -= health_decreation
             car2.health -= health_decreation
             return True
@@ -40,13 +40,14 @@ class GameScene:
             cone = arbiter.shapes[1].super
             if isinstance(cone, Car):
                 car, cone = cone, car
-            delta_score = car.car_model.body.velocity.get_length_sqrd() / 50
-            self.score -= delta_score
-            health_decreation = max(0, delta_score - 1)
             if isinstance(cone, StaticObstacle):
+                delta_score = health_decreation = 10  # car.car_model.body.velocity.get_length_sqrd() / 50
+                self.score -= delta_score
                 self.create_debris_effect(arbiter.contact_point_set.points[0].point_a)
                 car.health -= health_decreation
                 return True
+            delta_score = health_decreation = 5
+            self.score -= delta_score
             cone.health -= health_decreation
             if cone.health <= 0:
                 self.create_debris_effect(arbiter.contact_point_set.points[0].point_a)
@@ -66,7 +67,7 @@ class GameScene:
         self.render_group.add(self.background)
 
         self.car_m = Car(self.render_group, self.space, (0, -100), 0)
-        self.car_m.set_indicator(Indicator(self.car_m, self.render_group))
+        self.indicator = Indicator(self.car_m, self.render_group)
         self.cars = [self.car_m]
         for i in range(-5, 5):
             if i == 0:
@@ -121,7 +122,7 @@ class GameScene:
         for cone in self.traffic_cones:
             cone.apply_friction()
             cone.sync()
-        self.car_m.indicator.set_position(
+        self.indicator.set_position(
             self.render_group.camera.get_position(1, 1) - Vector2D(200, 100)
         )
         self.render_group.camera.set_zoom(1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000)
@@ -129,7 +130,7 @@ class GameScene:
             emitter.update()
         while len(self.emitter) > 0 and self.emitter[0].get_count() == 0:
             self.emitter.pop(0)
-        self.car_m.indicator.update_bar(self.car_m.health)
+        self.indicator.update_bar(self.car_m.health)
 
     def draw(self):
         self.render_group.draw()

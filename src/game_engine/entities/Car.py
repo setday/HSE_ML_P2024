@@ -14,27 +14,18 @@ class Car:
         if skin_id == -1:
             skin_id = random.randint(0, len(skins) - 1)
         skin = skins[skin_id % len(skins)]
-
         self.car_view = BasicSprite(skin, position)
         self.car_boundary = BasicRect(50, 100, position)
         self.car_model = CarPhysicsModel(position)
-        self.indicator = None
         render_group.add(self.car_view)
         render_group.add(self.car_boundary)
-
         self.space = space
         self.render_group = render_group
-
         self.car_model.shape.super = self
         self.space.add(self.car_model.body, self.car_model.shape)
         # self.screen.add_drawable(self.car_view)
-
         self.health = 100
-
         self.sync()
-
-    def set_indicator(self, indicator):
-        self.indicator = indicator
 
     def apply_friction(self):
         self.car_model.apply_friction()
