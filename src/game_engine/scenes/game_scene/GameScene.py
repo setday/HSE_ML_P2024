@@ -68,7 +68,9 @@ class GameScene:
 
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
-    def update(self, keys, delta_time):
+    def update(self, io_controller, delta_time):
+        keys = io_controller.keyboard
+
         self.car_m.controlling(keys)
 
         for car in self.cars:

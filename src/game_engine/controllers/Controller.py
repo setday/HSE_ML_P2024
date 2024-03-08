@@ -44,7 +44,7 @@ class RandomController(Controller):
             5,  # turn left
             15,  # turn right
             0,  # brake
-            0  # hand_break
+            5  # hand_break
         ]
         self.probabilities = list(map(lambda x: x / sum(self.probabilities), self.probabilities))
         self.probabilities = [sum(self.probabilities[:i]) for i in range(len(self.probabilities) + 1)]

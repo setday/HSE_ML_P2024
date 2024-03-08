@@ -1,18 +1,14 @@
 import random
 
-import pygame
+import arcade
 import pymunk
 
 from src.render.RenderGroup import RenderGroup
 
 
 class PhysicScene:
-    def __init__(self, window):
-        self.window = window
-
-        self.render_group = RenderGroup(window.width, window.height)
-
-        self.clock = pygame.time.Clock()
+    def __init__(self):
+        self.render_group = RenderGroup()
 
         self.space = pymunk.Space()
         self.space.gravity = (0, -1000)
@@ -30,29 +26,31 @@ class PhysicScene:
         self.ball_shape.elasticity = 0.95
         self.space.add(self.ball_body, self.ball_shape)
 
-    def update(self):
-        self.clock.tick(60)
-        self.space.step(1 / 60)
+    def update(self, io_controller, delta_time):
+        keys = io_controller.keyboard
+
+        delta_time *= 1
+
+        self.space.step(delta_time)
 
         # Randomly add impulse to ball
-        if pygame.mouse.get_pressed()[0]:
+        if keys.get(arcade.key.D, False):
             self.ball_body.apply_impulse_at_local_point((random.randint(-100, 100), random.randint(0, 100)))
 
         # Randomly add force to ball
-        if pygame.mouse.get_pressed()[2]:
+        if keys.get(arcade.key.F, False):
             self.ball_body.apply_force_at_local_point((0, 1000), (0, 0))
 
         # If k pressed half the speed of the ball
-        if pygame.key.get_pressed()[pygame.K_k]:
+        if keys.get(arcade.key.K, False):
             angle = 180
             rad = angle * 3.14 / 180
             self.ball_body.velocity = self.ball_body.velocity.rotated(rad)
 
     def draw(self):
         # Draw ground
-        # pygame.draw.line(screen, (0, 0, 0), (0, 600 - 100), (600, 600 - 100), 2)
+        arcade.draw_line(0, 100, 600, 100, arcade.color.BLACK, 2)
 
         # Draw ball
-        # x, y = ball_body.position
-        # pygame.draw.circle(screen, (0, 0, 255), (int(x), 600-int(y)), ball_radius)
-        pass
+        x, y = self.ball_body.position
+        arcade.draw_circle_filled(x, y, self.ball_radius, arcade.color.BLUE)
