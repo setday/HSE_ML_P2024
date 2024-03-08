@@ -1,10 +1,10 @@
 import arcade
 
-from pymunk import Vec2d as Vector2D
+from pyglet.math import Vec2 as Vector2D
 
 
 class BasicDrawable(arcade.Sprite):
-    def __init__(self, position: Vector2D):
+    def __init__(self, position: Vector2D = Vector2D(0, 0)):
         super().__init__()
 
         self.texture = arcade.Texture.create_empty("WT", (1, 1))

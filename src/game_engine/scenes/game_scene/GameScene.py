@@ -67,7 +67,8 @@ class GameScene:
         self.render_group.add(self.background)
 
         self.car_m = Car(self.render_group, self.space, (0, -100), 0)
-        self.indicator = Indicator(self.car_m, self.render_group)
+        self.indicator = Indicator(self.car_m)
+        self.render_group.add(self.indicator.sprite_list)
         self.cars = [self.car_m]
         for i in range(-5, 5):
             if i == 0:
@@ -130,7 +131,7 @@ class GameScene:
             emitter.update()
         while len(self.emitter) > 0 and self.emitter[0].get_count() == 0:
             self.emitter.pop(0)
-        self.indicator.update_bar(self.car_m.health)
+        self.indicator.update_bar()
 
     def draw(self):
         self.render_group.draw()
