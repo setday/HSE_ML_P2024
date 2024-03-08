@@ -1,7 +1,6 @@
 import random
 import time
 
-import arcade
 import pymunk
 
 from pyglet.math import Vec2 as Vector2D

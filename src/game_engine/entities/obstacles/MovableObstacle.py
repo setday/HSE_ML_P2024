@@ -14,7 +14,7 @@ class MovableObstacle:
         self.obstacle_model = MovableObstaclePhysicsModel(position, (16, 16))
 
         render_group.add(self.obstacle_view)
-        render_group.add(self.obstacle_boundary)
+        # render_group.add(self.obstacle_boundary)
 
         self.space = space
         self.render_group = render_group
