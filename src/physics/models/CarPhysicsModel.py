@@ -9,7 +9,8 @@ class CarPhysicsModel:
         (17, 37)
     ]
 
-    def __init__(self, position, size=(50, 100)):
+
+    def __init__(self, position, size=(45, 87)):
         self.body = pymunk.Body(2000, pymunk.moment_for_box(2000, size))
         self.body.position = position
 
