@@ -1,8 +1,7 @@
 import arcade
+from pyglet.math import Vec2 as Vector2D
 
 from src.render.sprites.BasicSprite import BasicSprite
-
-from pyglet.math import Vec2 as Vector2D
 
 
 class Indicator:
@@ -17,7 +16,7 @@ class Indicator:
             height: int = 21,
             border_size: int = 5,
 
-            icon: str = "assets/heart_2.png",
+            icon: str = "assets/pic/heart_2.png",
 
             score_color: arcade.Color = (161, 256, 111),
             trail_color: arcade.Color = (255, 184, 84),

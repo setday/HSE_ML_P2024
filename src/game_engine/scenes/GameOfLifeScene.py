@@ -1,5 +1,5 @@
-import pygame
 import numpy as np
+import pygame
 
 from src.render.RenderGroup import RenderGroup
 
