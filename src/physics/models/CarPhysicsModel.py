@@ -15,7 +15,7 @@ class CarPhysicsModel:
 
         self.shape = None
         if collision_points_set is not None:
-            pymunk.Poly(self.body, collision_points_set)
+            self.shape = pymunk.Poly(self.body, collision_points_set)
         else:
             self.shape = pymunk.Poly.create_box(self.body, (45, 87))
         self.shape.elasticity = 0.5

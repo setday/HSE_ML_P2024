@@ -16,7 +16,7 @@ class Car:
         skin = skins[skin_id % len(skins)]
 
         self.car_view = BasicSprite(skin, position)
-        self.car_model = CarPhysicsModel(position)
+        self.car_model = CarPhysicsModel(position, self.car_view.get_hit_box())
 
         render_group.add(self.car_view)
 
