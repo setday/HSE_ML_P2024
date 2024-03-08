@@ -31,14 +31,16 @@ class MovableObstacle:
         self.obstacle_model.apply_friction()
 
     def sync(self):
-        def inverse_y(pos: Vector2D) -> Vector2D:
-            return Vector2D(pos.x, -pos.y)
+        self.obstacle_view.update_position(self.obstacle_model.body.position)
+        self.obstacle_view.update_angle(degrees(self.obstacle_model.body.angle))
 
-        self.obstacle_view.update_position(inverse_y(self.obstacle_model.body.position))
-        self.obstacle_view.update_angle(-degrees(self.obstacle_model.body.angle))
-
-        self.obstacle_boundary.update_position(inverse_y(self.obstacle_model.body.position))
-        self.obstacle_boundary.update_angle(-degrees(self.obstacle_model.body.angle))
+        self.obstacle_boundary.update_position(self.obstacle_model.body.position)
+        self.obstacle_boundary.update_angle(degrees(self.obstacle_model.body.angle))
 
     def turn_debug_view(self, mode=True):
         pass
+
+    def remove(self):
+        self.obstacle_view.remove_from_sprite_lists()
+        self.obstacle_boundary.remove_from_sprite_lists()
+        self.space.remove(self.obstacle_model.body, self.obstacle_model.shape)

@@ -4,53 +4,52 @@ import time
 import arcade
 import pymunk
 
+from pyglet.math import Vec2 as Vector2D
+
 from src.game_engine.entities.Car import Car
+from src.render.screen_elements.Indicator import Indicator
 from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
 from src.render.RenderGroup import RenderGroup
 from src.render.sprites.BasicSprite import BasicSprite
 from src.game_engine.controllers.Controller import *
 
+from src.game_engine.scenes.game_scene.CollisionHandlers import collision_car_with_car, collision_car_with_obstacle
+
+from src.render.particle.ParticleShow import ParticleShow
+
 
 class GameScene:
     def __init__(self):
+        self.down_render_group = RenderGroup()
         self.render_group = RenderGroup()
+        self.top_render_group = RenderGroup()
         self.space = pymunk.Space()
+        self.particle_show = ParticleShow()
+        self.score = [10000]
 
-        self.score = 10000
+        h_10_10 = self.space.add_collision_handler(10, 10)
+        h_10_10.begin = collision_car_with_car
+        h_10_20 = self.space.add_collision_handler(10, 20)
+        h_10_20.begin = collision_car_with_obstacle
+        h_10_30 = self.space.add_collision_handler(10, 30)
+        h_10_30.begin = collision_car_with_obstacle
 
-        def collision_car_with_car(arbiter, space, data):
-            car1: Car = arbiter.shapes[0].super
-            car2: Car = arbiter.shapes[1].super
+        h_10_10.data["score"] = h_10_20.data["score"] = h_10_30.data["score"] = self.score
+        h_10_10.data["debris_emitter"] = h_10_20.data["debris_emitter"] = \
+            h_10_30.data["debris_emitter"] = self.particle_show
 
-            delta_score = (car1.car_model.body.velocity - car2.car_model.body.velocity).get_length_sqrd() / 30
-            self.score -= delta_score
-
-            health_decreation = max(0, delta_score - 1)
-            car1.health -= health_decreation
-            car2.health -= health_decreation
-
-            return True
-
-        def collision_car_with_O(arbiter, space, data):
-            self.score -= 10
-
-            return True
-
-        h = self.space.add_collision_handler(10, 10)
-        h.begin = collision_car_with_car
-        h = self.space.add_collision_handler(10, 20)
-        h.begin = collision_car_with_O
-        h = self.space.add_collision_handler(10, 30)
-        h.begin = collision_car_with_O
-
-        self.background = BasicSprite("assets/Map.jpg", (0, 0))
+        self.background = BasicSprite("assets/Map.jpg", Vector2D(0, 0))
         self.background.update_scale(10)
 
-        self.render_group.add(self.background)
+        self.down_render_group.add(self.background)
 
         self.car_m = Car(self.render_group, self.space, (0, -100), 0)
+        self.indicator = Indicator(self.car_m)
+        self.render_group.add(self.indicator.sprite_list)
+
         self.car_m.switch_controller(KeyboardController())
+  
         self.cars = [self.car_m]
         for i in range(-5, 5):
             if i == 0:
@@ -72,7 +71,7 @@ class GameScene:
         self.traffic_cones.append(MovableObstacle(self.render_group, self.space, (70 * 4 + 35, -130)))
 
         for i in range(-5, 5):
-            StaticObstacle(self.render_group, self.space, (70 * i, -10))
+            StaticObstacle(self.top_render_group, self.space, (70 * i, -10))
 
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
@@ -91,14 +90,25 @@ class GameScene:
         for car in self.cars:
             car.apply_friction()
             car.sync()
+            for emitter in car.tyre_emitters:
+                emitter.update()
 
         for cone in self.traffic_cones:
             cone.apply_friction()
             cone.sync()
-
+        self.indicator.set_position(
+            self.render_group.camera.get_position(1, 1) - Vector2D(200, 100)
+        )
         self.render_group.camera.set_zoom(1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000)
+        self.particle_show.update()
+        self.indicator.update_bar()
 
     def draw(self):
+        self.down_render_group.draw()
+        for car in self.cars:
+            for emitter in car.tyre_emitters:
+                emitter.draw()
         self.render_group.draw()
-
+        self.particle_show.draw()
+        self.top_render_group.draw()
         self.render_group.camera.use()
