@@ -12,12 +12,16 @@ from src.render.sprites.BasicSprite import BasicSprite
 
 from src.game_engine.scenes.game_scene.CollisionHandlers import collision_car_with_car, collision_car_with_obstacle
 
+from src.render.particle.ParticleShow import ParticleShow
+
 
 class GameScene:
     def __init__(self):
+        self.down_render_group = RenderGroup()
         self.render_group = RenderGroup()
+        self.top_render_group = RenderGroup()
         self.space = pymunk.Space()
-        self.emitter = []
+        self.particle_show = ParticleShow()
         self.score = [10000]
 
         h_10_10 = self.space.add_collision_handler(10, 10)
@@ -29,12 +33,12 @@ class GameScene:
 
         h_10_10.data["score"] = h_10_20.data["score"] = h_10_30.data["score"] = self.score
         h_10_10.data["debris_emitter"] = h_10_20.data["debris_emitter"] = \
-            h_10_30.data["debris_emitter"] = self.create_debris_effect
+            h_10_30.data["debris_emitter"] = self.particle_show
 
         self.background = BasicSprite("assets/Map.jpg", Vector2D(0, 0))
         self.background.update_scale(10)
 
-        self.render_group.add(self.background)
+        self.down_render_group.add(self.background)
 
         self.car_m = Car(self.render_group, self.space, (0, -100), 0)
         self.indicator = Indicator(self.car_m)
@@ -58,7 +62,7 @@ class GameScene:
         self.traffic_cones.append(MovableObstacle(self.render_group, self.space, (70 * 4 + 35, -130)))
 
         for i in range(-5, 5):
-            StaticObstacle(self.render_group, self.space, (70 * i, -10))
+            StaticObstacle(self.top_render_group, self.space, (70 * i, -10))
 
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
@@ -89,6 +93,8 @@ class GameScene:
         for car in self.cars:
             car.apply_friction()
             car.sync()
+            for emitter in car.tyre_emitters:
+                emitter.update()
 
         for cone in self.traffic_cones:
             cone.apply_friction()
@@ -97,29 +103,15 @@ class GameScene:
             self.render_group.camera.get_position(1, 1) - Vector2D(200, 100)
         )
         self.render_group.camera.set_zoom(1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000)
-        for emitter in self.emitter:
-            emitter.update()
-        while len(self.emitter) > 0 and self.emitter[0].get_count() == 0:
-            self.emitter.pop(0)
+        self.particle_show.update()
         self.indicator.update_bar()
 
     def draw(self):
+        self.down_render_group.draw()
+        for car in self.cars:
+            for emitter in car.tyre_emitters:
+                emitter.draw()
         self.render_group.draw()
-        for emitter in self.emitter:
-            emitter.draw()
+        self.particle_show.draw()
+        self.top_render_group.draw()
         self.render_group.camera.use()
-
-    def create_debris_effect(self, center):
-        x, y = center
-
-        self.emitter.append(arcade.make_burst_emitter(
-            center_xy=(x, -y),
-            filenames_and_textures=(":resources:images/pinball/pool_cue_ball.png",
-                                    ":resources:images/space_shooter/meteorGrey_big2.png"),
-            particle_count=5,
-            particle_speed=0.3,
-            particle_lifetime_min=0.75,
-            particle_lifetime_max=1.25,
-            particle_scale=0.13,
-            fade_particles=True
-        ))
