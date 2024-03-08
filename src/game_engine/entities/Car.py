@@ -53,6 +53,15 @@ class Car:
 
         self.sync()
 
+        self.controller = None
+
+    def controlling(self, keys):
+        self.controller.handle_input(keys)
+
+    def switch_controller(self, controller):
+        self.controller = controller
+        controller.connect_car(self)
+
     def apply_friction(self):
         self.car_model.apply_friction()
 
