@@ -112,7 +112,7 @@ class Car:
 
         self.car_boundary.update_color((0, int(max(self.health, 1) * 2.55), 0))
 
-        if self.tyre_state != 0 and not self.is_hand_braking:
+        if self.tyre_state != 0 and (not self.is_hand_braking or self.car_model.body.velocity.get_length_sqrd() < 100):
             self._stop_tyring()
         if self.tyre_state != 1 and self.is_hand_braking and self.car_model.body.velocity.get_length_sqrd() > 100:
             self._start_tyring()
