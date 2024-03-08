@@ -1,17 +1,16 @@
-import random
-import time
-
 import arcade
 import pymunk
 
 from pyglet.math import Vec2 as Vector2D
 
 from src.game_engine.entities.Car import Car
-from src.game_engine.entities.Indicator import Indicator
+from src.render.screen_elements.Indicator import Indicator
 from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
 from src.render.RenderGroup import RenderGroup
 from src.render.sprites.BasicSprite import BasicSprite
+
+from src.game_engine.scenes.game_scene.CollisionHandlers import collision_car_with_car, collision_car_with_obstacle
 
 
 class GameScene:
@@ -19,49 +18,20 @@ class GameScene:
         self.render_group = RenderGroup()
         self.space = pymunk.Space()
         self.emitter = []
-        self.score = 10000
+        self.score = [10000]
 
-        def collision_car_with_car(arbiter, space, data):
-            car1: Car = arbiter.shapes[0].super
-            car2: Car = arbiter.shapes[1].super
-            delta_score = 10 #(car1.car_model.body.velocity - car2.car_model.body.velocity).get_length_sqrd() / 30
-            self.score -= delta_score
+        h_10_10 = self.space.add_collision_handler(10, 10)
+        h_10_10.begin = collision_car_with_car
+        h_10_20 = self.space.add_collision_handler(10, 20)
+        h_10_20.begin = collision_car_with_obstacle
+        h_10_30 = self.space.add_collision_handler(10, 30)
+        h_10_30.begin = collision_car_with_obstacle
 
-            if car1.car_model.body.velocity.get_length_sqrd() > 10:
-                self.create_debris_effect(random.choice(arbiter.contact_point_set.points).point_a)
+        h_10_10.data["score"] = h_10_20.data["score"] = h_10_30.data["score"] = self.score
+        h_10_10.data["debris_emitter"] = h_10_20.data["debris_emitter"] = \
+            h_10_30.data["debris_emitter"] = self.create_debris_effect
 
-            health_decreation = delta_score
-            car1.health -= health_decreation
-            car2.health -= health_decreation
-            return True
-
-        def collision_car_with_O(arbiter, space, data):
-            car = arbiter.shapes[0].super
-            cone = arbiter.shapes[1].super
-            if isinstance(cone, Car):
-                car, cone = cone, car
-            if isinstance(cone, StaticObstacle):
-                delta_score = health_decreation = 10  # car.car_model.body.velocity.get_length_sqrd() / 50
-                self.score -= delta_score
-                self.create_debris_effect(arbiter.contact_point_set.points[0].point_a)
-                car.health -= health_decreation
-                return True
-            delta_score = health_decreation = 5
-            self.score -= delta_score
-            cone.health -= health_decreation
-            if cone.health <= 0:
-                self.create_debris_effect(arbiter.contact_point_set.points[0].point_a)
-                cone.remove()
-            return True
-
-        h = self.space.add_collision_handler(10, 10)
-        h.begin = collision_car_with_car
-        h = self.space.add_collision_handler(10, 20)
-        h.begin = collision_car_with_O
-        h = self.space.add_collision_handler(10, 30)
-        h.begin = collision_car_with_O
-
-        self.background = BasicSprite("assets/Map.jpg", (0, 0))
+        self.background = BasicSprite("assets/Map.jpg", Vector2D(0, 0))
         self.background.update_scale(10)
 
         self.render_group.add(self.background)
