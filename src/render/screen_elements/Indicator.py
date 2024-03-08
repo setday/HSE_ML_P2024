@@ -31,8 +31,8 @@ class Indicator:
         else:
             raise ValueError(f"Invalid owner type: {type(owner)} has no health attribute")
 
-        self.target_health = 200
-        self.current_health = 200
+        self.target_health = 0
+        self.current_health = 0
 
         self.box_width = width
         self.box_height = height
@@ -89,8 +89,7 @@ class Indicator:
             score_color,
         )
 
-        self._update_current_health()
-        self._set_target_health(self.target_health)
+        self.update_bar()
 
         self.icon = BasicSprite(icon, scale=5)
         self.icon.position = (-self.half_box_width, 0)
@@ -107,33 +106,47 @@ class Indicator:
 
         self.set_position(position)
 
+    def _set_score_box(self, new_width) -> None:
+        self.score_box_1.width = new_width
+        self.score_box_2.width = new_width + self.border_width
+        self.score_box_2.left = self.score_box_1.left = self.center_x - self.half_box_width
+
+    def _set_trail_box(self, new_width) -> None:
+        self.trail_box_1.width = new_width
+        self.trail_box_2.width = new_width + self.border_width
+        self.trail_box_2.left = self.trail_box_1.left = self.center_x - self.half_box_width
+
+        self.trail_shadow_box_1.width = new_width + self.border_width
+        self.trail_shadow_box_2.width = new_width + self.border_width * 2
+        self.trail_shadow_box_2.left = self.trail_shadow_box_1.left = self.center_x - self.half_box_width
+
     def _set_target_health(self, new_health) -> None:
         self.target_health = new_health
 
-        self.score_box_1.width = self.target_health
-        self.score_box_2.width = self.target_health + self.border_width
-        self.score_box_2.left = self.score_box_1.left = self.center_x - self.half_box_width
+        if self.target_health < self.current_health:
+            self._set_score_box(self.target_health)
+        else:
+            self._set_trail_box(self.target_health)
 
     def _update_current_health(self) -> None:
         self.current_health -= (self.current_health - self.target_health) * self.change_speed
         if abs(self.current_health - self.target_health) < 1:
             self.current_health = self.target_health
 
-        self.trail_box_1.width = self.current_health
-        self.trail_box_2.width = self.current_health + self.border_width
-        self.trail_box_2.left = self.trail_box_1.left = self.center_x - self.half_box_width
-
-        self.trail_shadow_box_1.width = self.current_health + self.border_width
-        self.trail_shadow_box_2.width = self.current_health + self.border_width * 2
-        self.trail_shadow_box_2.left = self.trail_shadow_box_1.left = self.center_x - self.half_box_width
+        if self.current_health < self.target_health:
+            self._set_score_box(self.current_health)
+        else:
+            self._set_trail_box(self.current_health)
 
     def update_bar(self) -> None:
         new_health = max(0.001, self.owner.health)
 
-        if new_health != self.target_health:
+        if new_health * 2 != self.target_health:
+            print(self.current_health, self.target_health, new_health)
             self._set_target_health(2 * new_health)
 
         if self.current_health != self.target_health:
+            print(self.current_health, self.target_health)
             self._update_current_health()
 
     def set_position(self, new_position) -> None:

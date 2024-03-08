@@ -1,3 +1,6 @@
+import time
+
+import arcade.key
 import pymunk
 from pyglet.math import Vec2 as Vector2D
 
@@ -70,6 +73,13 @@ class GameScene:
 
     def update(self, io_controller, delta_time):
         keys = io_controller.keyboard
+
+        if keys.get(arcade.key.F6, False):
+            image = arcade.get_image()
+            image.save(f"data/screenshots/{time.time()}.png")
+
+        if keys.get(arcade.key.F7, False):
+            self.car_m.health = 100
 
         self.car_m.controlling(keys)
 
