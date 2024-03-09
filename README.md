@@ -19,14 +19,14 @@ pip freeze > requirements.txt
 
 Build debug
 ```shell
-python ./src/main.py
+python ./main.py
 ```
 
 Check build release:
 ```shell
 mypy .
 
-pyinstaller.exe ./src/main.py
+pyinstaller.exe ./main.py
 
 .\build\main\main.exe
 ```
