@@ -77,6 +77,7 @@ class GameScene:
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
         self.parking_place = ParkingPlace(self.render_group, self.space, (-100, 0), (200, 150))
+        self.parking_place.obstacle_boundary.update_color((0, 255, 0))
         h_10_40 = self.space.add_collision_handler(10, 40)
         h_10_40.begin = collision_car_with_parking_place
         h_10_40.separate = end_collision_car_with_parking_place
