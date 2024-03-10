@@ -23,6 +23,16 @@ def collision_car_with_car(arbiter, _, data):
 
     return True
 
+def collision_car_with_parking_place(arbiter, _, data):
+    data["parking_place"].obstacle_boundary.update_color((255, 0, 0))
+
+    return False
+
+def end_collision_car_with_parking_place(arbiter, _, data):
+    data["parking_place"].obstacle_boundary.update_color((0, 255, 0))
+
+    return False
+
 
 def collision_car_with_obstacle(arbiter, _, data):
     car = arbiter.shapes[0].super
