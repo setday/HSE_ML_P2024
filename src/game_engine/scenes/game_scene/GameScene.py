@@ -1,22 +1,18 @@
-import random
 import time
 
-import arcade
+import arcade.key
 import pymunk
-
 from pyglet.math import Vec2 as Vector2D
 
+from src.game_engine.controllers.Controller import *
 from src.game_engine.entities.Car import Car
-from src.render.screen_elements.Indicator import Indicator
 from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
-from src.render.RenderGroup import RenderGroup
-from src.render.sprites.BasicSprite import BasicSprite
-from src.game_engine.controllers.Controller import *
-
 from src.game_engine.scenes.game_scene.CollisionHandlers import collision_car_with_car, collision_car_with_obstacle
-
+from src.render.RenderGroup import RenderGroup
 from src.render.particle.ParticleShow import ParticleShow
+from src.render.screen_elements.Indicator import Indicator
+from src.render.sprites.BasicSprite import BasicSprite
 
 
 class GameScene:
@@ -39,7 +35,7 @@ class GameScene:
         h_10_10.data["debris_emitter"] = h_10_20.data["debris_emitter"] = \
             h_10_30.data["debris_emitter"] = self.particle_show
 
-        self.background = BasicSprite("assets/Map.jpg", Vector2D(0, 0))
+        self.background = BasicSprite("assets/pic/Map.jpg", Vector2D(0, 0))
         self.background.update_scale(10)
 
         self.down_render_group.add(self.background)
@@ -49,7 +45,7 @@ class GameScene:
         self.render_group.add(self.indicator.sprite_list)
 
         self.car_m.switch_controller(KeyboardController())
-  
+
         self.cars = [self.car_m]
         for i in range(-5, 5):
             if i == 0:
@@ -75,7 +71,16 @@ class GameScene:
 
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
-    def update(self, keys, delta_time):
+    def update(self, io_controller, delta_time):
+        keys = io_controller.keyboard
+
+        if keys.get(arcade.key.F6, False):
+            image = arcade.get_image()
+            image.save(f"data/screenshots/{time.time()}.png")
+
+        if keys.get(arcade.key.F7, False):
+            self.car_m.health = 100
+
         self.car_m.controlling(keys)
 
         for car in self.cars:

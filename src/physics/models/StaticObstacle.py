@@ -6,7 +6,7 @@ class StaticObstaclePhysicsModel:
         self.body = pymunk.Body(body_type=pymunk.Body.STATIC)
         self.body.position = position
 
-        self.shape = pymunk.Poly.create_box(self.body, size)
+        self.shape = pymunk.shapes.Circle(self.body, size[0] / 2)
         self.shape.elasticity = 0.5
         self.shape.friction = 1
         self.shape.collision_type = 30

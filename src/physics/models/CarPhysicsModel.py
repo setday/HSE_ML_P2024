@@ -9,11 +9,15 @@ class CarPhysicsModel:
         (17, 37)
     ]
 
-    def __init__(self, position, size=(50, 100)):
-        self.body = pymunk.Body(2000, pymunk.moment_for_box(2000, size))
+    def __init__(self, position, collision_points_set=None):
+        self.body = pymunk.Body(2000, pymunk.moment_for_box(2000, (45, 87)))
         self.body.position = position
 
-        self.shape = pymunk.Poly.create_box(self.body, size)
+        self.shape = None
+        if collision_points_set is not None:
+            self.shape = pymunk.Poly(self.body, collision_points_set)
+        else:
+            self.shape = pymunk.Poly.create_box(self.body, (45, 87))
         self.shape.elasticity = 0.5
         self.shape.friction = 1
         self.shape.collision_type = 10
