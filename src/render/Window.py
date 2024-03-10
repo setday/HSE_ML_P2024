@@ -1,6 +1,5 @@
 import arcade
-
-
+import pyglet
 class IOController:
     def __init__(self):
         self.keyboard = {}
@@ -11,8 +10,11 @@ class IOController:
 
 
 class Window(arcade.Window):
-    def __init__(self, width: int, height: int, title: str):
-        super().__init__(width, height, title)
+    def __init__(self, width: int, height: int, title: str, icon_path: str | None = None):
+        super().__init__(width=width, height=height, title=title, fullscreen=True)
+
+        if icon_path is not None:
+            self.set_icon(pyglet.image.load(icon_path))
 
         self._update_hook = None
         self._draw_hook = None
@@ -43,6 +45,9 @@ class Window(arcade.Window):
             self._update_hook(self._controller, delta_time)
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
+        if symbol == arcade.key.ESCAPE:
+            self.close()
+
         self._controller.keyboard[symbol] = True
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
