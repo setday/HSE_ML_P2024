@@ -49,7 +49,7 @@ class GameScene:
         self.render_group.add(self.indicator.sprite_list)
 
         self.car_m.switch_controller(KeyboardController())
-  
+
         self.cars = [self.car_m]
         for i in range(-5, 5):
             if i == 0:
@@ -74,6 +74,7 @@ class GameScene:
             StaticObstacle(self.top_render_group, self.space, (70 * i, -10))
 
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
+        arcade.load_font('assets/ka1.ttf')
 
     def update(self, keys, delta_time):
         self.car_m.controlling(keys)
@@ -112,3 +113,6 @@ class GameScene:
         self.particle_show.draw()
         self.top_render_group.draw()
         self.render_group.camera.use()
+        arcade.draw_text(str(int(self.score[0])), self.indicator.center_x - self.indicator.box_width / 2,
+                         self.indicator.center_y - 70,
+                         arcade.color.YELLOW, 40, 80, 'right', font_name='Karmatic Arcade')
