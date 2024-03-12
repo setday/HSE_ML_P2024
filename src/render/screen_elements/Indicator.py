@@ -88,7 +88,7 @@ class Indicator:
         self._update_current_health()
         self._set_target_health(self.target_health)
 
-        self.icon = BasicSprite(icon, scale=5)
+        self.icon = BasicSprite(icon, scale=5.5)
         self.icon.position = (-self.half_box_width, 0)
 
         self.sprite_list.append(self.border_box)
