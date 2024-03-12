@@ -8,6 +8,7 @@ from pyglet.math import Vec2 as Vector2D
 
 from src.game_engine.entities.Car import Car
 from src.render.screen_elements.Indicator import Indicator
+from src.render.screen_elements.ScoreDisplay import ScoreDisplay
 from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
 from src.render.RenderGroup import RenderGroup
@@ -26,7 +27,7 @@ class GameScene:
         self.top_render_group = RenderGroup()
         self.space = pymunk.Space()
         self.particle_show = ParticleShow()
-        self.score = [10000]
+        self.score: list[int] = [10000]
 
         h_10_10 = self.space.add_collision_handler(10, 10)
         h_10_10.begin = collision_car_with_car
@@ -74,7 +75,9 @@ class GameScene:
             StaticObstacle(self.top_render_group, self.space, (70 * i, -10))
 
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
-        arcade.load_font('assets/ka1.ttf')
+        self.display = ScoreDisplay(str(self.score[0]), 0, 0, arcade.color.YELLOW_ROSE, 40, 80, 'assets/ka1.ttf',
+                                    'Karmatic Arcade', self.score[0])
+        self.render_group.add(self.display.coin)
 
     def update(self, keys, delta_time):
         self.car_m.controlling(keys)
@@ -103,6 +106,8 @@ class GameScene:
         self.render_group.camera.set_zoom(1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000)
         self.particle_show.update()
         self.indicator.update_bar()
+        self.display.set_position(self.render_group.camera.get_position(1, 1) - Vector2D(290, 170))
+        self.display.update_score(self.score[0])
 
     def draw(self):
         self.down_render_group.draw()
@@ -113,6 +118,4 @@ class GameScene:
         self.particle_show.draw()
         self.top_render_group.draw()
         self.render_group.camera.use()
-        arcade.draw_text(str(int(self.score[0])), self.indicator.center_x - self.indicator.box_width / 2,
-                         self.indicator.center_y - 70,
-                         arcade.color.YELLOW, 40, 80, 'right', font_name='Karmatic Arcade')
+        self.display.draw()
