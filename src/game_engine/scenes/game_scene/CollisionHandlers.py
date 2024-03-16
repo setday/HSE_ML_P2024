@@ -24,31 +24,39 @@ def collision_car_with_car(arbiter, _, data):
     return True
 
 
-def collision_car_with_outer_parking_place(arbiter, _, data):
-    data["parking_place"].inner_obstacle_boundary.update_color((0, 255, 0))
-    data["parking_place"].outer_obstacle_boundary.update_color((0, 255, 0))
-
+def collision_car_with_base_parking_place(arbiter, _, data):
+    data["parking_place"].tr1 = True
+    if data["parking_place"].tr2:
+        data["parking_place"].base_boundary.update_color((255, 0, 0))
+        data["parking_place"].dead_boundary.update_color((255, 0, 0))
+    else:
+        data["parking_place"].base_boundary.update_color((0, 255, 0))
+        data["parking_place"].dead_boundary.update_color((0, 255, 0))
     return False
 
 
-def end_collision_car_with_outer_parking_place(arbiter, _, data):
-    data["parking_place"].inner_obstacle_boundary.update_color((255, 0, 0))
-    data["parking_place"].outer_obstacle_boundary.update_color((255, 0, 0))
-
+def end_collision_car_with_base_parking_place(arbiter, _, data):
+    data["parking_place"].tr1 = False
+    data["parking_place"].base_boundary.update_color((255, 0, 0))
+    data["parking_place"].dead_boundary.update_color((255, 0, 0))
     return False
 
 
-def collision_car_with_inner_parking_place(arbiter, _, data):
-    data["parking_place"].inner_obstacle_boundary.update_color((0, 0, 255))
-    data["parking_place"].outer_obstacle_boundary.update_color((0, 0, 255))
-
+def collision_car_with_dead_parking_place(arbiter, _, data):
+    data["parking_place"].tr2 = True
+    data["parking_place"].base_boundary.update_color((255, 0, 0))
+    data["parking_place"].dead_boundary.update_color((255, 0, 0))
     return False
 
 
-def end_collision_car_with_inner_parking_place(arbiter, _, data):
-    data["parking_place"].inner_obstacle_boundary.update_color((0, 255, 0))
-    data["parking_place"].outer_obstacle_boundary.update_color((0, 255, 0))
-
+def end_collision_car_with_dead_parking_place(arbiter, _, data):
+    data["parking_place"].tr2 = False
+    if data["parking_place"].tr1:
+        data["parking_place"].base_boundary.update_color((0, 255, 0))
+        data["parking_place"].dead_boundary.update_color((0, 255, 0))
+    else:
+        data["parking_place"].base_boundary.update_color((255, 0, 0))
+        data["parking_place"].dead_boundary.update_color((255, 0, 0))
     return False
 
 
