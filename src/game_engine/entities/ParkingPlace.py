@@ -15,8 +15,8 @@ class ParkingPlace:
         render_group.add(self.base_boundary)
         render_group.add(self.dead_boundary)
 
-        self.tr1 = False
-        self.tr2 = False
+        self.tr1 = 0
+        self.tr2 = 0
 
         # self.preview = [
         #     BasicRect(margin, size[1], Vec2(position[0] - size[0] / 2 + margin / 2, position[1])),
