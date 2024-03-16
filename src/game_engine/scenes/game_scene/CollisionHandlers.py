@@ -23,13 +23,31 @@ def collision_car_with_car(arbiter, _, data):
 
     return True
 
-def collision_car_with_parking_place(arbiter, _, data):
-    data["parking_place"].obstacle_boundary.update_color((255, 0, 0))
+
+def collision_car_with_outer_parking_place(arbiter, _, data):
+    data["parking_place"].inner_obstacle_boundary.update_color((0, 255, 0))
+    data["parking_place"].outer_obstacle_boundary.update_color((0, 255, 0))
 
     return False
 
-def end_collision_car_with_parking_place(arbiter, _, data):
-    data["parking_place"].obstacle_boundary.update_color((0, 255, 0))
+
+def end_collision_car_with_outer_parking_place(arbiter, _, data):
+    data["parking_place"].inner_obstacle_boundary.update_color((255, 0, 0))
+    data["parking_place"].outer_obstacle_boundary.update_color((255, 0, 0))
+
+    return False
+
+
+def collision_car_with_inner_parking_place(arbiter, _, data):
+    data["parking_place"].inner_obstacle_boundary.update_color((0, 0, 255))
+    data["parking_place"].outer_obstacle_boundary.update_color((0, 0, 255))
+
+    return False
+
+
+def end_collision_car_with_inner_parking_place(arbiter, _, data):
+    data["parking_place"].inner_obstacle_boundary.update_color((0, 255, 0))
+    data["parking_place"].outer_obstacle_boundary.update_color((0, 255, 0))
 
     return False
 

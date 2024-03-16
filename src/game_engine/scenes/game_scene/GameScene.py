@@ -20,6 +20,7 @@ from src.render.particle.ParticleShow import ParticleShow
 
 from src.game_engine.entities.ParkingPlace import ParkingPlace
 
+
 class GameScene:
     def __init__(self):
         self.down_render_group = RenderGroup()
@@ -50,7 +51,7 @@ class GameScene:
         self.render_group.add(self.indicator.sprite_list)
 
         self.car_m.switch_controller(KeyboardController())
-  
+
         self.cars = [self.car_m]
         # for i in range(-5, 5):
         #     if i == 0:
@@ -76,12 +77,17 @@ class GameScene:
 
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
-        self.parking_place = ParkingPlace(self.render_group, self.space, (-100, 0), (200, 150))
-        self.parking_place.obstacle_boundary.update_color((0, 255, 0))
-        h_10_40 = self.space.add_collision_handler(10, 40)
-        h_10_40.begin = collision_car_with_parking_place
-        h_10_40.separate = end_collision_car_with_parking_place
-        h_10_40.data["parking_place"] = self.parking_place
+        self.parking_place = ParkingPlace(self.render_group, self.space, (-100, 0), (200, 150), 50)
+        self.parking_place.inner_obstacle_boundary.update_color((0, 255, 0))
+        self.parking_place.outer_obstacle_boundary.update_color((0, 255, 0))
+        h_10_41 = self.space.add_collision_handler(10, 42)
+        h_10_41.begin = collision_car_with_outer_parking_place
+        h_10_41.separate = end_collision_car_with_outer_parking_place
+        h_10_41.data["parking_place"] = self.parking_place
+        h_10_42 = self.space.add_collision_handler(10, 41)
+        h_10_42.begin = collision_car_with_inner_parking_place
+        h_10_42.separate = end_collision_car_with_inner_parking_place
+        h_10_42.data["parking_place"] = self.parking_place
 
     def update(self, keys, delta_time):
         self.car_m.controlling(keys)
