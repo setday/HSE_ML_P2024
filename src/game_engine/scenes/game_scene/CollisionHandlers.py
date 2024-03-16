@@ -44,6 +44,10 @@ def end_collision_car_with_dead_parking_place(arbiter, _, data):
     return False
 
 
+def ignore_collision_car_with_parking_place(arbiter, _, data):
+    return False
+
+
 def collision_car_with_obstacle(arbiter, _, data):
     car = arbiter.shapes[0].super
     cone = arbiter.shapes[1].super

@@ -78,9 +78,11 @@ class GameScene:
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
         self.parking_places = list()
-        self.add_parking_place((300, 300), (200, 150), 10, [self.car_m], [10], [41, 42])
+        self.add_parking_place((300, 300), (200, 150), 10, [self.car_m], [10], [41, 42], [])
+        self.add_parking_place((0, 300), (200, 150), 10, [self.car_m], [10], [43, 44], [])
+        self.add_parking_place((0, -300), (200, 150), 10, [], [], [100, 101], [10])
 
-    def add_parking_place(self, position, size, offset, cars, car_ids, free_collision_ids):
+    def add_parking_place(self, position, size, offset, cars, car_ids, free_collision_ids, ignore_car_ids):
         parking_place = ParkingPlace(self.render_group, self.space, position, size, offset, free_collision_ids)
 
         for i in range(len(cars)):
@@ -97,6 +99,13 @@ class GameScene:
             dead_handler.separate = end_collision_car_with_dead_parking_place
             dead_handler.data["parking_place"] = parking_place
             dead_handler.data["car"] = cars[i]
+
+        for car_id in ignore_car_ids:
+            ignore_base_handler = self.space.add_collision_handler(car_id, free_collision_ids[0])
+            ignore_base_handler.begin = ignore_collision_car_with_parking_place
+
+            ignore_dead_handler = self.space.add_collision_handler(car_id, free_collision_ids[1])
+            ignore_dead_handler.begin = ignore_collision_car_with_parking_place
 
         self.parking_places.append(parking_place)
 
@@ -128,10 +137,11 @@ class GameScene:
         self.particle_show.update()
         self.indicator.update_bar()
 
-        if self.parking_places[0].is_car_inside(self.car_m):
-            self.parking_places[0].update_color((0, 255, 0))
-        else:
-            self.parking_places[0].update_color((255, 0, 0))
+        for parking_place in self.parking_places:
+            if parking_place.is_car_inside(self.car_m):
+                parking_place.update_color((0, 255, 0))
+            else:
+                parking_place.update_color((255, 0, 0))
 
     def draw(self):
         self.down_render_group.draw()
