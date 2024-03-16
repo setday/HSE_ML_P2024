@@ -77,19 +77,28 @@ class GameScene:
 
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
-        self.parking_place = ParkingPlace(self.render_group, self.space, (300, 300), (200, 150), 10)
-        self.parking_place.base_boundary.update_color((255, 0, 0))
-        self.parking_place.dead_boundary.update_color((255, 0, 0))
+        self.parking_places = list()
+        self.add_parking_place((300, 300), (200, 150), 10, [self.car_m], [10], [41, 42])
 
-        h_10_41 = self.space.add_collision_handler(10, 41)
-        h_10_41.begin = collision_car_with_base_parking_place
-        h_10_41.separate = end_collision_car_with_base_parking_place
-        h_10_41.data["parking_place"] = self.parking_place
+    def add_parking_place(self, position, size, offset, cars, car_ids, free_collision_ids):
+        parking_place = ParkingPlace(self.render_group, self.space, position, size, offset, free_collision_ids)
 
-        h_10_42 = self.space.add_collision_handler(10, 42)
-        h_10_42.begin = collision_car_with_dead_parking_place
-        h_10_42.separate = end_collision_car_with_dead_parking_place
-        h_10_42.data["parking_place"] = self.parking_place
+        for i in range(len(cars)):
+            parking_place.num_of_intersect_edges[cars[i]] = 0
+
+            base_handler = self.space.add_collision_handler(car_ids[i], free_collision_ids[0])
+            base_handler.begin = collision_car_with_base_parking_place
+            base_handler.separate = end_collision_car_with_base_parking_place
+            base_handler.data["parking_place"] = parking_place
+            base_handler.data["car"] = cars[i]
+
+            dead_handler = self.space.add_collision_handler(car_ids[i], free_collision_ids[1])
+            dead_handler.begin = collision_car_with_dead_parking_place
+            dead_handler.separate = end_collision_car_with_dead_parking_place
+            dead_handler.data["parking_place"] = parking_place
+            dead_handler.data["car"] = cars[i]
+
+        self.parking_places.append(parking_place)
 
     def update(self, keys, delta_time):
         self.car_m.controlling(keys)
@@ -118,6 +127,11 @@ class GameScene:
         self.render_group.camera.set_zoom(1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000)
         self.particle_show.update()
         self.indicator.update_bar()
+
+        if self.parking_places[0].is_car_inside(self.car_m):
+            self.parking_places[0].update_color((0, 255, 0))
+        else:
+            self.parking_places[0].update_color((255, 0, 0))
 
     def draw(self):
         self.down_render_group.draw()

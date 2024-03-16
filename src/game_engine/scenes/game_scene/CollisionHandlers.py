@@ -25,38 +25,22 @@ def collision_car_with_car(arbiter, _, data):
 
 
 def collision_car_with_base_parking_place(arbiter, _, data):
-    data["parking_place"].tr1 = 1
-    if data["parking_place"].tr2 > 0:
-        data["parking_place"].base_boundary.update_color((255, 0, 0))
-        data["parking_place"].dead_boundary.update_color((255, 0, 0))
-    else:
-        data["parking_place"].base_boundary.update_color((0, 255, 0))
-        data["parking_place"].dead_boundary.update_color((0, 255, 0))
+    data["parking_place"].touching_cars.add(data["car"])
     return False
 
 
 def end_collision_car_with_base_parking_place(arbiter, _, data):
-    data["parking_place"].tr1 = 0
-    data["parking_place"].base_boundary.update_color((255, 0, 0))
-    data["parking_place"].dead_boundary.update_color((255, 0, 0))
+    data["parking_place"].touching_cars.remove(data["car"])
     return False
 
 
 def collision_car_with_dead_parking_place(arbiter, _, data):
-    data["parking_place"].tr2 += 1
-    data["parking_place"].base_boundary.update_color((255, 0, 0))
-    data["parking_place"].dead_boundary.update_color((255, 0, 0))
+    data["parking_place"].num_of_intersect_edges[data["car"]] += 1
     return False
 
 
 def end_collision_car_with_dead_parking_place(arbiter, _, data):
-    data["parking_place"].tr2 -= 1
-    if data["parking_place"].tr1 == 1 and data["parking_place"].tr2 == 0:
-        data["parking_place"].base_boundary.update_color((0, 255, 0))
-        data["parking_place"].dead_boundary.update_color((0, 255, 0))
-    else:
-        data["parking_place"].base_boundary.update_color((255, 0, 0))
-        data["parking_place"].dead_boundary.update_color((255, 0, 0))
+    data["parking_place"].num_of_intersect_edges[data["car"]] -= 1
     return False
 
 
