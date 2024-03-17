@@ -1,3 +1,5 @@
+from math import radians, degrees
+
 from pyglet.math import Vec2 as Vector2D
 from pymunk import Space
 
@@ -38,7 +40,7 @@ class ObjectFactory:
             'red_car': 1,
             'long_car': 2,
         }
-        return Car(render_group, space, position, angle, car_model_dict[car_model])
+        return Car(render_group, space, position, radians(angle), car_model_dict[car_model])
 
     @staticmethod
     def create_movable_obstacle(render_group: RenderGroup,
@@ -49,7 +51,7 @@ class ObjectFactory:
         movable_obstacle_model_dict = {
             'cone': 'assets/pic/obstacles/Traffic_Cone.png',
         }
-        return MovableObstacle(render_group, space, position, angle,
+        return MovableObstacle(render_group, space, position, radians(angle),
                                movable_obstacle_model_dict[movable_obstacle_model])
 
     @staticmethod
@@ -66,8 +68,10 @@ class ObjectFactory:
             'x_barrier': None,
             'y_barrier': None,
         }
-        shape_type = static_obstacle_model if (
-                static_obstacle_model == 'x_barrier' or static_obstacle_model == 'y_barrier'
-        ) else 'circle'
-        return StaticObstacle(render_group, space, position, angle,
+        shape_type = 'self'
+        if static_obstacle_model in ['x_barrier', 'y_barrier']:
+            shape_type = static_obstacle_model
+        if static_obstacle_model == 'tree':
+            shape_type = 'circle'
+        return StaticObstacle(render_group, space, position, radians(angle),
                               static_obstacle_model_dict[static_obstacle_model], shape_type)

@@ -105,8 +105,19 @@ class GameScene:
 
         for i in range(-5, 5):
             ObjectFactory.create_object(
-                self.render_group, self.space, 'static_obstacle', Vector2D(70 * i, -10),
+                self.top_render_group, self.space, 'static_obstacle', Vector2D(70 * i, -10),
                 static_obstacle_model='tree'
+            )
+
+        for i in range(-5, 4):
+            ObjectFactory.create_object(
+                self.render_group, self.space, 'static_obstacle', Vector2D(70 * i + 35, -100), 90,
+                static_obstacle_model='metal_pipe'
+            )
+        for i in range(-5, 5):
+            ObjectFactory.create_object(
+                self.render_group, self.space, 'static_obstacle', Vector2D(70 * i, -50),
+                static_obstacle_model='rubbish_line'
             )
 
         ObjectFactory.create_object(

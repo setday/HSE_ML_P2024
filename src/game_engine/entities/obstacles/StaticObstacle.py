@@ -27,7 +27,10 @@ class StaticObstacle:
         if shape_type == 'circle':
             shape_size = 10
 
-        self.obstacle_model = StaticObstaclePhysicsModel((x, y), shape_type, shape_size)
+        if shape_type != 'self':
+            self.obstacle_model = StaticObstaclePhysicsModel((x, y), shape_type, shape_size)
+        else:
+            self.obstacle_model = StaticObstaclePhysicsModel((x, y), 'polygon', 0, self.obstacle_view.get_hit_box())
         self.obstacle_model.body.angle = angle
 
         if self.obstacle_view is not None:
