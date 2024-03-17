@@ -7,13 +7,12 @@ from pyglet.math import Vec2 as Vector2D
 from src.game_engine.controllers.Controller import *
 from src.game_engine.entities.Car import Car
 from src.render.screen_elements.ScoreDisplay import ScoreDisplay
-from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
-from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
 from src.game_engine.scenes.game_scene.CollisionHandlers import collision_car_with_car, collision_car_with_obstacle
 from src.render.RenderGroup import RenderGroup
 from src.render.particle.ParticleShow import ParticleShow
 from src.render.screen_elements.Indicator import Indicator
 from src.render.sprites.BasicSprite import BasicSprite
+from src.game_engine.scenes.game_scene.SceneSetup import SceneSetup
 
 
 class GameScene:
@@ -36,41 +35,22 @@ class GameScene:
         h_10_10.data["debris_emitter"] = h_10_20.data["debris_emitter"] = \
             h_10_30.data["debris_emitter"] = self.particle_show
 
-        self.background = BasicSprite("assets/pic/Map.jpg", Vector2D(0, 0))
-        self.background.update_scale(10)
+        self.background = BasicSprite("assets/pic/Map3.jpeg", Vector2D(0, 0))
+        self.background.update_scale(2)
 
         self.down_render_group.add(self.background)
 
-        self.car_m = Car(self.render_group, self.space, (0, -100), 0)
+        self.car_m = Car(self.render_group, self.space, (150, 200), 0)
 
         self.car_m.switch_controller(KeyboardController())
 
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
-
         self.cars = [self.car_m]
-        for i in range(-5, 5):
-            if i == 0:
-                continue
-            car = Car(self.render_group, self.space, (70 * i, -100), 1)
-            car.switch_controller(random.choice([RandomController(), AIController(), BrakeController()]))
-            self.cars.append(car)
 
         self.traffic_cones = []
-        for i in range(-5, 5):
-            self.traffic_cones.append(MovableObstacle(self.render_group, self.space, (70 * i, -170)))
 
-        self.traffic_cones.append(MovableObstacle(self.render_group, self.space, (70 * -5 - 35, -70)))
-        self.traffic_cones.append(MovableObstacle(self.render_group, self.space, (70 * -5 - 40, -100)))
-        self.traffic_cones.append(MovableObstacle(self.render_group, self.space, (70 * -5 - 35, -130)))
-
-        self.traffic_cones.append(MovableObstacle(self.render_group, self.space, (70 * 4 + 35, -70)))
-        self.traffic_cones.append(MovableObstacle(self.render_group, self.space, (70 * 4 + 40, -100)))
-        self.traffic_cones.append(MovableObstacle(self.render_group, self.space, (70 * 4 + 35, -130)))
-
-        for i in range(-5, 5):
-            StaticObstacle(self.top_render_group, self.space, (70 * i, -10))
-
+        SceneSetup(self)
         ######################
         # Screen Elements
         ######################
@@ -85,6 +65,7 @@ class GameScene:
                                         color=(255, 220, 40),
                                         font_path='assets/ka1.ttf', font_name='Karmatic Arcade')
         self.screen_group.add(self.score_board.sprite_list)
+
 
     def update(self, io_controller, delta_time):
         keys = io_controller.keyboard
