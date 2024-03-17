@@ -25,26 +25,50 @@ def collision_car_with_car(arbiter, _, data):
 
 
 def collision_car_with_base_parking_place(arbiter, _, data):
-    data["parking_place"].touching_cars.add(data["car"])
+    car = arbiter.shapes[0].super
+    parking_place = arbiter.shapes[1].super
+
+    if isinstance(parking_place, Car):
+        car, parking_place = parking_place, car
+
+    if parking_place in car.avaiable_parking_places:
+        parking_place.touching_cars.add(car)
     return False
 
 
 def end_collision_car_with_base_parking_place(arbiter, _, data):
-    data["parking_place"].touching_cars.remove(data["car"])
+    car = arbiter.shapes[0].super
+    parking_place = arbiter.shapes[1].super
+
+    if isinstance(parking_place, Car):
+        car, parking_place = parking_place, car
+
+    if parking_place in car.avaiable_parking_places:
+        parking_place.touching_cars.remove(car)
     return False
 
 
 def collision_car_with_dead_parking_place(arbiter, _, data):
-    data["parking_place"].num_of_intersect_edges[data["car"]] += 1
+    car = arbiter.shapes[0].super
+    parking_place = arbiter.shapes[1].super
+
+    if isinstance(parking_place, Car):
+        car, parking_place = parking_place, car
+
+    if parking_place in car.avaiable_parking_places:
+        parking_place.num_of_intersect_edges_by_car[car] += 1
     return False
 
 
 def end_collision_car_with_dead_parking_place(arbiter, _, data):
-    data["parking_place"].num_of_intersect_edges[data["car"]] -= 1
-    return False
+    car = arbiter.shapes[0].super
+    parking_place = arbiter.shapes[1].super
 
+    if isinstance(parking_place, Car):
+        car, parking_place = parking_place, car
 
-def ignore_collision_car_with_parking_place(arbiter, _, data):
+    if parking_place in car.avaiable_parking_places:
+        parking_place.num_of_intersect_edges_by_car[car] -= 1
     return False
 
 

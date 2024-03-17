@@ -78,34 +78,25 @@ class GameScene:
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
         self.parking_places = list()
-        self.add_parking_place((300, 300), (200, 150), 10, [self.car_m], [10], [41, 42], [])
-        self.add_parking_place((0, 300), (200, 150), 10, [self.car_m], [10], [43, 44], [])
-        self.add_parking_place((0, -300), (200, 150), 10, [], [], [100, 101], [10])
 
-    def add_parking_place(self, position, size, offset, cars, car_ids, free_collision_ids, ignore_car_ids):
-        parking_place = ParkingPlace(self.render_group, self.space, position, size, offset, free_collision_ids)
+        base_handler = self.space.add_collision_handler(10, 40)
+        base_handler.begin = collision_car_with_base_parking_place
+        base_handler.separate = end_collision_car_with_base_parking_place
+        dead_handler = self.space.add_collision_handler(10, 41)
+        dead_handler.begin = collision_car_with_dead_parking_place
+        dead_handler.separate = end_collision_car_with_dead_parking_place
+
+        self.add_parking_place((300, 300), (200, 150), 10, [self.car_m])
+        self.add_parking_place((0, 300), (200, 150), 10, [self.car_m])
+        self.add_parking_place((0, -300), (200, 150), 10, [])
+
+        self.tmp_cnt = 0
+
+    def add_parking_place(self, position, size, offset, cars):
+        parking_place = ParkingPlace(self.render_group, self.space, position, size, offset, cars)
 
         for i in range(len(cars)):
-            parking_place.num_of_intersect_edges[cars[i]] = 0
-
-            base_handler = self.space.add_collision_handler(car_ids[i], free_collision_ids[0])
-            base_handler.begin = collision_car_with_base_parking_place
-            base_handler.separate = end_collision_car_with_base_parking_place
-            base_handler.data["parking_place"] = parking_place
-            base_handler.data["car"] = cars[i]
-
-            dead_handler = self.space.add_collision_handler(car_ids[i], free_collision_ids[1])
-            dead_handler.begin = collision_car_with_dead_parking_place
-            dead_handler.separate = end_collision_car_with_dead_parking_place
-            dead_handler.data["parking_place"] = parking_place
-            dead_handler.data["car"] = cars[i]
-
-        for car_id in ignore_car_ids:
-            ignore_base_handler = self.space.add_collision_handler(car_id, free_collision_ids[0])
-            ignore_base_handler.begin = ignore_collision_car_with_parking_place
-
-            ignore_dead_handler = self.space.add_collision_handler(car_id, free_collision_ids[1])
-            ignore_dead_handler.begin = ignore_collision_car_with_parking_place
+            cars[i].avaiable_parking_places.add(parking_place)
 
         self.parking_places.append(parking_place)
 
@@ -142,6 +133,10 @@ class GameScene:
                 parking_place.update_color((0, 255, 0))
             else:
                 parking_place.update_color((255, 0, 0))
+
+        if self.car_m.is_parked():
+            print("WIN!", self.tmp_cnt)
+        self.tmp_cnt += 1
 
     def draw(self):
         self.down_render_group.draw()

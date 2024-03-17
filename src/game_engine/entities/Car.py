@@ -55,6 +55,16 @@ class Car:
 
         self.controller = None
 
+        self.avaiable_parking_places = set()
+
+    def is_parked(self):
+        if self.car_model.body.velocity.get_length_sqrd() > 0.1:
+            return False
+        for parking_place in self.avaiable_parking_places:
+            if parking_place.is_car_inside(self):
+                return True
+        return False
+
     def controlling(self, keys):
         self.controller.handle_input(keys)
 
@@ -126,8 +136,8 @@ class Car:
         lft = Vec2d(0, 1).rotated(self.car_model.body.angle)
 
         for i in range(4):
-            offset = fwd * CarPhysicsModel.wheels_offset[i][0] + lft * CarPhysicsModel.wheels_offset[i][1] -\
-                self.car_model.body.position
+            offset = fwd * CarPhysicsModel.wheels_offset[i][0] + lft * CarPhysicsModel.wheels_offset[i][1] - \
+                     self.car_model.body.position
 
             self.tyre_emitters[i].center_x = -offset.x
             self.tyre_emitters[i].center_y = offset.y
@@ -137,7 +147,7 @@ class Car:
                 change_xy=(0, 0),
                 lifetime=1,
                 scale=1,
-                angle=90-d_angle,
+                angle=90 - d_angle,
             )
 
     def turn_debug_view(self, mode=True):
