@@ -3,7 +3,7 @@ from src.render.sprites.BasicRect import BasicRect
 
 
 class ParkingPlace:
-    def __init__(self, render_group, space, position, size, offset, cars):
+    def __init__(self, render_group, space, position, size, offset):
         self.base_boundary = BasicRect(*size, position)
         self.dead_boundary = BasicRect(size[0] - offset, size[1] - offset, position)
         self.parking_model = ParkingPlacePhysicsModel(position, size, offset)
@@ -12,9 +12,6 @@ class ParkingPlace:
         render_group.add(self.dead_boundary)
 
         self.update_color((255, 0, 0))
-
-        self.touching_cars = set()
-        self.num_of_intersect_edges_by_car = {car: 0 for car in cars}
 
         self.space = space
         self.render_group = render_group
@@ -29,6 +26,3 @@ class ParkingPlace:
     def update_color(self, color):
         self.base_boundary.update_color(color)
         self.dead_boundary.update_color(color)
-
-    def is_car_inside(self, car):
-        return car in self.touching_cars and self.num_of_intersect_edges_by_car[car] == 0

@@ -31,8 +31,11 @@ def collision_car_with_base_parking_place(arbiter, _, data):
     if isinstance(parking_place, Car):
         car, parking_place = parking_place, car
 
-    if parking_place in car.avaiable_parking_places:
-        parking_place.touching_cars.add(car)
+    if parking_place in car.linked_parking_places:
+        car.linked_parking_places[parking_place][0] = 1
+        if car.linked_parking_places[parking_place][1] == 0:
+            car.inside_parking_place_cnt += 1
+            parking_place.update_color((0, 255, 0))
 
     return False
 
@@ -44,8 +47,11 @@ def end_collision_car_with_base_parking_place(arbiter, _, data):
     if isinstance(parking_place, Car):
         car, parking_place = parking_place, car
 
-    if parking_place in car.avaiable_parking_places:
-        parking_place.touching_cars.remove(car)
+    if parking_place in car.linked_parking_places:
+        car.linked_parking_places[parking_place][0] = 0
+        if car.linked_parking_places[parking_place][1] == 0:
+            car.inside_parking_place_cnt -= 1
+            parking_place.update_color((255, 0, 0))
 
     return False
 
@@ -57,8 +63,12 @@ def collision_car_with_dead_parking_place(arbiter, _, data):
     if isinstance(parking_place, Car):
         car, parking_place = parking_place, car
 
-    if parking_place in car.avaiable_parking_places:
-        parking_place.num_of_intersect_edges_by_car[car] += 1
+    if parking_place in car.linked_parking_places:
+        if car.linked_parking_places[parking_place][1] == 0 and car.linked_parking_places[parking_place][0] == 1:
+            car.inside_parking_place_cnt -= 1
+            parking_place.update_color((255, 0, 0))
+        car.linked_parking_places[parking_place][1] += 1
+
     return False
 
 
@@ -69,8 +79,12 @@ def end_collision_car_with_dead_parking_place(arbiter, _, data):
     if isinstance(parking_place, Car):
         car, parking_place = parking_place, car
 
-    if parking_place in car.avaiable_parking_places:
-        parking_place.num_of_intersect_edges_by_car[car] -= 1
+    if parking_place in car.linked_parking_places:
+        car.linked_parking_places[parking_place][1] -= 1
+        if car.linked_parking_places[parking_place][1] == 0 and car.linked_parking_places[parking_place][0] == 1:
+            car.inside_parking_place_cnt += 1
+            parking_place.update_color((0, 255, 0))
+
     return False
 
 

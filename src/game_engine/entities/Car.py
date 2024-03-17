@@ -55,15 +55,18 @@ class Car:
 
         self.controller = None
 
-        self.avaiable_parking_places = set()
+        self.linked_parking_places = dict()
+        self.inside_parking_place_cnt = 0
+
+    def link_parking_place(self, parking_place):
+        self.linked_parking_places[parking_place] = [0, 0]
+
+    def unlink_parking_place(self, parking_place):
+        if parking_place in self.linked_parking_places:
+            del self.linked_parking_places[parking_place]
 
     def is_parked(self):
-        if self.car_model.body.velocity.get_length_sqrd() > 0.2:
-            return False
-        for parking_place in self.avaiable_parking_places:
-            if parking_place.is_car_inside(self):
-                return True
-        return False
+        return self.car_model.body.velocity.get_length_sqrd() <= 0.2 and self.inside_parking_place_cnt > 0
 
     def controlling(self, keys):
         self.controller.handle_input(keys)

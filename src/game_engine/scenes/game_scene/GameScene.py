@@ -93,10 +93,10 @@ class GameScene:
         self.win_state = False
 
     def add_parking_place(self, position, size, offset, cars):
-        parking_place = ParkingPlace(self.render_group, self.space, position, size, offset, cars)
+        parking_place = ParkingPlace(self.render_group, self.space, position, size, offset)
 
         for i in range(len(cars)):
-            cars[i].avaiable_parking_places.add(parking_place)
+            cars[i].link_parking_place(parking_place)
 
         self.parking_places.append(parking_place)
 
@@ -127,12 +127,6 @@ class GameScene:
         self.render_group.camera.set_zoom(1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000)
         self.particle_show.update()
         self.indicator.update_bar()
-
-        for parking_place in self.parking_places:
-            if parking_place.is_car_inside(self.car_m):
-                parking_place.update_color((0, 255, 0))
-            else:
-                parking_place.update_color((255, 0, 0))
 
         if self.win_state ^ self.car_m.is_parked():
             self.win_state = not self.win_state
