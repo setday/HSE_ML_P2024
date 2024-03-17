@@ -7,17 +7,13 @@ from src.render.sprites.BasicSprite import BasicSprite
 class Indicator:
     def __init__(
             self,
-
             owner,
-
             position: Vector2D = Vector2D(300, 300),
-
             width: int = 200,
             height: int = 21,
             border_size: int = 5,
 
             icon: str = "assets/pic/heart_2.png",
-
             score_color: arcade.Color = (161, 256, 111),
             trail_color: arcade.Color = (255, 184, 84),
             background_color: arcade.Color = (135, 135, 135),
@@ -91,7 +87,7 @@ class Indicator:
 
         self.update_bar()
 
-        self.icon = BasicSprite(icon, scale=5)
+        self.icon = BasicSprite(icon, scale=5.5)
         self.icon.position = (-self.half_box_width, 0)
 
         self.sprite_list.append(self.border_box)
