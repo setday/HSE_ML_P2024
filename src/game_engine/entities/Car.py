@@ -58,7 +58,7 @@ class Car:
         self.avaiable_parking_places = set()
 
     def is_parked(self):
-        if self.car_model.body.velocity.get_length_sqrd() > 0.1:
+        if self.car_model.body.velocity.get_length_sqrd() > 0.2:
             return False
         for parking_place in self.avaiable_parking_places:
             if parking_place.is_car_inside(self):

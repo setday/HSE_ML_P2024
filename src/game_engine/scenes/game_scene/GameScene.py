@@ -90,7 +90,7 @@ class GameScene:
         self.add_parking_place((0, 300), (200, 150), 10, [self.car_m])
         self.add_parking_place((0, -300), (200, 150), 10, [])
 
-        self.tmp_cnt = 0
+        self.win_state = False
 
     def add_parking_place(self, position, size, offset, cars):
         parking_place = ParkingPlace(self.render_group, self.space, position, size, offset, cars)
@@ -134,9 +134,12 @@ class GameScene:
             else:
                 parking_place.update_color((255, 0, 0))
 
-        if self.car_m.is_parked():
-            print("WIN!", self.tmp_cnt)
-        self.tmp_cnt += 1
+        if self.win_state ^ self.car_m.is_parked():
+            self.win_state = not self.win_state
+            if self.win_state:
+                print("You win")
+            else:
+                print("You out")
 
     def draw(self):
         self.down_render_group.draw()

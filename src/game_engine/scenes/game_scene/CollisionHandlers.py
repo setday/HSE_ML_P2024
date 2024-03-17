@@ -33,6 +33,7 @@ def collision_car_with_base_parking_place(arbiter, _, data):
 
     if parking_place in car.avaiable_parking_places:
         parking_place.touching_cars.add(car)
+
     return False
 
 
@@ -45,6 +46,7 @@ def end_collision_car_with_base_parking_place(arbiter, _, data):
 
     if parking_place in car.avaiable_parking_places:
         parking_place.touching_cars.remove(car)
+
     return False
 
 
