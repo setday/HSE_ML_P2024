@@ -13,7 +13,11 @@ class Indicator:
             height: int = 21,
             border_size: int = 5,
 
-            icon: str = "assets/pic/heart_2.png",
+# <<<<<<< HEAD
+#             icon: str = "assets/pic/heart_2.png",
+# =======
+             icon: str = "assets/pic/icon/heart_2.png",
+# >>>>>>> object-factory
             score_color: arcade.Color = (161, 256, 111),
             trail_color: arcade.Color = (255, 184, 84),
             background_color: arcade.Color = (135, 135, 135),

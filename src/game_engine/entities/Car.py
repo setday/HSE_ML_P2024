@@ -10,14 +10,18 @@ from src.render.sprites.BasicSprite import BasicSprite
 
 
 class Car:
-    def __init__(self, render_group, space, position=(300, 300), skin_id=-1, rotate=False):
-        skins = ["assets/pic/car_2.png", "assets/pic/car_3.png", "assets/pic/car_1.png"]
+    def __init__(self, render_group, space, position=(300, 300), angle=0, skin_id=-1, rotate=False):
+        skins = ["assets/pic/cars/car_2.png", "assets/pic/cars/car_3.png", "assets/pic/cars/car_1.png"]
         if skin_id == -1:
             skin_id = random.randint(0, len(skins) - 1)
         skin = skins[skin_id % len(skins)]
 
+        x, y = position
+
         self.car_view = BasicSprite(skin, position)
-        self.car_model = CarPhysicsModel(position, self.car_view.get_hit_box())
+        self.car_model = CarPhysicsModel((x, y), self.car_view.get_hit_box())
+
+        self.car_model.body.angle = angle
 
         render_group.add(self.car_view)
 
@@ -132,7 +136,7 @@ class Car:
             self.tyre_emitters[i].center_y = offset.y
 
             self.tyre_emitters[i].particle_factory = lambda emitter: arcade.FadeParticle(
-                filename_or_texture='assets/pic/tyre_trail.png',
+                filename_or_texture='assets/pic/extra/tyre_trail.png',
                 change_xy=(0, 0),
                 lifetime=1,
                 scale=1,

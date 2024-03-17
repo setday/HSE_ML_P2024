@@ -9,12 +9,12 @@ class ScoreDisplay:
     def __init__(self,
                  score=0,
                  position: Vector2D = Vector2D(300, 300),
-                 font_path='assets/ka1.ttf',
+                 font_path='assets/fnt/ka1.ttf',
                  font_name='Karmatic Arcade',
                  color=arcade.color.WHITE,
                  size=25,
                  width=200,
-                 icon="assets/coin_2.png"
+                 icon="assets/pic/icon/coin_2.png"
                  ):
         if font_path is not None:
             arcade.load_font(font_path)
