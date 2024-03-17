@@ -1,3 +1,4 @@
+import math
 import random
 from math import radians, degrees
 
@@ -9,7 +10,7 @@ from src.render.sprites.BasicSprite import BasicSprite
 
 
 class Car:
-    def __init__(self, render_group, space, position=(300, 300), skin_id=-1):
+    def __init__(self, render_group, space, position=(300, 300), skin_id=-1, rotate=False):
         skins = ["assets/pic/car_2.png", "assets/pic/car_3.png", "assets/pic/car_1.png"]
         if skin_id == -1:
             skin_id = random.randint(0, len(skins) - 1)
@@ -50,6 +51,13 @@ class Car:
         self.sync()
 
         self.controller = None
+
+        if rotate:
+            self.fast_rotate(random.choice([math.pi / 2, -math.pi / 2]))
+
+    def fast_rotate(self, angle):
+        self.car_view.update_angle(angle)
+        self.car_model.update_angle(angle)
 
     def controlling(self, keys):
         self.controller.handle_input(keys)
