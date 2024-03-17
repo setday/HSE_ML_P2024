@@ -12,7 +12,6 @@ class Camera(arcade.Camera):
         self._target_zoom = 1
 
         self.position = self._target_position - self._screen_shift
-        print(self.position, self._target_position, self._screen_shift, self.viewport_width, self.viewport_height)
 
         self._snapped_sprite = None
 
