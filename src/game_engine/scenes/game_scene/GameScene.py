@@ -45,7 +45,7 @@ class GameScene:
         self.car_m = ObjectFactory.create_object(render_group=self.render_group,
                                                  space=self.space,
                                                  object_type='car',
-                                                 position=Vector2D(0, -100),
+                                                 position=Vector2D(200, 1000),
                                                  car_model='blue_car')
 
         self.car_m.switch_controller(KeyboardController())
@@ -53,92 +53,11 @@ class GameScene:
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
         self.cars = [self.car_m]
-# <<<<<<< HEAD
-#
-#         self.traffic_cones = []
-#
-#         SceneSetup(self)
-#         ######################
-#         # Screen Elements
-#         ######################
-#
-#         self.screen_group = RenderGroup()
-#         camera_offset = self.screen_group.camera.get_position(1, 1)
-#
-#         self.indicator = Indicator(owner=self.car_m, position=camera_offset - Vector2D(200, 100))
-#         self.screen_group.add(self.indicator.sprite_list)
-#
-#         self.score_board = ScoreDisplay(score=self.score[0], position=camera_offset - Vector2D(200, 170),
-#                                         color=(255, 220, 40),
-#                                         font_path='assets/ka1.ttf', font_name='Karmatic Arcade')
-#         self.screen_group.add(self.score_board.sprite_list)
-#
-# =======
-        for i in range(-5, 5):
-            if i == 0:
-                continue
-            car = ObjectFactory.create_object(render_group=self.render_group,
-                                              space=self.space,
-                                              object_type='car',
-                                              position=Vector2D(70 * i, -100),
-                                              car_model='red_car')
-            car.switch_controller(random.choice([RandomController(), AIController(), BrakeController()]))
-            self.cars.append(car)
 
         self.traffic_cones = []
-        for i in range(-5, 5):
-            self.traffic_cones.append(
-                ObjectFactory.create_object(
-                    render_group=self.render_group,
-                    space=self.space,
-                    object_type='movable_obstacle',
-                    position=Vector2D(70 * i, -170),
-                    movable_obstacle_model='cone'
-                )
-            )
 
-        self.traffic_cones.append(ObjectFactory.create_object(
-            self.render_group, self.space, 'movable_obstacle', Vector2D(70 * -5 - 35, -70),
-            movable_obstacle_model='cone'
-        ))
-        self.traffic_cones.append(ObjectFactory.create_object(
-            self.render_group, self.space, 'movable_obstacle', Vector2D(70 * -5 - 40, -100),
-            movable_obstacle_model='cone'
-        ))
-        self.traffic_cones.append(ObjectFactory.create_object(
-            self.render_group, self.space, 'movable_obstacle', Vector2D(70 * -5 - 35, -130),
-            movable_obstacle_model='cone'
-        ))
+        SceneSetup(self)
 
-        self.traffic_cones.append(ObjectFactory.create_object(
-            self.render_group, self.space, 'movable_obstacle', Vector2D(70 * 4 + 35, -70),
-            movable_obstacle_model='cone'
-        ))
-        self.traffic_cones.append(ObjectFactory.create_object(
-            self.render_group, self.space, 'movable_obstacle', Vector2D(70 * 4 + 40, -100),
-            movable_obstacle_model='cone'
-        ))
-        self.traffic_cones.append(ObjectFactory.create_object(
-            self.render_group, self.space, 'movable_obstacle', Vector2D(70 * 4 + 35, -130),
-            movable_obstacle_model='cone'
-        ))
-
-        for i in range(-5, 5):
-            ObjectFactory.create_object(
-                self.top_render_group, self.space, 'static_obstacle', Vector2D(70 * i, -10),
-                static_obstacle_model='tree'
-            )
-
-        for i in range(-5, 4):
-            ObjectFactory.create_object(
-                self.render_group, self.space, 'static_obstacle', Vector2D(70 * i + 35, -100), 90,
-                static_obstacle_model='metal_pipe'
-            )
-        for i in range(-5, 5):
-            ObjectFactory.create_object(
-                self.render_group, self.space, 'static_obstacle', Vector2D(70 * i, -50),
-                static_obstacle_model='rubbish_line'
-            )
 
         ObjectFactory.create_object(
             self.render_group, self.space, 'static_obstacle', Vector2D(0, 1000),
@@ -171,7 +90,6 @@ class GameScene:
                                         color=(255, 220, 40),
                                         font_path='assets/fnt/ka1.ttf', font_name='Karmatic Arcade')
         self.screen_group.add(self.score_board.sprite_list)
-
 
     def update(self, io_controller, delta_time):
         keys = io_controller.keyboard

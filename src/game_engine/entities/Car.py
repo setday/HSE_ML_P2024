@@ -21,8 +21,6 @@ class Car:
         self.car_view = BasicSprite(skin, position)
         self.car_model = CarPhysicsModel((x, y), self.car_view.get_hit_box())
 
-        self.car_model.body.angle = angle
-
         render_group.add(self.car_view)
 
         self.space = space
@@ -56,8 +54,7 @@ class Car:
 
         self.controller = None
 
-        if rotate:
-            self.fast_rotate(random.choice([math.pi / 2, -math.pi / 2]))
+        self.fast_rotate(angle)
 
     def fast_rotate(self, angle):
         self.car_view.update_angle(angle)
