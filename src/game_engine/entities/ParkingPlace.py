@@ -1,15 +1,20 @@
 from src.physics.models.ParkingPlacePhysicModel import ParkingPlacePhysicsModel
 from src.render.sprites.BasicRect import BasicRect
+from src.render.sprites.BasicSprite import BasicSprite
 
 
 class ParkingPlace:
     def __init__(self, render_group, space, position, size, offset):
+        self.base_view = BasicSprite("assets/parking_place_background.png", position)
+        self.dead_view = BasicSprite("assets/parking_place_face.png", position)
         self.base_boundary = BasicRect(*size, position)
         self.dead_boundary = BasicRect(size[0] - offset, size[1] - offset, position)
         self.parking_model = ParkingPlacePhysicsModel(position, size, offset)
 
         render_group.add(self.base_boundary)
         render_group.add(self.dead_boundary)
+        render_group.add(self.base_view)
+        render_group.add(self.dead_view)
 
         self.update_color((255, 0, 0))
 

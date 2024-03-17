@@ -86,14 +86,14 @@ class GameScene:
         dead_handler.begin = collision_car_with_dead_parking_place
         dead_handler.separate = end_collision_car_with_dead_parking_place
 
-        self.add_parking_place((300, 300), (200, 150), 10, [self.car_m])
-        self.add_parking_place((0, 300), (200, 150), 10, [self.car_m])
-        self.add_parking_place((0, -300), (200, 150), 10, [])
+        self.add_parking_place((300, 300), (70, 120), 4, [self.car_m])
+        self.add_parking_place((0, 300), (70, 120), 4, [])
+        self.add_parking_place((0, -300), (70, 120), 4, [self.car_m])
 
         self.win_state = False
 
     def add_parking_place(self, position, size, offset, cars):
-        parking_place = ParkingPlace(self.render_group, self.space, position, size, offset)
+        parking_place = ParkingPlace(self.down_render_group, self.space, position, size, offset)
 
         for i in range(len(cars)):
             cars[i].link_parking_place(parking_place)
