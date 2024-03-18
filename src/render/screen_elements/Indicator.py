@@ -12,12 +12,7 @@ class Indicator:
             width: int = 200,
             height: int = 21,
             border_size: int = 5,
-
-# <<<<<<< HEAD
-#             icon: str = "assets/pic/heart_2.png",
-# =======
-             icon: str = "assets/pic/icon/heart_2.png",
-# >>>>>>> object-factory
+            icon: str = "assets/pic/icon/heart_2.png",
             score_color: arcade.Color = (161, 256, 111),
             trail_color: arcade.Color = (255, 184, 84),
             background_color: arcade.Color = (135, 135, 135),

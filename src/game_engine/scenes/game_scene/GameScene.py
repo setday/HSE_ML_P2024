@@ -5,7 +5,6 @@ import pymunk
 from pyglet.math import Vec2 as Vector2D
 
 from src.game_engine.controllers.Controller import *
-from src.game_engine.entities.Car import Car
 from src.render.screen_elements.ScoreDisplay import ScoreDisplay
 from src.game_engine.scenes.game_scene.CollisionHandlers import collision_car_with_car, collision_car_with_obstacle
 from src.render.RenderGroup import RenderGroup
