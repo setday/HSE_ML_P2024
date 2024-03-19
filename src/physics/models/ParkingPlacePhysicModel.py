@@ -2,12 +2,14 @@ import pymunk
 
 
 class ParkingPlacePhysicsModel:
-    def __init__(self, position, size, offset):
+    def __init__(self, position, size, offset, angle):
         self.inner_body = pymunk.Body(body_type=pymunk.Body.STATIC)
         self.inner_body.position = position
+        self.inner_body.angle = angle
 
         self.outer_body = pymunk.Body(body_type=pymunk.Body.STATIC)
         self.outer_body.position = position
+        self.outer_body.angle = angle
 
         self.dead_zones = [
             pymunk.Body(body_type=pymunk.Body.STATIC),
@@ -23,6 +25,11 @@ class ParkingPlacePhysicsModel:
 
         self.inner_shape = pymunk.Poly.create_box(self.inner_body, size)
         self.inner_shape.collision_type = 40
+
+        self.dead_zones[0].angle = angle
+        self.dead_zones[1].angle = angle
+        self.dead_zones[2].angle = angle
+        self.dead_zones[3].angle = angle
 
         self.dead_zone_shapes = [
             pymunk.Poly.create_box(self.dead_zones[0], (offset, size[0])),

@@ -77,8 +77,6 @@ class GameScene:
 
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
-        self.parking_places = list()
-
         base_handler = self.space.add_collision_handler(10, 40)
         base_handler.begin = collision_car_with_base_parking_place
         base_handler.separate = end_collision_car_with_base_parking_place
@@ -86,19 +84,11 @@ class GameScene:
         dead_handler.begin = collision_car_with_dead_parking_place
         dead_handler.separate = end_collision_car_with_dead_parking_place
 
-        self.add_parking_place((300, 300), (70, 120), 4, [self.car_m])
-        self.add_parking_place((0, 300), (70, 120), 4, [])
-        self.add_parking_place((0, -300), (70, 120), 4, [self.car_m])
+        pp_1 = ParkingPlace(self.down_render_group, self.space, (300, 300), (70, 120), 4, 0.3)
+        pp_2 = ParkingPlace(self.down_render_group, self.space, (0, 300), (70, 120), 4, -0.3)
+        pp_3 = ParkingPlace(self.down_render_group, self.space, (0, -300), (70, 120), 4, 0.4)
 
         self.win_state = False
-
-    def add_parking_place(self, position, size, offset, cars):
-        parking_place = ParkingPlace(self.down_render_group, self.space, position, size, offset)
-
-        for i in range(len(cars)):
-            cars[i].link_parking_place(parking_place)
-
-        self.parking_places.append(parking_place)
 
     def update(self, keys, delta_time):
         self.car_m.controlling(keys)
