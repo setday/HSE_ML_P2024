@@ -47,7 +47,6 @@ class GameScene:
 
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
-
         self.cars = [self.car_m]
         for i in range(-5, 5):
             if i == 0:
