@@ -43,6 +43,7 @@ class GameScene:
 
         self.down_render_group.add(self.background)
 
+
         self.car_m = ObjectFactory.create_object(render_group=self.render_group,
                                                  space=self.space,
                                                  object_type='car',
@@ -147,9 +148,20 @@ class GameScene:
         self.indicator = Indicator(owner=self.car_m, position=camera_offset - Vector2D(200, 100))
         self.screen_group.add(self.indicator.sprite_list)
 
+
+        ######################
+        # Screen Elements
+        ######################
+
+        self.screen_group = RenderGroup()
+        camera_offset = self.screen_group.camera.get_position(1, 1)
+
+        self.indicator = Indicator(owner=self.car_m, position=camera_offset - Vector2D(200, 100))
+        self.screen_group.add(self.indicator.sprite_list)
+
         self.score_board = ScoreDisplay(score=self.score[0], position=camera_offset - Vector2D(200, 170),
                                         color=(255, 220, 40),
-                                        font_path='assets/fnt/ka1.ttf', font_name='Karmatic Arcade')
+                                        font_path='assets/ka1.ttf', font_name='Karmatic Arcade')
         self.screen_group.add(self.score_board.sprite_list)
 
     def update(self, io_controller, delta_time):
