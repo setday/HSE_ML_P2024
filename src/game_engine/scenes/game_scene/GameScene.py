@@ -5,21 +5,19 @@ import pymunk
 from pyglet.math import Vec2 as Vector2D
 
 from src.game_engine.controllers.Controller import *
-from src.game_engine.entities.Car import Car
-from src.render.screen_elements.ScoreDisplay import ScoreDisplay
-from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
-from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
+from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.scenes.game_scene.CollisionHandlers import collision_car_with_car, collision_car_with_obstacle
 from src.render.RenderGroup import RenderGroup
 from src.render.particle.ParticleShow import ParticleShow
 from src.render.screen_elements.Indicator import Indicator
+from src.render.screen_elements.ScoreDisplay import ScoreDisplay
 from src.render.sprites.BasicSprite import BasicSprite
-
-from src.game_engine.entities.ObjectFactory import ObjectFactory
 
 
 class GameScene:
-    def __init__(self):
+    def __init__(self, core_instance):
+        self.core_instance = core_instance
+
         self.down_render_group = RenderGroup()
         self.render_group = RenderGroup()
         self.top_render_group = RenderGroup()
@@ -42,7 +40,6 @@ class GameScene:
         self.background.update_scale(10)
 
         self.down_render_group.add(self.background)
-
 
         self.car_m = ObjectFactory.create_object(render_group=self.render_group,
                                                  space=self.space,
@@ -148,7 +145,6 @@ class GameScene:
         self.indicator = Indicator(owner=self.car_m, position=camera_offset - Vector2D(200, 100))
         self.screen_group.add(self.indicator.sprite_list)
 
-
         ######################
         # Screen Elements
         ######################
@@ -161,7 +157,7 @@ class GameScene:
 
         self.score_board = ScoreDisplay(score=self.score[0], position=camera_offset - Vector2D(200, 170),
                                         color=(255, 220, 40),
-                                        font_path='assets/ka1.ttf', font_name='Karmatic Arcade')
+                                        font_path='assets/fnt/ka1.ttf', font_name='Karmatic Arcade')
         self.screen_group.add(self.score_board.sprite_list)
 
     def update(self, io_controller, delta_time):
@@ -209,6 +205,9 @@ class GameScene:
 
         self.indicator.update_bar()
         self.score_board.update_score(self.score[0])
+
+        if self.car_m.health <= 0:
+            self.core_instance.set_scene(None)
 
     def draw(self):
         self.render_group.camera.use()
