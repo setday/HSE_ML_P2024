@@ -6,7 +6,7 @@ from src.render.Window import Window, IOController
 
 class Core:
     def __init__(self):
-        self.window = Window(1900, 1000, "Park me")
+        self.window = Window(1920, 1080, "Park me")
         arcade.load_font('assets/fnt/Title.ttf')
         arcade.load_font('assets/fnt/ka1.ttf')
 

@@ -14,7 +14,7 @@ class Window(arcade.Window):
     def __init__(self, width: int, height: int, title: str):
         super().__init__(width, height, title)
 
-        self.center_window()
+        # self.center_window()
 
         self._update_hook = None
         self._draw_hook = None

@@ -169,16 +169,14 @@ class GameScene:
         # file = open("src/shaders/toy/fractal_pyramid.glsl")
         file = open("src/shaders/vignette/vignette.glsl")
         shader_sourcecode = file.read()
-        self.shader_vin = Shadertoy((1900, 1000), shader_sourcecode)
+        self.shader_vin = Shadertoy((1920, 1080), shader_sourcecode)
 
         file = open("src/shaders/color_filters/grayscale.glsl")
         shader_sourcecode = file.read()
-        self.shader_gray = Shadertoy((1900, 1000), shader_sourcecode)
+        self.shader_gray = Shadertoy((1920, 1080), shader_sourcecode)
 
         self.tick = 0
         self.reset_timer = 7
-
-        self.car_m.health = 1
 
     def update(self, io_controller, delta_time):
         keys = io_controller.keyboard
@@ -189,6 +187,9 @@ class GameScene:
 
         if keys.get(arcade.key.F7, False):
             self.car_m.health = 100
+
+        if keys.get(arcade.key.F8, False):
+            self.car_m.health = 10
 
         self.car_m.controlling(keys)
 
@@ -261,7 +262,7 @@ class GameScene:
             self.shader_gray.render(time=first_black_screen_trans, mouse_position=(0, 0))
 
             text_len = int(max((6.0 - self.reset_timer) * 7, 0.0))
-            self.end_text.text = "You LOSE"[:text_len]
+            self.end_text.text = "You   LOSE"[:text_len]
             self.end_text.draw()
 
             last_black_screen_trans = (3.0 - self.reset_timer) * 0.6
