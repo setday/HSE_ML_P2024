@@ -1,6 +1,7 @@
 import time
 
 import arcade.key
+from arcade.experimental import Shadertoy
 import pymunk
 from pyglet.math import Vec2 as Vector2D
 
@@ -145,20 +146,39 @@ class GameScene:
         self.indicator = Indicator(owner=self.car_m, position=camera_offset - Vector2D(200, 100))
         self.screen_group.add(self.indicator.sprite_list)
 
-        ######################
-        # Screen Elements
-        ######################
-
-        self.screen_group = RenderGroup()
-        camera_offset = self.screen_group.camera.get_position(1, 1)
-
-        self.indicator = Indicator(owner=self.car_m, position=camera_offset - Vector2D(200, 100))
-        self.screen_group.add(self.indicator.sprite_list)
-
         self.score_board = ScoreDisplay(score=self.score[0], position=camera_offset - Vector2D(200, 170),
                                         color=(255, 220, 40),
                                         font_path='assets/fnt/ka1.ttf', font_name='Karmatic Arcade')
         self.screen_group.add(self.score_board.sprite_list)
+
+        camera_offset = self.screen_group.camera.get_position(0, 0)
+        self.end_text = arcade.Text(
+            "ENDDDDDDD",
+            camera_offset.x,
+            camera_offset.y,
+            arcade.color.WHITE,
+            100,
+            anchor_x="center",
+            anchor_y="center",
+            font_name="Karmatic Arcade"
+        )
+
+        ######################
+        # Shaders Setup
+        ######################
+        # file = open("src/shaders/toy/fractal_pyramid.glsl")
+        file = open("src/shaders/vignette/vignette.glsl")
+        shader_sourcecode = file.read()
+        self.shader_vin = Shadertoy((1900, 1000), shader_sourcecode)
+
+        file = open("src/shaders/color_filters/grayscale.glsl")
+        shader_sourcecode = file.read()
+        self.shader_gray = Shadertoy((1900, 1000), shader_sourcecode)
+
+        self.tick = 0
+        self.reset_timer = 7
+
+        self.car_m.health = 1
 
     def update(self, io_controller, delta_time):
         keys = io_controller.keyboard
@@ -177,9 +197,7 @@ class GameScene:
                 continue
             car.controlling(keys)
 
-        delta_time *= 16
-
-        self.space.step(delta_time)
+        self.space.step(delta_time * 16)
 
         for car in self.cars:
             car.apply_friction()
@@ -207,7 +225,10 @@ class GameScene:
         self.score_board.update_score(self.score[0])
 
         if self.car_m.health <= 0:
-            self.core_instance.set_scene(None)
+            self.reset_timer -= delta_time
+
+            if self.reset_timer <= 0:
+                self.core_instance.set_scene(None)
 
     def draw(self):
         self.render_group.camera.use()
@@ -226,3 +247,22 @@ class GameScene:
         self.screen_group.camera.use()
         self.screen_group.draw()
         self.score_board.draw()
+
+        ######################
+        # Shaders Draw
+        ######################
+
+        self.tick += 1
+
+        self.shader_vin.render(time=self.tick / 125, time_delta=self.car_m.health, mouse_position=(0, 0))
+
+        if self.car_m.health <= 0:
+            first_black_screen_trans = min((7.0 - self.reset_timer) * 0.6, 0.8)
+            self.shader_gray.render(time=first_black_screen_trans, mouse_position=(0, 0))
+
+            text_len = int(max((6.0 - self.reset_timer) * 7, 0.0))
+            self.end_text.text = "You LOSE"[:text_len]
+            self.end_text.draw()
+
+            last_black_screen_trans = (3.0 - self.reset_timer) * 0.6
+            self.shader_gray.render(time=last_black_screen_trans, mouse_position=(0, 0))
