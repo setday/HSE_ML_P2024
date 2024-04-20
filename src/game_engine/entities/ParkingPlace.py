@@ -1,14 +1,23 @@
 from math import degrees
 
+from pyglet.math import Vec2 as Vector2D
+from pymunk import Space
+
 from src.physics.models.ParkingPlacePhysicModel import ParkingPlacePhysicsModel
+from src.render.RenderGroup import RenderGroup
 from src.render.sprites.BasicSprite import BasicSprite
 
 
 class ParkingPlace:
-    def __init__(self, render_group, space, position, size, offset, angle):
+    def __init__(self,
+                 render_group: RenderGroup,
+                 space: Space,
+                 position: Vector2D | tuple[float, float],
+                 size: tuple[float, float] = (70, 120),
+                 angle: float = 0):
         self.base_view = BasicSprite("assets/parking_place_background.png", position)
         self.dead_view = BasicSprite("assets/parking_place_face.png", position)
-        self.parking_model = ParkingPlacePhysicsModel(position, size, offset, angle)
+        self.parking_model = ParkingPlacePhysicsModel(position, size, angle)
 
         self.base_view.update_angle(degrees(angle))
         self.dead_view.update_angle(degrees(angle))

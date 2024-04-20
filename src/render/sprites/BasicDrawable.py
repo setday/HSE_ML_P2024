@@ -13,8 +13,8 @@ class BasicDrawable(arcade.Sprite):
         self.position = position
         self.scale = 1
 
-    def update_position(self, position: Vector2D) -> None:
-        def inverse_y(pos: Vector2D) -> Vector2D:
+    def update_position(self, position: Vector2D | tuple[float, float]) -> None:
+        def inverse_y(pos: Vector2D | tuple[float, float]) -> Vector2D:
             x, y = pos
             return Vector2D(x, -y)
 

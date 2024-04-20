@@ -144,9 +144,9 @@ class GameScene:
         dead_handler.begin = collision_car_with_dead_parking_place
         dead_handler.separate = end_collision_car_with_dead_parking_place
 
-        pp_1 = ParkingPlace(self.down_render_group, self.space, (300, 300), (70, 120), 4, 0.3)
-        pp_2 = ParkingPlace(self.down_render_group, self.space, (0, 300), (70, 120), 4, -0.3)
-        pp_3 = ParkingPlace(self.down_render_group, self.space, (0, -300), (70, 120), 4, 0.4)
+        ParkingPlace(self.down_render_group, self.space, (300, 300), angle=0.3)
+        ParkingPlace(self.down_render_group, self.space, (0, 300), angle=-0.3)
+        ParkingPlace(self.down_render_group, self.space, (0, -300), angle=0.4)
 
         ######################
         # Screen Elements
