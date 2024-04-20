@@ -1,24 +1,19 @@
 import arcade
+from pyglet.math import Vec2 as Vector2D
 
 from src.render.sprites.BasicSprite import BasicSprite
-
-from pyglet.math import Vec2 as Vector2D
 
 
 class Indicator:
     def __init__(
             self,
-
             owner,
-
             position: Vector2D = Vector2D(300, 300),
-
             width: int = 200,
             height: int = 21,
             border_size: int = 5,
 
-            icon: str = "assets/heart_2.png",
-
+            icon: str = "assets/pic/icon/heart_2.png",
             score_color: arcade.Color = (161, 256, 111),
             trail_color: arcade.Color = (255, 184, 84),
             background_color: arcade.Color = (135, 135, 135),
@@ -32,8 +27,8 @@ class Indicator:
         else:
             raise ValueError(f"Invalid owner type: {type(owner)} has no health attribute")
 
-        self.target_health = 200
-        self.current_health = 200
+        self.target_health = 0
+        self.current_health = 0
 
         self.box_width = width
         self.box_height = height
@@ -90,10 +85,9 @@ class Indicator:
             score_color,
         )
 
-        self._update_current_health()
-        self._set_target_health(self.target_health)
+        self.update_bar()
 
-        self.icon = BasicSprite(icon, scale=5)
+        self.icon = BasicSprite(icon, scale=5.5)
         self.icon.position = (-self.half_box_width, 0)
 
         self.sprite_list.append(self.border_box)
@@ -108,33 +102,45 @@ class Indicator:
 
         self.set_position(position)
 
+    def _set_score_box(self, new_width) -> None:
+        self.score_box_1.width = new_width
+        self.score_box_2.width = new_width + self.border_width
+        self.score_box_2.left = self.score_box_1.left = self.center_x - self.half_box_width
+
+    def _set_trail_box(self, new_width) -> None:
+        self.trail_box_1.width = new_width
+        self.trail_box_2.width = new_width + self.border_width
+        self.trail_box_2.left = self.trail_box_1.left = self.center_x - self.half_box_width
+
+        self.trail_shadow_box_1.width = new_width + self.border_width
+        self.trail_shadow_box_2.width = new_width + self.border_width * 2
+        self.trail_shadow_box_2.left = self.trail_shadow_box_1.left = self.center_x - self.half_box_width
+
     def _set_target_health(self, new_health) -> None:
         self.target_health = new_health
 
-        self.score_box_1.width = self.target_health
-        self.score_box_2.width = self.target_health + self.border_width
-        self.score_box_2.left = self.score_box_1.left = self.center_x - self.half_box_width
+        if self.target_health < self.current_health:
+            self._set_score_box(self.target_health)
+        else:
+            self._set_trail_box(self.target_health)
 
     def _update_current_health(self) -> None:
         self.current_health -= (self.current_health - self.target_health) * self.change_speed
         if abs(self.current_health - self.target_health) < 1:
             self.current_health = self.target_health
 
-        self.trail_box_1.width = self.current_health
-        self.trail_box_2.width = self.current_health + self.border_width
-        self.trail_box_2.left = self.trail_box_1.left = self.center_x - self.half_box_width
-
-        self.trail_shadow_box_1.width = self.current_health + self.border_width
-        self.trail_shadow_box_2.width = self.current_health + self.border_width * 2
-        self.trail_shadow_box_2.left = self.trail_shadow_box_1.left = self.center_x - self.half_box_width
+        if self.current_health < self.target_health:
+            self._set_score_box(self.current_health)
+        else:
+            self._set_trail_box(self.current_health)
 
     def update_bar(self) -> None:
         new_health = max(0.001, self.owner.health)
 
-        if new_health != self.target_health:
+        if new_health * 2 != self.target_health:
             self._set_target_health(2 * new_health)
 
-        if self.current_health != self.target_health:
+        if self.current_health != self.target_health:   
             self._update_current_health()
 
     def set_position(self, new_position) -> None:

@@ -8,8 +8,10 @@ class Camera(arcade.Camera):
 
         self._screen_shift = Vector2D(self.viewport_width / 2, self.viewport_height / 2)
 
-        self._target_position = -self._screen_shift
+        self._target_position = Vector2D(0, 0)
         self._target_zoom = 1
+
+        self.position = self._target_position - self._screen_shift
 
         self._snapped_sprite = None
 
@@ -22,7 +24,7 @@ class Camera(arcade.Camera):
     def get_position(self, vertical_state: int = 0, horizontal_state: int = 0) -> Vector2D:
         """
         Returns the position of the camera.
-        vertical_state: -1 for top, 0 for middle, 1 for bottom.
+        vertical_state: -1 for bottom, 0 for middle, 1 for topw.
         horizontal_state: -1 for left, 0 for middle, 1 for right.
         """
 

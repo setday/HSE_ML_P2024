@@ -1,5 +1,6 @@
-import arcade
 import random
+
+import arcade
 
 
 class Controller:
@@ -23,9 +24,9 @@ class KeyboardController(Controller):
         if keys.get(arcade.key.RIGHT, False) or keys.get(arcade.key.D, False):
             self.car.turn_right(keys.get(arcade.key.SPACE, False))
         if keys.get(arcade.key.UP, False) or keys.get(arcade.key.W, False):
-            self.car.accelerate()
+            self.car.forward_accelerate()
         if keys.get(arcade.key.DOWN, False) or keys.get(arcade.key.S, False):
-            self.car.brake()
+            self.car.backward_acceleration()
         if keys.get(arcade.key.R, False):
             self.car.car_model.body.velocity = (0, 0)
 
@@ -43,7 +44,7 @@ class RandomController(Controller):
             5,  # turn left
             15,  # turn right
             0,  # brake
-            0  # hand_break
+            5  # hand_break
         ]
         self.probabilities = list(map(lambda x: x / sum(self.probabilities), self.probabilities))
         self.probabilities = [sum(self.probabilities[:i]) for i in range(len(self.probabilities) + 1)]
@@ -53,13 +54,13 @@ class RandomController(Controller):
             self.action_kind = random.random()
             self.timer = 30
         if self.probabilities[0] <= self.action_kind < self.probabilities[1]:
-            self.car.accelerate()
+            self.car.forward_accelerate()
         elif self.probabilities[1] <= self.action_kind < self.probabilities[2]:
             self.car.turn_left(False)
         elif self.probabilities[2] <= self.action_kind < self.probabilities[3]:
             self.car.turn_right(False)
         elif self.probabilities[3] <= self.action_kind < self.probabilities[4]:
-            self.car.brake()
+            self.car.backward_acceleration()
         else:
             self.car.hand_brake()
         self.timer -= 1
@@ -70,7 +71,7 @@ class BrakeController(Controller):
         super().__init__()
 
     def handle_input(self, keys):
-        self.car.brake()
+        self.car.hand_brake()
 
 
 class AIController(BrakeController):
