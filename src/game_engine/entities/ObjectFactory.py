@@ -1,4 +1,4 @@
-from math import radians, degrees
+from math import radians
 
 from pyglet.math import Vec2 as Vector2D
 from pymunk import Space

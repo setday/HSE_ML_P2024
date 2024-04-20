@@ -6,7 +6,6 @@ from pymunk import Space
 from src.physics.models.ParkingPlacePhysicModel import ParkingPlacePhysicsModel
 from src.render.RenderGroup import RenderGroup
 from src.render.sprites.BasicRect import BasicRect
-from src.render.sprites.BasicSprite import BasicSprite
 
 
 class ParkingPlace:

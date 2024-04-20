@@ -140,7 +140,7 @@ class Indicator:
         if new_health * 2 != self.target_health:
             self._set_target_health(2 * new_health)
 
-        if self.current_health != self.target_health:   
+        if self.current_health != self.target_health:
             self._update_current_health()
 
     def set_position(self, new_position) -> None:
