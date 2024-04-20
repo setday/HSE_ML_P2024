@@ -10,8 +10,7 @@ from src.game_engine.scenes.game_scene.CollisionHandlers import collision_car_wi
 from src.render.RenderGroup import RenderGroup
 from src.render.particle.ParticleShow import ParticleShow
 from src.render.screen_elements.Indicator import Indicator
-from src.render.sprites.BasicSprite import BasicSprite
-from src.game_engine.scenes.game_scene.SceneSetup import SceneSetup
+
 
 from src.game_engine.entities.ObjectFactory import ObjectFactory
 
@@ -36,15 +35,12 @@ class GameScene:
         h_10_10.data["debris_emitter"] = h_10_20.data["debris_emitter"] = \
             h_10_30.data["debris_emitter"] = self.particle_show
 
-        self.background = BasicSprite("assets/pic/Map3.jpeg", Vector2D(0, 0))
-        self.background.update_scale(2)
 
-        self.down_render_group.add(self.background)
 
         self.car_m = ObjectFactory.create_object(render_group=self.render_group,
                                                  space=self.space,
                                                  object_type='car',
-                                                 position=Vector2D(200, 1000),
+                                                 position=Vector2D(0, 0),
                                                  car_model='blue_car')
 
         self.car_m.switch_controller(KeyboardController())
@@ -54,26 +50,6 @@ class GameScene:
         self.cars = [self.car_m]
 
         self.traffic_cones = []
-
-        SceneSetup(self)
-
-
-        ObjectFactory.create_object(
-            self.render_group, self.space, 'static_obstacle', Vector2D(0, 1000),
-            static_obstacle_model='x_barrier'
-        )
-        ObjectFactory.create_object(
-            self.render_group, self.space, 'static_obstacle', Vector2D(0, -2000),
-            static_obstacle_model='x_barrier'
-        )
-        ObjectFactory.create_object(
-            self.render_group, self.space, 'static_obstacle', Vector2D(3500, 0),
-            static_obstacle_model='y_barrier'
-        )
-        ObjectFactory.create_object(
-            self.render_group, self.space, 'static_obstacle', Vector2D(-3500, 0),
-            static_obstacle_model='y_barrier'
-        )
 
         ######################
         # Screen Elements

@@ -5,7 +5,7 @@ from src.game_engine.entities.ObjectFactory import *
 from src.game_engine.scenes.game_scene.EnvGeneration import ReadPositions
 
 
-def SceneSetup(scene):
+def TightSceneSetup(scene):
     trees_positions, cones_positions, cars_positions, \
         rotated_cars_positions, vert_barrier_positions, hor_barriers_positions = ReadPositions()
     for position in set(trees_positions):
@@ -60,3 +60,92 @@ def SceneSetup(scene):
             position=position,
             static_obstacle_model='rubbish_line'
         )
+
+
+def WideSceneSetup(scene):
+    for i in range(-5, 5):
+        scene.traffic_cones.append(
+            ObjectFactory.create_object(
+                render_group=scene.render_group,
+                space=scene.space,
+                object_type='movable_obstacle',
+                position=Vector2D(70 * i, -170),
+                movable_obstacle_model='cone'
+            )
+        )
+
+    scene.traffic_cones.append(ObjectFactory.create_object(
+        scene.render_group, scene.space, 'movable_obstacle', Vector2D(70 * -5 - 35, -70),
+        movable_obstacle_model='cone'
+    ))
+    scene.traffic_cones.append(ObjectFactory.create_object(
+        scene.render_group, scene.space, 'movable_obstacle', Vector2D(70 * -5 - 40, -100),
+        movable_obstacle_model='cone'
+    ))
+    scene.traffic_cones.append(ObjectFactory.create_object(
+        scene.render_group, scene.space, 'movable_obstacle', Vector2D(70 * -5 - 35, -130),
+        movable_obstacle_model='cone'
+    ))
+
+    scene.traffic_cones.append(ObjectFactory.create_object(
+        scene.render_group, scene.space, 'movable_obstacle', Vector2D(70 * 4 + 35, -70),
+        movable_obstacle_model='cone'
+    ))
+    scene.traffic_cones.append(ObjectFactory.create_object(
+        scene.render_group, scene.space, 'movable_obstacle', Vector2D(70 * 4 + 40, -100),
+        movable_obstacle_model='cone'
+    ))
+    scene.traffic_cones.append(ObjectFactory.create_object(
+        scene.render_group, scene.space, 'movable_obstacle', Vector2D(70 * 4 + 35, -130),
+        movable_obstacle_model='cone'
+    ))
+
+    for i in range(-5, 5):
+        ObjectFactory.create_object(
+            scene.top_render_group, scene.space, 'static_obstacle', Vector2D(70 * i, -10),
+            static_obstacle_model='tree'
+        )
+
+    for i in range(-5, 4):
+        ObjectFactory.create_object(
+            scene.render_group, scene.space, 'static_obstacle', Vector2D(70 * i + 35, -100), 90,
+            static_obstacle_model='metal_pipe'
+        )
+    for i in range(-5, 5):
+        ObjectFactory.create_object(
+            scene.render_group, scene.space, 'static_obstacle', Vector2D(70 * i, -50),
+            static_obstacle_model='rubbish_line'
+        )
+
+    ObjectFactory.create_object(
+        scene.render_group, scene.space, 'static_obstacle', Vector2D(0, 1000),
+        static_obstacle_model='x_barrier'
+    )
+    ObjectFactory.create_object(
+        scene.render_group, scene.space, 'static_obstacle', Vector2D(0, -2000),
+        static_obstacle_model='x_barrier'
+    )
+    ObjectFactory.create_object(
+        scene.render_group, scene.space, 'static_obstacle', Vector2D(3500, 0),
+        static_obstacle_model='y_barrier'
+    )
+    ObjectFactory.create_object(
+        scene.render_group, scene.space, 'static_obstacle', Vector2D(-3500, 0),
+        static_obstacle_model='y_barrier'
+    )
+    ObjectFactory.create_object(
+        scene.render_group, scene.space, 'static_obstacle', Vector2D(0, 1000),
+        static_obstacle_model='x_barrier'
+    )
+    ObjectFactory.create_object(
+        scene.render_group, scene.space, 'static_obstacle', Vector2D(0, -2000),
+        static_obstacle_model='x_barrier'
+    )
+    ObjectFactory.create_object(
+        scene.render_group, scene.space, 'static_obstacle', Vector2D(3500, 0),
+        static_obstacle_model='y_barrier'
+    )
+    ObjectFactory.create_object(
+        scene.render_group, scene.space, 'static_obstacle', Vector2D(-3500, 0),
+        static_obstacle_model='y_barrier'
+    )

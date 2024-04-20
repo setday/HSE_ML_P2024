@@ -1,6 +1,7 @@
 import arcade
 
-from src.game_engine.scenes.game_scene.GameScene import GameScene
+from src.game_engine.scenes.game_scene.TightScene import TightScene
+from src.game_engine.scenes.game_scene.WideScene import WideScene
 from src.game_engine.scenes.fun_scenes.PhysicScene import PhysicScene
 from src.game_engine.scenes.fun_scenes.GameOfLifeScene import GameOfLifeScene
 from src.render.Window import Window, IOController
@@ -9,8 +10,11 @@ from src.render.Window import Window, IOController
 class Core:
     def __init__(self):
         self.window = Window(1920, 1080, "Park me")
-
-        self.scene = GameScene()
+        n = input()
+        if n:
+            self.scene = WideScene()
+        else:
+            self.scene = TightScene()
         # self.scene = PhysicScene()
         # self.scene = GameOfLifeScene()
 
