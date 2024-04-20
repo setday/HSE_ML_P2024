@@ -1,4 +1,4 @@
-from math import radians, degrees
+from math import radians
 
 from pyglet.math import Vec2 as Vector2D
 from pymunk import Space
@@ -14,7 +14,7 @@ class ObjectFactory:
     def create_object(render_group: RenderGroup,
                       space: Space,
                       object_type: str = 'car',
-                      position: Vector2D = (0, 0),
+                      position: Vector2D | tuple[float, float] = (0, 0),
                       angle: float = 0,
                       **kwargs) -> Car | MovableObstacle | StaticObstacle:
         if object_type == 'car':
@@ -31,7 +31,7 @@ class ObjectFactory:
     @staticmethod
     def create_car(render_group: RenderGroup,
                    space: Space,
-                   position: Vector2D = (0, 0),
+                   position: Vector2D | tuple[float, float] = (0, 0),
                    angle: float = 0,
                    car_model: str = 'blue_car') -> Car:
         car_model_dict = {
@@ -45,7 +45,7 @@ class ObjectFactory:
     @staticmethod
     def create_movable_obstacle(render_group: RenderGroup,
                                 space: Space,
-                                position: Vector2D = (0, 0),
+                                position: Vector2D | tuple[float, float] = (0, 0),
                                 angle: float = 0,
                                 movable_obstacle_model: str = 'cone') -> MovableObstacle:
         movable_obstacle_model_dict = {
@@ -57,7 +57,7 @@ class ObjectFactory:
     @staticmethod
     def create_static_obstacle(render_group: RenderGroup,
                                space: Space,
-                               position: Vector2D = (0, 0),
+                               position: Vector2D | tuple[float, float] = (0, 0),
                                angle: float = 0,
                                static_obstacle_model: str = 'bush') -> StaticObstacle:
         static_obstacle_model_dict = {
