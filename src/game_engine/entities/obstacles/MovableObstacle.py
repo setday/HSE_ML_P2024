@@ -1,13 +1,26 @@
 from math import degrees
 
+from pymunk import Space
+from pyglet.math import Vec2 as Vector2D
+
 from src.physics.models.MovableObstacle import MovableObstaclePhysicsModel
+from src.render.RenderGroup import RenderGroup
 from src.render.sprites.BasicSprite import BasicSprite
 
 
 class MovableObstacle:
-    def __init__(self, render_group, space, position):
-        self.obstacle_view = BasicSprite("assets/pic/Traffic_Cone.png", position)
-        self.obstacle_model = MovableObstaclePhysicsModel(position, (16, 16))
+    def __init__(self,
+                 render_group: RenderGroup,
+                 space: Space,
+                 position: Vector2D = (0, 0),
+                 angle: float = 0,
+                 image_path: str = "assets/pic/obstacles/Traffic_Cone.png"):
+        self.obstacle_view = BasicSprite(image_path, position)
+
+        x, y = position
+
+        self.obstacle_model = MovableObstaclePhysicsModel((x, y), self.obstacle_view.get_hit_box())
+        self.obstacle_model.body.angle = angle
 
         render_group.add(self.obstacle_view)
 

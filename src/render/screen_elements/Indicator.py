@@ -8,12 +8,12 @@ class Indicator:
     def __init__(
             self,
             owner,
-            position: Vector2D = Vector2D(300, 300),
+            position: Vector2D | tuple[float, float] = (300, 300),
             width: int = 200,
             height: int = 21,
             border_size: int = 5,
 
-            icon: str = "assets/pic/heart_2.png",
+            icon: str = "assets/pic/icon/heart_2.png",
             score_color: arcade.Color = (161, 256, 111),
             trail_color: arcade.Color = (255, 184, 84),
             background_color: arcade.Color = (135, 135, 135),
@@ -140,7 +140,7 @@ class Indicator:
         if new_health * 2 != self.target_health:
             self._set_target_health(2 * new_health)
 
-        if self.current_health != self.target_health:   
+        if self.current_health != self.target_health:
             self._update_current_health()
 
     def set_position(self, new_position) -> None:

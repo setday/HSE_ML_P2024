@@ -58,6 +58,10 @@ class CarPhysicsModel:
         self.body.apply_force_at_local_point((0, -force), (0, 0))
 
     def brake(self):
+        if self.body.velocity.get_length_sqrd() < 2:
+            self.body.velocity /= 3
+            return
+
         velocity_direction = self.body.velocity.normalized().rotated(-self.body.angle)
         stop_force = velocity_direction * -0.25 * self.body.mass * 9.8
         self.body.apply_force_at_local_point((stop_force.x, stop_force.y), (0, 0))
