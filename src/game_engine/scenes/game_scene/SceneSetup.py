@@ -5,7 +5,8 @@ from src.game_engine.entities.ObjectFactory import *
 from src.game_engine.scenes.game_scene.EnvGeneration import ReadPositions
 from src.game_engine.entities.ParkingPlace import ParkingPlace
 
-def TightSceneSetup(scene):
+
+def TightSceneSetup(scene, cars):
     trees_positions, cones_positions, cars_positions, \
         rotated_cars_positions, vert_barrier_positions, hor_barriers_positions = ReadPositions()
     for position in set(trees_positions):
@@ -26,23 +27,24 @@ def TightSceneSetup(scene):
                 movable_obstacle_model='cone'
             )
         )
-    for position in set(random.choices(rotated_cars_positions, k=random.randint(5, 10))):
-        car = ObjectFactory.create_object(render_group=scene.render_group,
-                                          space=scene.space,
-                                          object_type='car',
-                                          position=position,
-                                          car_model='red_car',
-                                          angle=random.choice([90, -90]))
-        car.switch_controller(random.choice([RandomController(), AIController(), BrakeController()]))
-        scene.cars.append(car)
-    for position in set(random.choices(cars_positions, k=random.randint(5, 10))):
-        car = ObjectFactory.create_object(render_group=scene.render_group,
-                                          space=scene.space,
-                                          object_type='car',
-                                          position=position,
-                                          car_model='red_car')
-        car.switch_controller(random.choice([RandomController(), AIController(), BrakeController()]))
-        scene.cars.append(car)
+    if cars:
+        for position in set(random.choices(rotated_cars_positions, k=random.randint(5, 10))):
+            car = ObjectFactory.create_object(render_group=scene.render_group,
+                                              space=scene.space,
+                                              object_type='car',
+                                              position=position,
+                                              car_model='red_car',
+                                              angle=random.choice([90, -90]))
+            car.switch_controller(random.choice([RandomController(), AIController(), BrakeController()]))
+            scene.cars.append(car)
+        for position in set(random.choices(cars_positions, k=random.randint(5, 10))):
+            car = ObjectFactory.create_object(render_group=scene.render_group,
+                                              space=scene.space,
+                                              object_type='car',
+                                              position=position,
+                                              car_model='red_car')
+            car.switch_controller(random.choice([RandomController(), AIController(), BrakeController()]))
+            scene.cars.append(car)
     for position in vert_barrier_positions:
         ObjectFactory.create_object(
             render_group=scene.render_group,
@@ -62,7 +64,18 @@ def TightSceneSetup(scene):
         )
 
 
-def WideSceneSetup(scene):
+def WideSceneSetup(scene, cars, barriers):
+    if cars:
+        for i in range(-5, 5):
+            if i == 0:
+                continue
+            car = ObjectFactory.create_object(render_group=scene.render_group,
+                                              space=scene.space,
+                                              object_type='car',
+                                              position=(70 * i, -100),
+                                              car_model='red_car')
+            car.switch_controller(random.choice([RandomController(), AIController(), BrakeController()]))
+            scene.cars.append(car)
     for i in range(-5, 5):
         scene.traffic_cones.append(
             ObjectFactory.create_object(
@@ -109,19 +122,19 @@ def WideSceneSetup(scene):
     ###
     # Parking lots
     ###
-
-    for i in range(-5, 5):
-        ParkingPlace(scene.down_render_group, scene.space, (70 * i, -100))
-    for i in range(-5, 4):
-        ObjectFactory.create_object(
-            scene.render_group, scene.space, 'static_obstacle', (70 * i + 35, -100), 90,
-            static_obstacle_model='metal_pipe'
-        )
-    for i in range(-5, 5):
-        ObjectFactory.create_object(
-            scene.render_group, scene.space, 'static_obstacle', (70 * i, -45),
-            static_obstacle_model='rubbish_line'
-        )
+    if barriers:
+        for i in range(-5, 5):
+            ParkingPlace(scene.down_render_group, scene.space, (70 * i, -100))
+        for i in range(-5, 4):
+            ObjectFactory.create_object(
+                scene.render_group, scene.space, 'static_obstacle', (70 * i + 35, -100), 90,
+                static_obstacle_model='metal_pipe'
+            )
+        for i in range(-5, 5):
+            ObjectFactory.create_object(
+                scene.render_group, scene.space, 'static_obstacle', (70 * i, -45),
+                static_obstacle_model='rubbish_line'
+            )
 
     ###
     # Barriers

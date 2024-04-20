@@ -56,10 +56,6 @@ class GameScene:
         # Setup game objects
         ######################
 
-        self.background = BasicSprite("assets/pic/map/Map.jpg", (0, 0))
-        self.background.update_scale(10)
-
-
         self.car_m = ObjectFactory.create_object(render_group=self.render_group,
                                                  space=self.space,
                                                  object_type='car',
@@ -74,16 +70,6 @@ class GameScene:
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
         self.cars = [self.car_m]
-        for i in range(-5, 5):
-            if i == 0:
-                continue
-            car = ObjectFactory.create_object(render_group=self.render_group,
-                                              space=self.space,
-                                              object_type='car',
-                                              position=(70 * i, -100),
-                                              car_model='red_car')
-            car.switch_controller(random.choice([RandomController(), AIController(), BrakeController()]))
-            self.cars.append(car)
 
         self.traffic_cones = []
 

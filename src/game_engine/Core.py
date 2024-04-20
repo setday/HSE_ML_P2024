@@ -10,11 +10,16 @@ from src.render.Window import Window, IOController
 class Core:
     def __init__(self):
         self.window = Window(1920, 1080, "Park me")
-        n = input()
-        if n:
-            self.scene = WideScene()
+        n = [int(s) for s in input().split()]
+        """
+        n[1] is responsible for the map
+        n[2] is responsible for the cars
+        n[3] is responsible for the barriers
+        """
+        if n[0] == 1:
+            self.scene = WideScene(n[1], n[2])
         else:
-            self.scene = TightScene()
+            self.scene = TightScene(n[1])
         # self.scene = PhysicScene()
         # self.scene = GameOfLifeScene()
 

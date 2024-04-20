@@ -5,10 +5,10 @@ from src.game_engine.scenes.game_scene.SceneSetup import TightSceneSetup
 
 
 class TightScene(GameScene):
-    def __init__(self):
+    def __init__(self, cars=True):
         super().__init__()
 
         self.background = BasicSprite("assets/pic/Map3.jpeg", Vector2D(0, 0))
         self.background.update_scale(2)
         self.down_render_group.add(self.background)
-        TightSceneSetup(self)
+        TightSceneSetup(self, cars)

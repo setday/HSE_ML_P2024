@@ -5,9 +5,9 @@ from src.game_engine.scenes.game_scene.SceneSetup import WideSceneSetup
 
 
 class WideScene(GameScene):
-    def __init__(self):
+    def __init__(self, cars, barriers):
         super().__init__()
         self.background = BasicSprite("assets/pic/map/Map.jpg", Vector2D(0, 0))
         self.background.update_scale(10)
         self.down_render_group.add(self.background)
-        WideSceneSetup(self)
+        WideSceneSetup(self, cars, barriers)
