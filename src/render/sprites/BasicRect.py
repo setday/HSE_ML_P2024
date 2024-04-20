@@ -12,19 +12,31 @@ class BasicRect(BasicDrawable):
         self.width = int(width)
         self.height = int(height)
 
-        self.border_width = 2
-
-        self._top_bottom_skip = int(width * self.border_width)
-        self._center_horizontal_skip = int(width - 2 * self.border_width)
-        self._center_vertical_skip = int(height - 2 * self.border_width)
+        self.color = (255, 255, 255)
 
         self.src_surface = Texture.create_filled(hash(self).__str__(), (width, height), (0, 0, 0))
         self.texture = self.src_surface
-        self.update_color((255, 255, 255))
+
+        self.border_width = 2
+
+        self._top_bottom_skip = 0
+        self._center_horizontal_skip = 0
+        self._center_vertical_skip = 0
+
+        self.set_border_width(self.border_width)
 
         self.update_position(position)
         self.update_angle(0)
         self.update_scale(1)
+
+    def set_border_width(self, border_width: int) -> None:
+        self.border_width = border_width
+
+        self._top_bottom_skip = int(self.width * self.border_width)
+        self._center_horizontal_skip = int(self.width - 2 * self.border_width)
+        self._center_vertical_skip = int(self.height - 2 * self.border_width)
+
+        self.update_color(self.color)
 
     def update_color(self, color: Tuple[int, int, int] | Tuple[int, int, int, int]) -> None:
         self.color = color

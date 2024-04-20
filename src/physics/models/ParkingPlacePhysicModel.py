@@ -21,7 +21,7 @@ class ParkingPlacePhysicsModel:
             pymunk.Body(body_type=pymunk.Body.STATIC)
         ]
 
-        dead_zone_width = 3
+        dead_zone_width = 1
 
         self.dead_zones[0].position = (position[0] - size[0] / 2 + dead_zone_width / 2, position[1])
         self.dead_zones[1].position = (position[0] + size[0] / 2 - dead_zone_width / 2, position[1])

@@ -8,7 +8,7 @@ class Indicator:
     def __init__(
             self,
             owner,
-            position: Vector2D = Vector2D(300, 300),
+            position: Vector2D | tuple[float, float] = (300, 300),
             width: int = 200,
             height: int = 21,
             border_size: int = 5,

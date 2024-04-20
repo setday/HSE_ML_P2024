@@ -4,6 +4,10 @@ from src.game_engine.entities.Car import Car
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
 
 
+def skip_collision(arbiter, _, __):
+    return False
+
+
 def collision_car_with_car(arbiter, _, data):
     car1: Car = arbiter.shapes[0].super
     car2: Car = arbiter.shapes[1].super
