@@ -18,8 +18,8 @@ def collision_car_with_car(arbiter, _, data):
         ])
 
     health_decreation = delta_score
-    car1.health -= health_decreation
-    car2.health -= health_decreation
+    car1.change_health(-health_decreation)
+    car2.change_health(-health_decreation)
 
     return True
 
@@ -84,7 +84,7 @@ def collision_car_with_obstacle(arbiter, _, data):
             ":resources:images/space_shooter/meteorGrey_big2.png"
         ])
 
-        car.health -= health_decreation
+        car.change_health(-health_decreation)
 
         return True
 

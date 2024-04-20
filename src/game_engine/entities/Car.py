@@ -51,15 +51,19 @@ class Car:
 
         self.is_hand_braking = False
 
-        self.sync()
-
         self.controller = None
 
         self.dead_zones_intersect = 0
         self.inside_parking_place = 0
+        self.is_car_parked = False
 
-    def is_parked(self):
-        return self.car_model.body.velocity.get_length_sqrd() <= 0.2 and self.inside_parking_place and self.dead_zones_intersect == 0
+        self.hooks: dict[str, callable] = {
+            'dead_hook': None,
+            'parked_hook': None,
+            'unparked_hook': None,
+        }
+
+        self.sync()
 
     def controlling(self, keys):
         self.controller.handle_input(keys)
@@ -118,6 +122,17 @@ class Car:
 
         self.car_boundary.update_color((0, int(max(self.health, 1) * 2.55), 0))
 
+        if self.hooks['parked_hook'] or self.hooks['unparked_hook']:
+            parked_state = (self.car_model.body.velocity.get_length_sqrd() <= 0.2 and
+                            self.inside_parking_place and
+                            self.dead_zones_intersect == 0)
+            if parked_state != self.is_car_parked:
+                self.is_car_parked = parked_state
+                if self.hooks['parked_hook'] and self.is_car_parked:
+                    self.hooks['parked_hook'](self)
+                if self.hooks['unparked_hook'] and not self.is_car_parked:
+                    self.hooks['unparked_hook'](self)
+
         if self.tyre_state != 0 and (not self.is_hand_braking or self.car_model.body.velocity.get_length_sqrd() < 100):
             self._stop_tyring()
         if self.tyre_state != 1 and self.is_hand_braking and self.car_model.body.velocity.get_length_sqrd() > 100:
@@ -148,3 +163,15 @@ class Car:
 
     def turn_debug_view(self, mode=True):
         pass
+
+    def change_health(self, delta: float):
+        self.health += delta
+        self.health = min(max(self.health, 0), 100)
+        # self.sync()
+
+        if self.hooks['dead_hook'] and self.health <= 0:
+            self.hooks['dead_hook'](self)
+
+    def set_hook(self, hook_name: str, hook: callable):
+        self.hooks[hook_name] = hook
+        return self

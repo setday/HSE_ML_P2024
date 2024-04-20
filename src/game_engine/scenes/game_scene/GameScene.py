@@ -51,6 +51,9 @@ class GameScene:
         self.render_group.add(self.indicator.sprite_list)
 
         self.car_m.switch_controller(KeyboardController())
+        self.car_m.set_hook("dead_hook", lambda _: print("You dead"))
+        self.car_m.set_hook("parked_hook", lambda _: print("You win"))
+        self.car_m.set_hook("unparked_hook", lambda _: print("You out"))
 
         self.cars = [self.car_m]
         # for i in range(-5, 5):
@@ -117,13 +120,6 @@ class GameScene:
         self.render_group.camera.set_zoom(1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000)
         self.particle_show.update()
         self.indicator.update_bar()
-
-        if self.win_state ^ self.car_m.is_parked():
-            self.win_state = not self.win_state
-            if self.win_state:
-                print("You win")
-            else:
-                print("You out")
 
     def draw(self):
         self.down_render_group.draw()

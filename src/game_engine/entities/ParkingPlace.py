@@ -17,8 +17,6 @@ class ParkingPlace:
         render_group.add(self.base_view)
         render_group.add(self.dead_view)
 
-        self.update_color((255, 0, 0))
-
         self.space = space
         self.render_group = render_group
 
@@ -28,7 +26,3 @@ class ParkingPlace:
             self.space.add(self.parking_model.dead_zones[i], self.parking_model.dead_zone_shapes[i])
 
         self.space.add(self.parking_model.inner_body, self.parking_model.inner_shape)
-
-    def update_color(self, color):
-        self.base_boundary.update_color(color)
-        self.dead_boundary.update_color(color)
