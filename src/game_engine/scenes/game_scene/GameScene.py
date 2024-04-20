@@ -5,23 +5,14 @@ import pymunk
 from pyglet.math import Vec2 as Vector2D
 
 from src.game_engine.controllers.Controller import *
-from src.game_engine.entities.Car import Car
-from src.render.screen_elements.ScoreDisplay import ScoreDisplay
-from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
-from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
-from src.game_engine.scenes.game_scene.CollisionHandlers import collision_car_with_car, collision_car_with_obstacle
+from src.game_engine.entities.ObjectFactory import ObjectFactory
+from src.game_engine.entities.ParkingPlace import ParkingPlace
+from src.game_engine.scenes.game_scene.CollisionHandlers import *
 from src.render.RenderGroup import RenderGroup
 from src.render.particle.ParticleShow import ParticleShow
 from src.render.screen_elements.Indicator import Indicator
+from src.render.screen_elements.ScoreDisplay import ScoreDisplay
 from src.render.sprites.BasicSprite import BasicSprite
-
-from src.game_engine.controllers.Controller import *
-
-from src.game_engine.scenes.game_scene.CollisionHandlers import *
-
-from src.game_engine.entities.ObjectFactory import ObjectFactory
-
-from src.game_engine.entities.ParkingPlace import ParkingPlace
 
 
 class GameScene:

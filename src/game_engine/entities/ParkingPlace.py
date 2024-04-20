@@ -1,8 +1,7 @@
-from src.physics.models.ParkingPlacePhysicModel import ParkingPlacePhysicsModel
-from src.render.sprites.BasicRect import BasicRect
-from src.render.sprites.BasicSprite import BasicSprite
-
 from math import degrees
+
+from src.physics.models.ParkingPlacePhysicModel import ParkingPlacePhysicsModel
+from src.render.sprites.BasicSprite import BasicSprite
 
 
 class ParkingPlace:
