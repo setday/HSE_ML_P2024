@@ -69,9 +69,9 @@ class GameScene:
                                                  car_model='blue_car')
 
         self.car_m.switch_controller(KeyboardController())
-        self.car_m.set_hook("dead_hook", lambda _: print("You dead"))
-        self.car_m.set_hook("parked_hook", lambda _: print("You win"))
-        self.car_m.set_hook("unparked_hook", lambda _: print("You out"))
+        # self.car_m.set_hook("dead_hook", lambda _: print("You dead"))
+        # self.car_m.set_hook("parked_hook", lambda _: print("You win"))
+        # self.car_m.set_hook("unparked_hook", lambda _: print("You out"))
 
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
