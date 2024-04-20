@@ -4,17 +4,19 @@ from pyglet.math import Vec2 as Vector2D
 
 
 class BasicDrawable(arcade.Sprite):
-    def __init__(self, position: Vector2D = Vector2D(0, 0)):
+    def __init__(self, position: Vector2D | tuple[float, float] = (0, 0)):
         super().__init__()
 
         self.texture = arcade.Texture.create_empty("WT", (1, 1))
 
         self.angle = 0
-        self.position = position
+        self.position = Vector2D(0, 0)
         self.scale = 1
 
-    def update_position(self, position: Vector2D) -> None:
-        def inverse_y(pos: Vector2D) -> Vector2D:
+        self.update_position(position)
+
+    def update_position(self, position: Vector2D | tuple[float, float]) -> None:
+        def inverse_y(pos: Vector2D | tuple[float, float]) -> Vector2D:
             x, y = pos
             return Vector2D(x, -y)
 

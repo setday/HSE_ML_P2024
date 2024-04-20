@@ -3,7 +3,7 @@ import random
 from src.game_engine.controllers.Controller import *
 from src.game_engine.entities.ObjectFactory import *
 from src.game_engine.scenes.game_scene.EnvGeneration import ReadPositions
-
+from src.game_engine.entities.ParkingPlace import ParkingPlace
 
 def TightSceneSetup(scene):
     trees_positions, cones_positions, cars_positions, \
@@ -69,83 +69,79 @@ def WideSceneSetup(scene):
                 render_group=scene.render_group,
                 space=scene.space,
                 object_type='movable_obstacle',
-                position=Vector2D(70 * i, -170),
+                position=(70 * i, -170),
                 movable_obstacle_model='cone'
             )
         )
 
     scene.traffic_cones.append(ObjectFactory.create_object(
-        scene.render_group, scene.space, 'movable_obstacle', Vector2D(70 * -5 - 35, -70),
+        scene.render_group, scene.space, 'movable_obstacle', (70 * -5 - 35, -70),
         movable_obstacle_model='cone'
     ))
     scene.traffic_cones.append(ObjectFactory.create_object(
-        scene.render_group, scene.space, 'movable_obstacle', Vector2D(70 * -5 - 40, -100),
+        scene.render_group, scene.space, 'movable_obstacle', (70 * -5 - 40, -100),
         movable_obstacle_model='cone'
     ))
     scene.traffic_cones.append(ObjectFactory.create_object(
-        scene.render_group, scene.space, 'movable_obstacle', Vector2D(70 * -5 - 35, -130),
+        scene.render_group, scene.space, 'movable_obstacle', (70 * -5 - 35, -130),
         movable_obstacle_model='cone'
     ))
 
     scene.traffic_cones.append(ObjectFactory.create_object(
-        scene.render_group, scene.space, 'movable_obstacle', Vector2D(70 * 4 + 35, -70),
+        scene.render_group, scene.space, 'movable_obstacle', (70 * 4 + 35, -70),
         movable_obstacle_model='cone'
     ))
     scene.traffic_cones.append(ObjectFactory.create_object(
-        scene.render_group, scene.space, 'movable_obstacle', Vector2D(70 * 4 + 40, -100),
+        scene.render_group, scene.space, 'movable_obstacle', (70 * 4 + 40, -100),
         movable_obstacle_model='cone'
     ))
     scene.traffic_cones.append(ObjectFactory.create_object(
-        scene.render_group, scene.space, 'movable_obstacle', Vector2D(70 * 4 + 35, -130),
+        scene.render_group, scene.space, 'movable_obstacle', (70 * 4 + 35, -130),
         movable_obstacle_model='cone'
     ))
 
     for i in range(-5, 5):
         ObjectFactory.create_object(
-            scene.top_render_group, scene.space, 'static_obstacle', Vector2D(70 * i, -10),
+            scene.top_render_group, scene.space, 'static_obstacle', (70 * i, -10),
             static_obstacle_model='tree'
         )
 
+    ###
+    # Parking lots
+    ###
+
+    for i in range(-5, 5):
+        ParkingPlace(scene.down_render_group, scene.space, (70 * i, -100))
     for i in range(-5, 4):
         ObjectFactory.create_object(
-            scene.render_group, scene.space, 'static_obstacle', Vector2D(70 * i + 35, -100), 90,
+            scene.render_group, scene.space, 'static_obstacle', (70 * i + 35, -100), 90,
             static_obstacle_model='metal_pipe'
         )
     for i in range(-5, 5):
         ObjectFactory.create_object(
-            scene.render_group, scene.space, 'static_obstacle', Vector2D(70 * i, -50),
+            scene.render_group, scene.space, 'static_obstacle', (70 * i, -45),
             static_obstacle_model='rubbish_line'
         )
 
+    ###
+    # Barriers
+    ###
+
     ObjectFactory.create_object(
-        scene.render_group, scene.space, 'static_obstacle', Vector2D(0, 1000),
+        scene.render_group, scene.space, 'static_obstacle', (0, 1000),
         static_obstacle_model='x_barrier'
     )
     ObjectFactory.create_object(
-        scene.render_group, scene.space, 'static_obstacle', Vector2D(0, -2000),
+        scene.render_group, scene.space, 'static_obstacle', (0, -2000),
         static_obstacle_model='x_barrier'
     )
     ObjectFactory.create_object(
-        scene.render_group, scene.space, 'static_obstacle', Vector2D(3500, 0),
+        scene.render_group, scene.space, 'static_obstacle', (3500, 0),
         static_obstacle_model='y_barrier'
     )
     ObjectFactory.create_object(
-        scene.render_group, scene.space, 'static_obstacle', Vector2D(-3500, 0),
+        scene.render_group, scene.space, 'static_obstacle', (-3500, 0),
         static_obstacle_model='y_barrier'
     )
-    ObjectFactory.create_object(
-        scene.render_group, scene.space, 'static_obstacle', Vector2D(0, 1000),
-        static_obstacle_model='x_barrier'
-    )
-    ObjectFactory.create_object(
-        scene.render_group, scene.space, 'static_obstacle', Vector2D(0, -2000),
-        static_obstacle_model='x_barrier'
-    )
-    ObjectFactory.create_object(
-        scene.render_group, scene.space, 'static_obstacle', Vector2D(3500, 0),
-        static_obstacle_model='y_barrier'
-    )
-    ObjectFactory.create_object(
-        scene.render_group, scene.space, 'static_obstacle', Vector2D(-3500, 0),
-        static_obstacle_model='y_barrier'
-    )
+
+    ParkingPlace(scene.down_render_group, scene.space, (0, -300), angle=0.4)
