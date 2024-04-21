@@ -12,7 +12,7 @@ from src.render.particle.ParticleShow import ParticleShow
 from src.render.screen_elements.Indicator import Indicator
 from src.render.screen_elements.ScoreDisplay import ScoreDisplay
 from src.render.sprites.BasicSprite import BasicSprite
-
+from src.game_engine.scenes.game_scene.SceneSetup import SceneSetup
 
 class GameScene:
     def __init__(self):
@@ -52,6 +52,10 @@ class GameScene:
             self.space.add_collision_handler(i, 40).begin = skip_collision
             self.space.add_collision_handler(i, 41).begin = skip_collision
 
+        self.background = BasicSprite("assets/pic/map/Map.jpg", Vector2D(0, 0))
+        self.background.update_scale(10)
+        self.down_render_group.add(self.background)
+
         ######################
         # Setup game objects
         ######################
@@ -73,7 +77,7 @@ class GameScene:
 
         self.traffic_cones = []
 
-
+        SceneSetup(self, 'assets/json/ParkWithObstacles.json')
         ######################
         # Screen Elements
         ######################

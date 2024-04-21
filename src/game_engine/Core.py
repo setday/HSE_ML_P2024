@@ -1,7 +1,6 @@
 import arcade
 
-from src.game_engine.scenes.game_scene.TightScene import TightScene
-from src.game_engine.scenes.game_scene.WideScene import WideScene
+from src.game_engine.scenes.game_scene.GameScene import GameScene
 from src.game_engine.scenes.fun_scenes.PhysicScene import PhysicScene
 from src.game_engine.scenes.fun_scenes.GameOfLifeScene import GameOfLifeScene
 from src.render.Window import Window, IOController
@@ -10,16 +9,7 @@ from src.render.Window import Window, IOController
 class Core:
     def __init__(self):
         self.window = Window(1920, 1080, "Park me")
-        n = [int(s) for s in input().split()]
-        """
-        n[1] is responsible for the map
-        n[2] is responsible for the cars
-        n[3] is responsible for the barriers
-        """
-        if n[0] == 1:
-            self.scene = WideScene(n[1], n[2])
-        else:
-            self.scene = TightScene(n[1])
+        self.scene = GameScene()
         # self.scene = PhysicScene()
         # self.scene = GameOfLifeScene()
 

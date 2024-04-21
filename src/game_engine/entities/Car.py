@@ -52,7 +52,6 @@ class Car:
         self.is_hand_braking = False
 
         self.controller = None
-        self.fast_rotate(angle)
         self.dead_zones_intersect = 0
         self.inside_parking_place = 0
         self.is_car_parked = False
@@ -65,9 +64,6 @@ class Car:
 
         self.sync()
 
-    def fast_rotate(self, angle):
-        self.car_view.update_angle(angle)
-        self.car_model.update_angle(angle)
 
     def controlling(self, keys):
         self.controller.handle_input(keys)
