@@ -77,7 +77,7 @@ class GameScene:
 
         self.traffic_cones = []
 
-        SceneSetup(self, 'assets/json/ParkWithObstacles.json')
+        SceneSetup(self, 'assets/MapConfigs/ParkWithObstacles.json')
         ######################
         # Screen Elements
         ######################

@@ -1,5 +1,7 @@
 import json
 import random
+
+
 def Map1InitPositions():
     d = {
         'trees_positions': [],
@@ -8,13 +10,13 @@ def Map1InitPositions():
         'barriers_positions': [],
         'parking_positions': [(0, -300, 0.4)]
     }
-    with open('../../../../assets/json/OnlyPark.json', 'w') as file:
+    with open('../../../../assets/MapConfigs/OnlyPark.json', 'w') as file:
         json.dump(d, file)
     for i in range(-5, 4):
         d['barriers_positions'].append((70 * i + 35, -100, 90))
     for i in range(-5, 5):
         d['barriers_positions'].append((70 * i, -45, 0))
-    with open('../../../../assets/json/ParkWithBarriers.json', 'w') as file:
+    with open('../../../../assets/MapConfigs/ParkWithBarriers.json', 'w') as file:
         json.dump(d, file)
     for i in range(-5, 5):
         d['cones_positions'].append((70 * i, -170))
@@ -26,7 +28,7 @@ def Map1InitPositions():
     d['cones_positions'].append((70 * 4 + 35, -130))
     for i in range(-5, 5):
         d['trees_positions'].append((70 * i, -10))
-    with open('../../../../assets/json/ParkWithObstacles.json', 'w') as file:
+    with open('../../../../assets/MapConfigs/ParkWithObstacles.json', 'w') as file:
         json.dump(d, file)
     for i in range(-5, 5):
         if i == 0:
@@ -34,8 +36,9 @@ def Map1InitPositions():
         d['cars_positions'].append(((70 * i, -100, 90)))
     for i in range(-5, 5):
         d['parking_positions'].append((70 * i, -100, 0))
-    with open('../../../../assets/json/ParkWithEnemies.json', 'w') as file:
+    with open('../../../../assets/MapConfigs/ParkWithEnemies.json', 'w') as file:
         json.dump(d, file)
+
 
 def Map2InitPositions():
     d = {'trees_positions': [
@@ -107,9 +110,8 @@ def Map2InitPositions():
         d['barriers_positions'].append((425, y, 0))
         d['barriers_positions'].append((475, y, 0))
         d['barriers_positions'].append((525, y, 0))
-    with open('../../../../assets/json/TestMap.json', 'w') as file:
+    with open('../../../../assets/MapConfigs/TestMap.json', 'w') as file:
         json.dump(d, file)
-
 
 
 def ReadPositions(path):
