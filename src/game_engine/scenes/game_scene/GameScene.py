@@ -5,14 +5,13 @@ import pymunk
 from pyglet.math import Vec2 as Vector2D
 
 from src.game_engine.controllers.Controller import *
-from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.scenes.game_scene.CollisionHandlers import *
 from src.render.RenderGroup import RenderGroup
 from src.render.particle.ParticleShow import ParticleShow
 from src.render.screen_elements.Indicator import Indicator
 from src.render.screen_elements.ScoreDisplay import ScoreDisplay
-from src.render.sprites.BasicSprite import BasicSprite
 from src.game_engine.scenes.game_scene.SceneSetup import SceneSetup
+
 
 class GameScene:
     def __init__(self):
@@ -52,32 +51,23 @@ class GameScene:
             self.space.add_collision_handler(i, 40).begin = skip_collision
             self.space.add_collision_handler(i, 41).begin = skip_collision
 
-        self.background = BasicSprite("assets/pic/map/Map.jpg", Vector2D(0, 0))
-        self.background.update_scale(10)
-        self.down_render_group.add(self.background)
+
 
         ######################
         # Setup game objects
         ######################
 
-        self.car_m = ObjectFactory.create_object(render_group=self.render_group,
-                                                 space=self.space,
-                                                 object_type='car',
-                                                 position=(0, -100),
-                                                 car_model='blue_car')
 
-        self.car_m.switch_controller(KeyboardController())
         # self.car_m.set_hook("dead_hook", lambda _: print("You dead"))
         # self.car_m.set_hook("parked_hook", lambda _: print("You win"))
         # self.car_m.set_hook("unparked_hook", lambda _: print("You out"))
 
-        self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
-        self.cars = [self.car_m]
-
-        self.traffic_cones = []
 
         SceneSetup(self, 'assets/MapConfigs/ParkWithObstacles.json')
+
+        for car in self.cars[1:]:
+            car.switch_controller(random.choice([RandomController(), AIController(), BrakeController()]))
         ######################
         # Screen Elements
         ######################
