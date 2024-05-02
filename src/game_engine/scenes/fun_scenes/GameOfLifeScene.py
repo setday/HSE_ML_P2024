@@ -18,8 +18,15 @@ class GameOfLifeField:
         for i in range(self.height):
             for j in range(self.width):
                 state = self.grid[i, j]
-                neighbours = np.sum(
-                    self.grid[max(0, i - 1):min(self.height, i + 2), max(0, j - 1):min(self.width, j + 2)]) - state
+                neighbours = (
+                    np.sum(
+                        self.grid[
+                            max(0, i - 1) : min(self.height, i + 2),
+                            max(0, j - 1) : min(self.width, j + 2),
+                        ]
+                    )
+                    - state
+                )
 
                 if state and not 2 <= neighbours <= 3:
                     new_grid[i, j] = 0
@@ -59,16 +66,27 @@ class GameOfLifeScene:
         if x < 0 or y < 0 or x > 500 or y > 500:
             return
 
-        self.field.grid[y // self.RESOLUTION, x // self.RESOLUTION] = \
-            not self.field.grid[y // self.RESOLUTION, x // self.RESOLUTION]
+        self.field.grid[
+            y // self.RESOLUTION, x // self.RESOLUTION
+        ] = not self.field.grid[y // self.RESOLUTION, x // self.RESOLUTION]
 
     def draw(self):
         for i in range(self.ROWS):
             for j in range(self.COLS):
                 if self.field.grid[i, j]:
-                    arcade.draw_rectangle_filled(j * self.RESOLUTION + 100, i * self.RESOLUTION + 100,
-                                                 self.RESOLUTION - 1, self.RESOLUTION - 1, arcade.color.WHITE)
+                    arcade.draw_rectangle_filled(
+                        j * self.RESOLUTION + 100,
+                        i * self.RESOLUTION + 100,
+                        self.RESOLUTION - 1,
+                        self.RESOLUTION - 1,
+                        arcade.color.WHITE,
+                    )
                 else:
-                    arcade.draw_rectangle_filled(j * self.RESOLUTION + 100, i * self.RESOLUTION + 100,
-                                                 self.RESOLUTION - 1, self.RESOLUTION - 1, arcade.color.BLACK)
+                    arcade.draw_rectangle_filled(
+                        j * self.RESOLUTION + 100,
+                        i * self.RESOLUTION + 100,
+                        self.RESOLUTION - 1,
+                        self.RESOLUTION - 1,
+                        arcade.color.BLACK,
+                    )
         pass

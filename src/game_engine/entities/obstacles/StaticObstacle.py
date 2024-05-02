@@ -9,14 +9,15 @@ from src.render.sprites.BasicSprite import BasicSprite
 
 
 class StaticObstacle:
-    def __init__(self,
-                 render_group: RenderGroup,
-                 space: Space,
-                 position: Vector2D = (0, 0),
-                 angle: float = 0,
-                 image_path: str | None = "assets/pic/obstacles/Tree_1.png",
-                 shape_type=None):
-
+    def __init__(
+        self,
+        render_group: RenderGroup,
+        space: Space,
+        position: Vector2D = (0, 0),
+        angle: float = 0,
+        image_path: str | None = "assets/pic/obstacles/Tree_1.png",
+        shape_type=None,
+    ):
         self.obstacle_view = None
         if image_path is not None:
             self.obstacle_view = BasicSprite(image_path, position)
@@ -24,13 +25,17 @@ class StaticObstacle:
         x, y = position
 
         shape_size = 20000
-        if shape_type == 'circle':
+        if shape_type == "circle":
             shape_size = 10
 
-        if shape_type != 'self':
-            self.obstacle_model = StaticObstaclePhysicsModel((x, y), shape_type, shape_size)
+        if shape_type != "self":
+            self.obstacle_model = StaticObstaclePhysicsModel(
+                (x, y), shape_type, shape_size
+            )
         else:
-            self.obstacle_model = StaticObstaclePhysicsModel((x, y), 'polygon', 0, self.obstacle_view.get_hit_box())
+            self.obstacle_model = StaticObstaclePhysicsModel(
+                (x, y), "polygon", 0, self.obstacle_view.get_hit_box()
+            )
         self.obstacle_model.body.angle = angle
 
         if self.obstacle_view is not None:
