@@ -41,9 +41,11 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
+    - name: Set end time
+      run: echo "export SERVER_END_TIME=$(($(date +%s) + 10))" >> $GITHUB_ENV
     - name: Format with black
       run: black --check .
     - name: Run game
       run: python3.10 main.py
     - name: Build with bazel
-      run: bazel run :main
+      run: bazel build :main
