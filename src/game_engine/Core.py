@@ -1,10 +1,8 @@
 import arcade
 
-from src.utils.Loaders import load_font
-
 from src.game_engine.scenes.StartScene import StartScene
-
 from src.render.Window import Window, IOController
+from src.utils.Loaders import load_font
 
 
 class Core:

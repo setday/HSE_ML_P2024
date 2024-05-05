@@ -2,6 +2,7 @@ import arcade
 
 from src.utils.Loaders import load_image
 
+
 class IOController:
     def __init__(self):
         self.keyboard = {}

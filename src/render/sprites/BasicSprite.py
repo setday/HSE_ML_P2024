@@ -1,12 +1,12 @@
 from pyglet.math import Vec2 as Vector2D
 
-from src.utils.Loaders import load_texture
 from src.render.sprites.BasicDrawable import BasicDrawable
+from src.utils.Loaders import load_texture
 
 
 class BasicSprite(BasicDrawable):
     def __init__(
-        self, image, position: Vector2D | tuple[float, float] = Vector2D(0, 0), scale=1
+            self, image, position: Vector2D | tuple[float, float] = Vector2D(0, 0), scale=1
     ) -> None:
         super().__init__(position)
 

@@ -1,10 +1,12 @@
+import random
 import time
 
 import arcade.key
-from arcade.experimental import Shadertoy
 import pymunk
+from arcade.experimental import Shadertoy
 from pyglet.math import Vec2 as Vector2D
-import random
+
+import src.game_engine.scenes.game_scene.CollisionHandlers as CollisionHandlers
 from src.game_engine.controllers.Controller import (
     KeyboardController,
     BrakeController,
@@ -13,7 +15,6 @@ from src.game_engine.controllers.Controller import (
 )
 from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.entities.ParkingPlace import ParkingPlace
-import src.game_engine.scenes.game_scene.CollisionHandlers as CollisionHandlers
 from src.render.RenderGroup import RenderGroup
 from src.render.particle.ParticleShow import ParticleShow
 from src.render.screen_elements.Indicator import Indicator
