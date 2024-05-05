@@ -22,6 +22,22 @@ class BasicDrawable(arcade.Sprite):
 
         self.position = inverse_y(position)
 
+    @property
+    def x(self) -> float:
+        return self.center_x
+
+    @x.setter
+    def x(self, value: float) -> None:
+        self.center_x = value
+
+    @property
+    def y(self) -> float:
+        return self.center_y
+
+    @y.setter
+    def y(self, value: float) -> None:
+        self.center_y = -value
+
     def update_angle(self, angle: float) -> None:
         self.angle = -angle
 

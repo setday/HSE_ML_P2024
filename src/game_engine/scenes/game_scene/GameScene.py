@@ -204,6 +204,7 @@ class GameScene:
         ######################
         # Shaders Setup
         ######################
+
         # file = open("src/shaders/toy/fractal_pyramid.glsl")
         file = open("src/shaders/vignette/vignette.glsl")
         shader_sourcecode = file.read()

@@ -2,6 +2,8 @@ import arcade
 
 from pyglet.math import Vec2 as Vector2D
 
+from src.utils.Loaders import load_font
+
 from src.render.sprites.BasicSprite import BasicSprite
 
 
@@ -17,7 +19,7 @@ class ScoreDisplay:
                  icon="assets/pic/icon/coin_2.png"
                  ):
         if font_path is not None:
-            arcade.load_font(font_path)
+            load_font(font_path)
         self.current_score = self.target_score = score
         self.change_speed = 0.03
 

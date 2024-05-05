@@ -1,5 +1,6 @@
 import arcade
 
+from src.utils.Loaders import load_image
 
 class IOController:
     def __init__(self):
@@ -13,6 +14,8 @@ class IOController:
 class Window(arcade.Window):
     def __init__(self, width: int, height: int, title: str):
         super().__init__(width, height, title)
+
+        self.set_icon(load_image("assets/pic/icon/icon.png"))
 
         # self.center_window()
 

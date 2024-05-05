@@ -1,5 +1,7 @@
 import arcade
 
+from src.utils.Loaders import load_font
+
 from src.game_engine.scenes.StartScene import StartScene
 from src.render.Window import Window, IOController
 
@@ -7,8 +9,8 @@ from src.render.Window import Window, IOController
 class Core:
     def __init__(self):
         self.window = Window(1920, 1080, "Park me")
-        arcade.load_font('assets/fnt/Title.ttf')
-        arcade.load_font('assets/fnt/ka1.ttf')
+        load_font('assets/fnt/Title.ttf')
+        load_font('assets/fnt/ka1.ttf')
 
         self.scene = None
 
