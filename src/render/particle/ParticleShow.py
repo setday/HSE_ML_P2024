@@ -17,7 +17,9 @@ class ParticleShow:
         for emitter in self.emitters:
             emitter.draw()
 
-    def add_burst(self, center_xy: Tuple[int, int], textures: List[str]) -> arcade.Emitter:
+    def add_burst(
+        self, center_xy: Tuple[int, int], textures: List[str]
+    ) -> arcade.Emitter:
         x, y = center_xy
 
         emitter = arcade.make_burst_emitter(
@@ -28,7 +30,7 @@ class ParticleShow:
             particle_lifetime_min=0.75,
             particle_lifetime_max=1.25,
             particle_scale=0.13,
-            fade_particles=True
+            fade_particles=True,
         )
 
         self.emitters.append(emitter)

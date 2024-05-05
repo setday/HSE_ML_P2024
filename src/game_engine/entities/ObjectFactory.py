@@ -11,67 +11,104 @@ from src.render.RenderGroup import RenderGroup
 
 class ObjectFactory:
     @staticmethod
-    def create_object(render_group: RenderGroup,
-                      space: Space,
-                      object_type: str = 'car',
-                      position: Vector2D | tuple[float, float] = (0, 0),
-                      angle: float = 0,
-                      **kwargs) -> Car | MovableObstacle | StaticObstacle:
-        if object_type == 'car':
-            return ObjectFactory.create_car(render_group, space, position, angle, kwargs.get('car_model', 'blue_car'))
-        elif object_type == 'movable_obstacle':
-            return ObjectFactory.create_movable_obstacle(render_group, space, position, angle,
-                                                         kwargs.get('movable_obstacle_model', 'cone'))
-        elif object_type == 'static_obstacle':
-            return ObjectFactory.create_static_obstacle(render_group, space, position, angle,
-                                                        kwargs.get('static_obstacle_model', 'tree'))
+    def create_object(
+        render_group: RenderGroup,
+        space: Space,
+        object_type: str = "car",
+        position: Vector2D | tuple[float, float] = (0, 0),
+        angle: float = 0,
+        **kwargs,
+    ) -> Car | MovableObstacle | StaticObstacle:
+        if object_type == "car":
+            return ObjectFactory.create_car(
+                render_group,
+                space,
+                position,
+                angle,
+                kwargs.get("car_model", "blue_car"),
+            )
+        elif object_type == "movable_obstacle":
+            return ObjectFactory.create_movable_obstacle(
+                render_group,
+                space,
+                position,
+                angle,
+                kwargs.get("movable_obstacle_model", "cone"),
+            )
+        elif object_type == "static_obstacle":
+            return ObjectFactory.create_static_obstacle(
+                render_group,
+                space,
+                position,
+                angle,
+                kwargs.get("static_obstacle_model", "tree"),
+            )
         else:
             raise ValueError(f"Invalid object type: {object_type}")
 
     @staticmethod
-    def create_car(render_group: RenderGroup,
-                   space: Space,
-                   position: Vector2D | tuple[float, float] = (0, 0),
-                   angle: float = 0,
-                   car_model: str = 'blue_car') -> Car:
+    def create_car(
+        render_group: RenderGroup,
+        space: Space,
+        position: Vector2D | tuple[float, float] = (0, 0),
+        angle: float = 0,
+        car_model: str = "blue_car",
+    ) -> Car:
         car_model_dict = {
-            'random_car': -1,
-            'blue_car': 0,
-            'red_car': 1,
-            'long_car': 2,
+            "random_car": -1,
+            "blue_car": 0,
+            "red_car": 1,
+            "long_car": 2,
         }
-        return Car(render_group, space, position, radians(angle), car_model_dict[car_model])
+        return Car(
+            render_group, space, position, radians(angle), car_model_dict[car_model]
+        )
 
     @staticmethod
-    def create_movable_obstacle(render_group: RenderGroup,
-                                space: Space,
-                                position: Vector2D | tuple[float, float] = (0, 0),
-                                angle: float = 0,
-                                movable_obstacle_model: str = 'cone') -> MovableObstacle:
+    def create_movable_obstacle(
+        render_group: RenderGroup,
+        space: Space,
+        position: Vector2D | tuple[float, float] = (0, 0),
+        angle: float = 0,
+        movable_obstacle_model: str = "cone",
+    ) -> MovableObstacle:
         movable_obstacle_model_dict = {
-            'cone': 'assets/pic/obstacles/Traffic_Cone.png',
+            "cone": "assets/pic/obstacles/Traffic_Cone.png",
         }
-        return MovableObstacle(render_group, space, position, radians(angle),
-                               movable_obstacle_model_dict[movable_obstacle_model])
+        return MovableObstacle(
+            render_group,
+            space,
+            position,
+            radians(angle),
+            movable_obstacle_model_dict[movable_obstacle_model],
+        )
 
     @staticmethod
-    def create_static_obstacle(render_group: RenderGroup,
-                               space: Space,
-                               position: Vector2D | tuple[float, float] = (0, 0),
-                               angle: float = 0,
-                               static_obstacle_model: str = 'bush') -> StaticObstacle:
+    def create_static_obstacle(
+        render_group: RenderGroup,
+        space: Space,
+        position: Vector2D | tuple[float, float] = (0, 0),
+        angle: float = 0,
+        static_obstacle_model: str = "bush",
+    ) -> StaticObstacle:
         static_obstacle_model_dict = {
-            'bush': 'assets/pic/obstacles/Bush.png',
-            'metal_pipe': 'assets/pic/obstacles/parking_barrier_1.png',
-            'rubbish_line': 'assets/pic/obstacles/parking_barrier_2.png',
-            'tree': 'assets/pic/obstacles/Tree_1.png',
-            'x_barrier': None,
-            'y_barrier': None,
+            "bush": "assets/pic/obstacles/Bush.png",
+            "metal_pipe": "assets/pic/obstacles/parking_barrier_1.png",
+            "rubbish_line": "assets/pic/obstacles/parking_barrier_2.png",
+            "tree": "assets/pic/obstacles/Tree_1.png",
+            "x_barrier": None,
+            "y_barrier": None,
         }
-        shape_type = 'self'
-        if static_obstacle_model in ['x_barrier', 'y_barrier']:
+        shape_type = "self"
+        if static_obstacle_model in ["x_barrier", "y_barrier"]:
             shape_type = static_obstacle_model
-        if static_obstacle_model == 'tree':
-            shape_type = 'circle'
-        return StaticObstacle(render_group, space, position, radians(angle),
-                              static_obstacle_model_dict[static_obstacle_model], shape_type)
+        if static_obstacle_model == "tree":
+            shape_type = "circle"
+        return StaticObstacle(
+            render_group,
+            space,
+            position,
+            radians(angle),
+            static_obstacle_model_dict[static_obstacle_model],
+            shape_type,
+        )
