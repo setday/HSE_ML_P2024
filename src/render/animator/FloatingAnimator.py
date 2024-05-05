@@ -22,14 +22,14 @@ class FloatingParameterAnimator(BasicAnimator):
 
 class FloatingAnimator(BasicAnimator):
     def __init__(
-            self,
-            instance: Any,
-            limits_x: tuple[float, float] = (0, 0),
-            limits_y: tuple[float, float] = (-10, 10),
-            speed: float = 1
+        self,
+        instance: Any,
+        limits_x: tuple[float, float] = (0, 0),
+        limits_y: tuple[float, float] = (-10, 10),
+        speed: float = 1,
     ):
-        if not hasattr(instance, 'x') or not hasattr(instance, 'y'):
-            raise ValueError('Instance must have x and y attributes')
+        if not hasattr(instance, "x") or not hasattr(instance, "y"):
+            raise ValueError("Instance must have x and y attributes")
 
         super().__init__(instance)
 

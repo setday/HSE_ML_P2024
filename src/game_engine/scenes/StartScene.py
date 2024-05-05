@@ -22,10 +22,7 @@ class StartScene:
         self.background.update_scale(10)
 
         self.background_animator = WanderAnimator(
-            self.background,
-            limits_x=(-1000, 1000),
-            limits_y=(-1000, 1000),
-            speed=0.05
+            self.background, limits_x=(-1000, 1000), limits_y=(-1000, 1000), speed=0.05
         )
 
         #
@@ -39,16 +36,11 @@ class StartScene:
             arcade.color.BLACK,
             100,
             200,
-            'center',
-            font_name="Karmatic Arcade"
+            "center",
+            font_name="Karmatic Arcade",
         )
         self.comment1 = arcade.Text(
-            "след от колес машины",
-            100,
-            650,
-            arcade.color.BLACK,
-            20,
-            200
+            "след от колес машины", 100, 650, arcade.color.BLACK, 20, 200
         )
         self.border_box1 = arcade.SpriteSolidColor(
             500,
@@ -62,7 +54,7 @@ class StartScene:
             150,
             arcade.color.BLACK,
             20,
-            200
+            200,
         )
         self.border_box2 = arcade.SpriteSolidColor(
             630,
@@ -80,25 +72,21 @@ class StartScene:
             width=200,
             height=100,
             style={
-                "font_name": 'Minecraft Ten font cyrillic',
+                "font_name": "Minecraft Ten font cyrillic",
                 "font_size": 40,
                 "font_color": arcade.color.BLACK,
                 "border_color": arcade.color.BLACK,
                 "bg_color": arcade.color.WHITE,
-            }
+            },
         )
         self.play_button.on_click = self.on_click
 
         self.play_button_animator = UIAnimatableWidget(
             anchor_x="center_x",
             anchor_y="center_y",
-
             child=self.play_button,
-
             animator_type=FloatingAnimator,
-            animator_params={
-                "speed": 1.0
-            }
+            animator_params={"speed": 1.0},
         )
         self.manager = arcade.gui.UIManager()
         self.manager.enable()

@@ -21,15 +21,23 @@ class WanderParameterAnimator(BasicAnimator):
             self.startValue = self._instance
             self._time = 0
 
-        self._instance = lerp_ease_in_out(self.startValue, self.targetValue, self._time * self.speed)
+        self._instance = lerp_ease_in_out(
+            self.startValue, self.targetValue, self._time * self.speed
+        )
 
         return self._instance
 
 
 class WanderAnimator(BasicAnimator):
-    def __init__(self, instance: Any, limits_x: tuple[float, float], limits_y: tuple[float, float], speed: float = 1):
-        if not hasattr(instance, 'x') or not hasattr(instance, 'y'):
-            raise ValueError('Instance must have x and y attributes')
+    def __init__(
+        self,
+        instance: Any,
+        limits_x: tuple[float, float],
+        limits_y: tuple[float, float],
+        speed: float = 1,
+    ):
+        if not hasattr(instance, "x") or not hasattr(instance, "y"):
+            raise ValueError("Instance must have x and y attributes")
 
         super().__init__(instance)
 

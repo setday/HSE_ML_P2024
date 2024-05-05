@@ -45,9 +45,9 @@ class GameScene:
         h_10_30 = self.space.add_collision_handler(10, 30)
         h_10_30.begin = CollisionHandlers.collision_car_with_obstacle
 
-        h_10_10.data["score"] = h_10_20.data["score"] = h_10_30.data[
-            "score"
-        ] = self.score
+        h_10_10.data["score"] = h_10_20.data["score"] = h_10_30.data["score"] = (
+            self.score
+        )
         h_10_10.data["debris_emitter"] = h_10_20.data["debris_emitter"] = h_10_30.data[
             "debris_emitter"
         ] = self.particle_show
@@ -66,12 +66,12 @@ class GameScene:
         for i in range(0, 40):
             if i == 10:
                 continue
-            self.space.add_collision_handler(
-                i, 40
-            ).begin = CollisionHandlers.skip_collision
-            self.space.add_collision_handler(
-                i, 41
-            ).begin = CollisionHandlers.skip_collision
+            self.space.add_collision_handler(i, 40).begin = (
+                CollisionHandlers.skip_collision
+            )
+            self.space.add_collision_handler(i, 41).begin = (
+                CollisionHandlers.skip_collision
+            )
 
         ######################
         # Setup game objects
@@ -279,7 +279,7 @@ class GameScene:
             100,
             anchor_x="center",
             anchor_y="center",
-            font_name="Karmatic Arcade"
+            font_name="Karmatic Arcade",
         )
 
         ######################
@@ -372,11 +372,15 @@ class GameScene:
 
         self.tick += 1
 
-        self.shader_vin.render(time=self.tick / 125, time_delta=self.car_m.health, mouse_position=(0, 0))
+        self.shader_vin.render(
+            time=self.tick / 125, time_delta=self.car_m.health, mouse_position=(0, 0)
+        )
 
         if self.car_m.health <= 0:
             first_black_screen_trans = min((7.0 - self.reset_timer) * 0.6, 0.8)
-            self.shader_gray.render(time=first_black_screen_trans, mouse_position=(0, 0))
+            self.shader_gray.render(
+                time=first_black_screen_trans, mouse_position=(0, 0)
+            )
 
             text_len = int(max((6.0 - self.reset_timer) * 7, 0.0))
             self.end_text.text = "You   LOSE"[:text_len]

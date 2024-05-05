@@ -16,13 +16,9 @@ class UIAnimatableWidget(UIAnchorWidget):
     :param style: not used
     """
 
-    def __init__(self,
-                 *,
-                 child: UIWidget,
-                 animator_type=None,
-                 animator_params=None,
-                 **kwargs
-                 ):
+    def __init__(
+        self, *, child: UIWidget, animator_type=None, animator_params=None, **kwargs
+    ):
         self.delta_align_x = 0
         self.delta_align_y = 0
 

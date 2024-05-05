@@ -15,14 +15,16 @@ class MoverParameterAnimator(BasicAnimator):
 
         super().update(dt)
 
-        self._instance = lerp_ease_in_out(self.start, self.target, self._time * self._duration)
+        self._instance = lerp_ease_in_out(
+            self.start, self.target, self._time * self._duration
+        )
         return self._instance
 
 
 class MoverAnimator(BasicAnimator):
     def __init__(self, instance: Any, target: tuple[float, float], duration: float):
-        if not hasattr(instance, 'x') or not hasattr(instance, 'y'):
-            raise ValueError('Instance must have x and y attributes')
+        if not hasattr(instance, "x") or not hasattr(instance, "y"):
+            raise ValueError("Instance must have x and y attributes")
 
         super().__init__(instance, duration)
 
