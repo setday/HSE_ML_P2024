@@ -6,8 +6,6 @@ from src.game_engine.scenes.LearningScene import LearningScene
 from src.render.Window import Window, IOController
 
 
-
-
 class Train:
     def __init__(self):
         self.window = Window(1920, 1080, "Train me")
@@ -49,5 +47,3 @@ class Train:
 
     def on_draw(self) -> None:
         self.scene.draw()
-
-train = Train()
