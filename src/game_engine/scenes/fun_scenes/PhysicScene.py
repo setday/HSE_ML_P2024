@@ -35,7 +35,9 @@ class PhysicScene:
 
         # Randomly add impulse to ball
         if keys.get(arcade.key.D, False):
-            self.ball_body.apply_impulse_at_local_point((random.randint(-100, 100), random.randint(0, 100)))
+            self.ball_body.apply_impulse_at_local_point(
+                (random.randint(-100, 100), random.randint(0, 100))
+            )
 
         # Randomly add force to ball
         if keys.get(arcade.key.F, False):

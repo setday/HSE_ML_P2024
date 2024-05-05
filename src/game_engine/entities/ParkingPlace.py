@@ -9,12 +9,14 @@ from src.render.sprites.BasicRect import BasicRect
 
 
 class ParkingPlace:
-    def __init__(self,
-                 render_group: RenderGroup,
-                 space: Space,
-                 position: Vector2D | tuple[float, float],
-                 size: tuple[float, float] = (65, 110),
-                 angle: float = 0):
+    def __init__(
+        self,
+        render_group: RenderGroup,
+        space: Space,
+        position: Vector2D | tuple[float, float],
+        size: tuple[float, float] = (65, 110),
+        angle: float = 0,
+    ):
         # self.base_view = BasicSprite("assets/parking_place_background.png", position)
         # self.dead_view = BasicSprite("assets/parking_place_face.png", position)
         self.parking_model = ParkingPlacePhysicsModel(position, size, angle)
@@ -37,6 +39,8 @@ class ParkingPlace:
         self.parking_model.inner_shape.super = self
         for i in range(len(self.parking_model.dead_zones)):
             self.parking_model.dead_zone_shapes[i].super = self
-            self.space.add(self.parking_model.dead_zones[i], self.parking_model.dead_zone_shapes[i])
+            self.space.add(
+                self.parking_model.dead_zones[i], self.parking_model.dead_zone_shapes[i]
+            )
 
         self.space.add(self.parking_model.inner_body, self.parking_model.inner_shape)

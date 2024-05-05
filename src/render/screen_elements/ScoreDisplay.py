@@ -8,16 +8,17 @@ from src.render.sprites.BasicSprite import BasicSprite
 
 
 class ScoreDisplay:
-    def __init__(self,
-                 score=0,
-                 position: Vector2D = Vector2D(300, 300),
-                 font_path='assets/fnt/ka1.ttf',
-                 font_name='Karmatic Arcade',
-                 color=arcade.color.WHITE,
-                 size=25,
-                 width=200,
-                 icon="assets/pic/icon/coin_2.png"
-                 ):
+    def __init__(
+        self,
+        score=0,
+        position: Vector2D = Vector2D(300, 300),
+        font_path="assets/fnt/ka1.ttf",
+        font_name="Karmatic Arcade",
+        color=arcade.color.WHITE,
+        size=25,
+        width=200,
+        icon="assets/pic/icon/coin_2.png",
+    ):
         if font_path is not None:
             load_font(font_path)
         self.current_score = self.target_score = score
@@ -44,8 +45,18 @@ class ScoreDisplay:
         self.sprite_list.append(self.border_box)
         self.sprite_list.append(self.background_box)
 
-        self.text = arcade.Text(str(score), 0, 0, color, size, width, 'left', font_name=font_name,
-                                anchor_y='center', anchor_x='center')
+        self.text = arcade.Text(
+            str(score),
+            0,
+            0,
+            color,
+            size,
+            width,
+            "left",
+            font_name=font_name,
+            anchor_y="center",
+            anchor_x="center",
+        )
         self.icon = BasicSprite(icon, scale=5.5)
         self.icon.center_x = -width / 2
         self.icon.center_y = 0
@@ -63,5 +74,7 @@ class ScoreDisplay:
 
     def update_score(self, new_score):
         self.target_score = new_score
-        self.current_score -= (self.current_score - self.target_score) * self.change_speed
+        self.current_score -= (
+            self.current_score - self.target_score
+        ) * self.change_speed
         self.text.text = int(self.current_score)

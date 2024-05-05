@@ -9,17 +9,21 @@ from src.render.sprites.BasicSprite import BasicSprite
 
 
 class MovableObstacle:
-    def __init__(self,
-                 render_group: RenderGroup,
-                 space: Space,
-                 position: Vector2D = (0, 0),
-                 angle: float = 0,
-                 image_path: str = "assets/pic/obstacles/Traffic_Cone.png"):
+    def __init__(
+        self,
+        render_group: RenderGroup,
+        space: Space,
+        position: Vector2D = (0, 0),
+        angle: float = 0,
+        image_path: str = "assets/pic/obstacles/Traffic_Cone.png",
+    ):
         self.obstacle_view = BasicSprite(image_path, position)
 
         x, y = position
 
-        self.obstacle_model = MovableObstaclePhysicsModel((x, y), self.obstacle_view.get_hit_box())
+        self.obstacle_model = MovableObstaclePhysicsModel(
+            (x, y), self.obstacle_view.get_hit_box()
+        )
         self.obstacle_model.body.angle = angle
 
         render_group.add(self.obstacle_view)
