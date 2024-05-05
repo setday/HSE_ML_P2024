@@ -1,8 +1,10 @@
 import time
+import random
 
 import arcade.key
 import pymunk
 from pyglet.math import Vec2 as Vector2D
+import math
 
 from src.game_engine.controllers.Controller import *
 from src.game_engine.entities.ObjectFactory import ObjectFactory
@@ -10,7 +12,6 @@ from src.game_engine.entities.ParkingPlace import ParkingPlace
 from src.game_engine.scenes.game_scene.CollisionHandlers import *
 from src.render.RenderGroup import RenderGroup
 from src.render.particle.ParticleShow import ParticleShow
-from src.render.screen_elements.Indicator import Indicator
 from src.render.screen_elements.ScoreDisplay import ScoreDisplay
 from src.render.sprites.BasicSprite import BasicSprite
 
@@ -28,7 +29,7 @@ class LearningScene:
         self.space = pymunk.Space()
 
         h_10_10 = self.space.add_collision_handler(10, 10)
-        h_10_10.begin = collision_car_with_car
+        h_10_10.begin = skip_collision
         h_10_20 = self.space.add_collision_handler(10, 20)
         h_10_20.begin = collision_car_with_obstacle
         h_10_30 = self.space.add_collision_handler(10, 30)
@@ -57,62 +58,98 @@ class LearningScene:
 
         self.down_render_group.add(self.background)
 
-        self.car_m = ObjectFactory.create_object(render_group=self.render_group,
+        self.population_size = 100
+        self.cars = []
+        for i in range(self.population_size):
+            angle = 2 * math.pi * random.random()
+            self.cars.append(ObjectFactory.create_object(render_group=self.render_group,
                                                  space=self.space,
                                                  object_type='car',
-                                                 position=(0, -100),
+                                                 position=(
+                                                    # 600 * math.cos(2 * math.pi * i / self.population_size),
+                                                    500 * math.cos(angle),
+                                                    # 600 * math.sin(2 * math.pi * i / self.population_size)
+                                                    500 * math.sin(angle)
+                                                 ),
+                                                 angle=360 * random.random(),
                                                  car_model='blue_car')
+            )
 
-        self.car_m.switch_controller(AIController())
-        # self.car_m.set_hook("dead_hook", lambda _: print("You dead"))
-        # self.car_m.set_hook("parked_hook", lambda _: print("You win"))
-        # self.car_m.set_hook("unparked_hook", lambda _: print("You out"))
+        for car in self.cars:
+            car.switch_controller(AIController())
+            # car.set_hook("dead_hook", lambda _: print("You dead"))
+            # car.set_hook("parked_hook", lambda _: print("You win"))
+            # car.set_hook("unparked_hook", lambda _: print("You out"))
 
-        self.render_group.camera.snap_to_sprite(self.car_m.car_view)
+        self.parking_place = ParkingPlace(self.down_render_group, self.space, (0, 0), angle=math.pi/4)
 
-        ParkingPlace(self.down_render_group, self.space, (0, -300), angle=0.4)
+        # self.render_group.camera.snap_to_sprite(self.car_m.car_view)
+        self.render_group.camera.snap_to_sprite(self.parking_place.border_box)
 
         ######################
         # Screen Elements
         ######################
 
         self.screen_group = RenderGroup()
-        camera_offset = self.screen_group.camera.get_position(1, 1)
+        # camera_offset = self.screen_group.camera.get_position(1, 1)
 
-        self.indicator = Indicator(owner=self.car_m, position=camera_offset - Vector2D(200, 100))
-        self.screen_group.add(self.indicator.sprite_list)
+        # self.best_car_dst = [10 ** 9 for i in range(self.population_size)]
 
-        self.score_board = ScoreDisplay(score=self.score[0], position=camera_offset - Vector2D(200, 170),
-                                        color=(255, 220, 40),
-                                        font_path='assets/fnt/ka1.ttf', font_name='Karmatic Arcade')
-        self.screen_group.add(self.score_board.sprite_list)
+        self.ticks_elapsed = 0
 
     def __init__(self):
         self.reset()
 
+
+    def link_models(self, models):
+        for i in range(self.population_size):
+            self.cars[i].controller.link_model(models[i])
+
+
+    def link_genomes(self, genomes):
+        self.genomes = genomes
+
+
+    def set_tick_lim(self, tick_lim):
+        self.tick_lim = tick_lim
+
+
     def update(self, io_controller, delta_time):
         keys = io_controller.keyboard
 
-        self.car_m.controlling(keys)
+        for i, car in enumerate(self.cars):
+            car_pos = car.car_model.body.position
+            car_angle = car.car_model.body.angle
+            car_speed = car.car_model.body.velocity.get_length_sqrd() ** 0.5
+
+            pp_pos = self.parking_place.parking_model.inner_body.position
+            pp_angle = self.parking_place.parking_model.inner_body.angle
+
+            car.controlling(keys, [*car_pos, car_angle, car_speed, *pp_pos, pp_angle])
+
+            dst = (car_pos[0] - pp_pos[0]) * (car_pos[0] - pp_pos[0]) + \
+                  (car_pos[1] - pp_pos[1]) * (car_pos[1] - pp_pos[1])
+
+            self.genomes[i][1].fitness += 1 / (abs(car_angle - pp_angle) + 10) + 1000 / (dst + 1) - 1 / (car_speed + 10)
+
+            # self.genomes[i][1].fitness += (self.best_car_dst[i] - dst) / (self.best_car_dst[i] + dst + 0.1 ** 10)
+            # self.best_car_dst[i] = max(self.best_car_dst[i], dst)
 
         delta_time *= 16
 
         self.space.step(delta_time)
+        self.ticks_elapsed += delta_time
+        if self.ticks_elapsed > self.tick_lim:
+            arcade.close_window()
 
-        zoom_factor = 1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
-
-        self.render_group.camera.set_zoom(zoom_factor)
+        for car in self.cars:
+            car.apply_friction()
+            car.sync()
+            for emitter in car.tyre_emitters:
+                emitter.update()
 
         self.particle_show.update()
 
-        ######################
-        # Screen Elements Update
-        ######################
-
-        self.screen_group.camera.set_zoom(zoom_factor)
-
-        self.indicator.update_bar()
-        self.score_board.update_score(self.score[0])
 
     def draw(self):
         self.render_group.camera.use()
@@ -127,7 +164,6 @@ class LearningScene:
 
         self.screen_group.camera.use()
         self.screen_group.draw()
-        self.score_board.draw()
 
     def get_score(self):
         return self.score

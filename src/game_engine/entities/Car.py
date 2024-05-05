@@ -68,8 +68,8 @@ class Car:
 
         self.sync()
 
-    def controlling(self, keys):
-        self.controller.handle_input(keys)
+    def controlling(self, keys, observation=None):
+        self.controller.handle_input(keys, observation)
 
     def switch_controller(self, controller):
         self.controller = controller
