@@ -1,6 +1,4 @@
 import random
-import sys
-
 import arcade
 from src.game_engine.Core import Core
 from src.render.Window import IOController
@@ -69,7 +67,11 @@ class TestCore(Core):
                 static_obstacle_model="rubbish_line",
             )
         elif obj == "parking_place":
-            ParkingPlace(self.scene.down_render_group, self.scene.space, (random.randint(-2000, 2000), random.randint(-3500, 3500)))
+            ParkingPlace(
+                self.scene.down_render_group,
+                self.scene.space,
+                (random.randint(-2000, 2000), random.randint(-3500, 3500))
+            )
 
     def on_update(self, io_controller: IOController, delta_time: float) -> None:
         for obj in self.test_objects:

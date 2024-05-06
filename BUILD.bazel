@@ -1,9 +1,37 @@
 load("@rules_python//python:defs.bzl", "py_binary")
 load("@python_deps//:requirements.bzl", "requirement")
+src = [
+    "src/game_engine/Core.py",
+    "src/game_engine/scenes/game_scene/GameScene.py",
+    "src/game_engine/scenes/game_scene/CollisionHandlers.py",
+    "src/game_engine/controllers/Controller.py",
+    "src/game_engine/entities/Car.py",
+    "src/game_engine/entities/ObjectFactory.py",
+    "src/game_engine/entities/ParkingPlace.py",
+    "src/game_engine/entities/obstacles/MovableObstacle.py",
+    "src/game_engine/entities/obstacles/StaticObstacle.py",
+    "src/physics/models/CarPhysicsModel.py",
+    "src/physics/models/MovableObstacle.py",
+    "src/physics/models/ParkingPlacePhysicModel.py",
+    "src/physics/models/StaticObstacle.py",
+    "src/render/Window.py",
+    "src/render/RenderGroup.py",
+    "src/render/Camera.py",
+    "src/render/particle/ParticleShow.py",
+    "src/render/sprites/BasicRect.py",
+    "src/render/sprites/BasicDrawable.py",
+    "src/render/sprites/BasicSprite.py",
+    "src/render/screen_elements/Indicator.py",
+    "src/render/screen_elements/ScoreDisplay.py"
+    ]
 py_binary(
     name = "main",
-    srcs = [
-    "main.py",
-    "src/*"
-    ]
+    srcs = ["main.py"] + src
+)
+
+load("//tools/pytest:defs.bzl", "pytest_test")
+
+pytest_test(
+    name = "test",
+    srcs = ["test_functional.py"] + src
 )
