@@ -70,7 +70,7 @@ class TestCore(Core):
             ParkingPlace(
                 self.scene.down_render_group,
                 self.scene.space,
-                (random.randint(-2000, 2000), random.randint(-3500, 3500))
+                (random.randint(-2000, 2000), random.randint(-3500, 3500)),
             )
 
     def on_update(self, io_controller: IOController, delta_time: float) -> None:
@@ -79,8 +79,10 @@ class TestCore(Core):
             self.num_obj += 1
         if not arcade.timings_enabled():
             arcade.enable_timings()
-        with open("results/" + f"{self.type}_" + "-".join(self.test_objects) + ".csv", 'a') as out:
-            print(f'{self.num_obj}, {arcade.get_fps()}', file=out)
+        with open(
+            "results/" + f"{self.type}_" + "-".join(self.test_objects) + ".csv", "a"
+        ) as out:
+            print(f"{self.num_obj}, {arcade.get_fps()}", file=out)
 
         if self.type != "graphics":
             super().on_update(io_controller, delta_time)
