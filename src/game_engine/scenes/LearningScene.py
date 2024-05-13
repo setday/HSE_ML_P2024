@@ -67,7 +67,7 @@ class LearningScene:
 
         self.reset()
 
-    async def reset(self):
+    def reset(self):
         self.state = 0
         for i in range(self.population_size):
             angle = 2 * math.pi * random.random()
@@ -79,16 +79,16 @@ class LearningScene:
         self.ticks_elapsed = 0
 
 
-    async def link_models(self, models):
+    def link_models(self, models):
         for i in range(self.population_size):
             self.cars[i].controller.link_model(models[i])
 
 
-    async def link_genomes(self, genomes):
+    def link_genomes(self, genomes):
         self.genomes = genomes
 
 
-    async def update(self, io_controller, delta_time):
+    def update(self, io_controller, delta_time):
         if self.state == 0:
             return
 
@@ -120,7 +120,7 @@ class LearningScene:
         self.ticks_elapsed += delta_time
         if self.ticks_elapsed > self.tick_lim:
             self.state = 0
-            await asyncio.sleep(0)
+            return
 
         for car in self.cars:
             car.apply_friction()
@@ -131,7 +131,7 @@ class LearningScene:
         # self.particle_show.update()
 
 
-    async def draw(self):
+    def draw(self):
         if self.state == 0:
             return
 
