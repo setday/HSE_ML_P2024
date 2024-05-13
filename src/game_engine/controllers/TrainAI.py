@@ -15,6 +15,16 @@ async def run_arcade():
     await arcade.run()
 
 
+# async def sleep_zero():
+#     await asyncio.sleep(0)
+
+
+def switch_task():
+    print("SWITCH from Train!")
+    # loop = asyncio.get_event_loop()
+    # loop.run_until_complete(sleep_zero())
+
+
 class Train:
     def __init__(self):
         self.window = Window(1920, 1080, "Train me")
@@ -28,7 +38,7 @@ class Train:
             nonlocal self
 
             while self.scene.state == 1:
-                pass
+                switch_task()
 
             self.scene.reset()      
 
@@ -41,7 +51,8 @@ class Train:
             self.scene.link_genomes(genomes)
 
             self.scene.state = 1
-            asyncio.run(asyncio.sleep(0))
+            switch_task()
+            # asyncio.run(asyncio.sleep(0))
 
 
         config = neat.config.Config(
