@@ -41,11 +41,8 @@ class Train:
             self.scene.link_genomes(genomes)
 
             self.scene.state = 1
-            # await asyncio.sleep(0)
-            # arcade.run()
-            # self.window = Window(1920, 1080, "Train me")
-            # self.window.set_update_hook(self.on_update)
-            # self.window.set_draw_hook(self.on_draw)
+            asyncio.run(asyncio.sleep(0))
+
 
         config = neat.config.Config(
             neat.DefaultGenome, 
