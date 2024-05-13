@@ -1,28 +1,10 @@
 import arcade
 import neat
 import os
-import asyncio
 
 from src.game_engine.scenes.LearningScene import LearningScene
 from src.render.Window import Window, IOController
 
-
-async def run_neat(pop, gen, iters):
-    await pop.run(gen, iters)
-
-
-async def run_arcade():
-    await arcade.run()
-
-
-# async def sleep_zero():
-#     await asyncio.sleep(0)
-
-
-def switch_task():
-    print("SWITCH from Train!")
-    # loop = asyncio.get_event_loop()
-    # loop.run_until_complete(sleep_zero())
 
 
 class Train:
@@ -32,52 +14,45 @@ class Train:
         self.window.set_update_hook(self.on_update)
         self.window.set_draw_hook(self.on_draw)
 
+        self.pop = None
+
+    def gen(self, genomes, config):
+        self.scene.reset()
+        self.scene.state = 1
+
+        nets = []
+        for i, g in genomes:
+            nets.append(neat.nn.FeedForwardNetwork.create(g, config))
+            g.fitness = 0
+
+        self.scene.link_models(nets)
+        self.scene.link_genomes(genomes)
+
+        print("Scene reset")
 
     def run(self) -> None:
-        def gen(genomes, config):
-            nonlocal self
-
-            while self.scene.state == 1:
-                switch_task()
-
-            self.scene.reset()      
-
-            nets = []
-            for i, g in genomes:
-                nets.append(neat.nn.FeedForwardNetwork.create(g, config))
-                g.fitness = 0
-
-            self.scene.link_models(nets)
-            self.scene.link_genomes(genomes)
-
-            self.scene.state = 1
-            switch_task()
-            # asyncio.run(asyncio.sleep(0))
-
-
         config = neat.config.Config(
-            neat.DefaultGenome, 
-            neat.DefaultReproduction, 
-            neat.DefaultSpeciesSet, 
-            neat.DefaultStagnation, 
+            neat.DefaultGenome,
+            neat.DefaultReproduction,
+            neat.DefaultSpeciesSet,
+            neat.DefaultStagnation,
             os.path.join(os.path.dirname(__file__), "config.txt")
         )
-        pop = neat.Population(config)
+
+        self.pop = neat.Population(config)
         stats = neat.StatisticsReporter()
-        pop.add_reporter(stats)
+        self.pop.add_reporter(stats)
 
-        loop = asyncio.get_event_loop()
-        task1 = loop.create_task(run_neat(pop, gen, 100))
-        task2 = loop.create_task(run_arcade())
-        loop.run_until_complete(asyncio.wait([task1, task2]))
+        self.pop.run(self.gen, 1)
+        arcade.run()
 
-        # winner = pop.run(gen, 100)
         stats.save()
         # print(winner)
 
-        
     def on_update(self, io_controller: IOController, delta_time: float) -> None:
         self.scene.update(io_controller, delta_time)
+        if self.scene.state == 0:
+            self.pop.run(self.gen, 1)
 
     def on_draw(self) -> None:
         self.scene.draw()

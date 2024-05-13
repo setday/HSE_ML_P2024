@@ -1,6 +1,5 @@
 import time
 import random
-import asyncio
 
 import arcade.key
 import pymunk
@@ -15,16 +14,6 @@ from src.render.RenderGroup import RenderGroup
 from src.render.particle.ParticleShow import ParticleShow
 from src.render.screen_elements.ScoreDisplay import ScoreDisplay
 from src.render.sprites.BasicSprite import BasicSprite
-
-
-# async def sleep_zero():
-#     await asyncio.sleep(0)
-
-
-def switch_task():
-    print("SWITCH from Scene!")
-    # loop = asyncio.get_event_loop()
-    # loop.run_until_complete(sleep_zero())
 
 
 class LearningScene:
@@ -52,7 +41,7 @@ class LearningScene:
 
         self.down_render_group.add(self.background)
 
-        self.population_size = 20
+        self.population_size = 100
         self.cars = []
         for i in range(self.population_size):
             self.cars.append(ObjectFactory.create_object(
@@ -67,13 +56,17 @@ class LearningScene:
         for car in self.cars:
             car.switch_controller(AIController())
 
-        self.parking_place = ParkingPlace(self.down_render_group, self.space, (0, 0), angle=math.pi/4)
+        self.parking_place = ParkingPlace(self.down_render_group, self.space, (100, -200), angle=math.pi / 4)
 
         self.render_group.camera.snap_to_sprite(self.parking_place.border_box)
 
         self.screen_group = RenderGroup()
 
-        self.tick_lim = 100
+        self.tick_lim = 20
+
+        self.genomes = None
+        self.state = -1
+        self.ticks_elapsed = 0
 
         self.reset()
 
@@ -82,21 +75,19 @@ class LearningScene:
         for i in range(self.population_size):
             angle = 2 * math.pi * random.random()
             self.cars[i].car_model.body.position = (
-                500 * math.cos(angle),
-                500 * math.sin(angle)
+                # 500 * math.cos(angle),
+                # 500 * math.sin(angle)
+                0, 0
             )
-            self.cars[i].car_model.body.angle = 360 * random.random()
+            self.cars[i].car_model.body.angle = 0  # 360 * random.random()
         self.ticks_elapsed = 0
-
 
     def link_models(self, models):
         for i in range(self.population_size):
             self.cars[i].controller.link_model(models[i])
 
-
     def link_genomes(self, genomes):
         self.genomes = genomes
-
 
     def update(self, io_controller, delta_time):
         if self.state == 0:
@@ -127,8 +118,6 @@ class LearningScene:
         self.ticks_elapsed += delta_time
         if self.ticks_elapsed > self.tick_lim:
             self.state = 0
-            switch_task()
-            # asyncio.run(asyncio.sleep(0))
 
         for car in self.cars:
             car.apply_friction()
