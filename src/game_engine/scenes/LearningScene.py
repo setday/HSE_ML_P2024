@@ -89,6 +89,17 @@ class LearningScene:
     def link_genomes(self, genomes):
         self.genomes = genomes
 
+    def update_cars_fitness(self):
+        for i, car in enumerate(self.cars):
+            car_pos = car.car_model.body.position
+            pp_pos = self.parking_place.parking_model.inner_body.position
+
+            dst = (car_pos[0] - pp_pos[0]) * (car_pos[0] - pp_pos[0]) + \
+                  (car_pos[1] - pp_pos[1]) * (car_pos[1] - pp_pos[1])
+
+            # self.genomes[i][1].fitness += 1 / (abs(car_angle - pp_angle) + 10) + 1000 / (dst + 1) - 1 / (car_speed + 10)
+            self.genomes[i][1].fitness += 100 / (dst + 1)
+
     def update(self, io_controller, delta_time):
         if self.state == 0:
             return
@@ -105,12 +116,6 @@ class LearningScene:
             car_speed = car.car_model.body.velocity.get_length_sqrd() ** 0.5
 
             car.controlling(keys, [car_pos[0] - pp_pos[0], car_pos[1] - pp_pos[1], car_angle - pp_angle, car_speed])
-
-            dst = (car_pos[0] - pp_pos[0]) * (car_pos[0] - pp_pos[0]) + \
-                  (car_pos[1] - pp_pos[1]) * (car_pos[1] - pp_pos[1])
-
-            # self.genomes[i][1].fitness += 1 / (abs(car_angle - pp_angle) + 10) + 1000 / (dst + 1) - 1 / (car_speed + 10)
-            self.genomes[i][1].fitness += 100 / (dst + 1)
 
         delta_time *= 16
 
