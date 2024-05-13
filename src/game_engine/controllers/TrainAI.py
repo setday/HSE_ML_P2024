@@ -1,6 +1,7 @@
 import arcade
 import neat
 import os
+import asyncio
 
 from src.game_engine.scenes.LearningScene import LearningScene
 from src.render.Window import Window, IOController
@@ -15,10 +16,13 @@ class Train:
 
 
     def run(self) -> None:
-        def gen(genomes, config):
+        async def gen(genomes, config):
             nonlocal self
 
-            self.scene.reset()            
+            while self.scene.state == 1:
+                await asyncio.sleep(0)
+
+            self.scene.reset()      
 
             nets = []
             for i, g in genomes:
@@ -27,12 +31,13 @@ class Train:
 
             self.scene.link_models(nets)
             self.scene.link_genomes(genomes)
-            self.scene.set_tick_lim(100)
 
-            arcade.run()
-            self.window = Window(1920, 1080, "Train me")
-            self.window.set_update_hook(self.on_update)
-            self.window.set_draw_hook(self.on_draw)
+            self.scene.state = 1
+            await asyncio.sleep(0)
+            # arcade.run()
+            # self.window = Window(1920, 1080, "Train me")
+            # self.window.set_update_hook(self.on_update)
+            # self.window.set_draw_hook(self.on_draw)
 
         config = neat.config.Config(
             neat.DefaultGenome, 
@@ -44,9 +49,15 @@ class Train:
         pop = neat.Population(config)
         stats = neat.StatisticsReporter()
         pop.add_reporter(stats)
-        winner = pop.run(gen, 10)
+
+        loop = asyncio.get_event_loop()
+        task1 = loop.create_task(pop.run(gen, 100))
+        task2 = loop.create_task(arcade.run())
+        loop.run_until_complete(asyncio.wait([task1, task2]))
+
+        # winner = pop.run(gen, 100)
         stats.save()
-        print(winner)
+        # print(winner)
 
         
     def on_update(self, io_controller: IOController, delta_time: float) -> None:
