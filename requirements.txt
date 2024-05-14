@@ -12,7 +12,7 @@ pycparser==2.21
 pyglet==2.0.dev23
 pyinstaller==6.3.0
 pyinstaller-hooks-contrib==2024.0
-pymunk~=6.4.0
+pymunk~=6.6.0
 pytiled-parser==2.2.0
 pywin32-ctypes==0.2.2
 typing_extensions==4.9.0
@@ -21,3 +21,11 @@ anyio==3.6.2
 pytest~=8.2.0
 six~=1.16.0
 setuptools~=59.6.0
+gym~=0.26.2
+flake==6.0.0
+black==23.11.0
+torch~=1.13.1
+matplotlib~=3.7.1
+sklearn~=0.0.post1
+scikit-learn~=1.2.1
+ipython~=8.20.0

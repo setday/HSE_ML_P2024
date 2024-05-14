@@ -1,6 +1,7 @@
 import time
 
 import arcade.key
+import numpy as np
 import pymunk
 from pyglet.math import Vec2 as Vector2D
 import random
@@ -82,11 +83,11 @@ class GameScene:
             render_group=self.render_group,
             space=self.space,
             object_type="car",
-            position=(0, -100),
+            position=(-500, -100),
             car_model="blue_car",
         )
 
-        self.car_m.switch_controller(KeyboardController())
+        self.car_m.switch_controller(AIController("baseline"))
         # self.car_m.set_hook("dead_hook", lambda _: print("You dead"))
         # self.car_m.set_hook("parked_hook", lambda _: print("You win"))
         # self.car_m.set_hook("unparked_hook", lambda _: print("You out"))
@@ -94,20 +95,20 @@ class GameScene:
         self.render_group.camera.snap_to_sprite(self.car_m.car_view)
 
         self.cars = [self.car_m]
-        for i in range(-5, 5):
-            if i == 0:
-                continue
-            car = ObjectFactory.create_object(
-                render_group=self.render_group,
-                space=self.space,
-                object_type="car",
-                position=(70 * i, -100),
-                car_model="red_car",
-            )
-            car.switch_controller(
-                random.choice([RandomController(), AIController(), BrakeController()])
-            )
-            self.cars.append(car)
+        # for i in range(-5, 5):
+        #     if i == 0:
+        #         continue
+        #     car = ObjectFactory.create_object(
+        #         render_group=self.render_group,
+        #         space=self.space,
+        #         object_type="car",
+        #         position=(70 * i, -100),
+        #         car_model="red_car",
+        #     )
+        #     car.switch_controller(
+        #         random.choice([RandomController(), AIController(), BrakeController()])
+        #     )
+        #     self.cars.append(car)
 
         self.traffic_cones = []
         for i in range(-5, 5):
@@ -190,8 +191,8 @@ class GameScene:
         # Parking lots
         ###
 
-        for i in range(-5, 5):
-            ParkingPlace(self.down_render_group, self.space, (70 * i, -100))
+        # for i in range(-5, 5):
+        #     ParkingPlace(self.down_render_group, self.space, (70 * i, -100))
         for i in range(-5, 4):
             ObjectFactory.create_object(
                 self.render_group,
@@ -243,7 +244,9 @@ class GameScene:
             static_obstacle_model="y_barrier",
         )
 
-        ParkingPlace(self.down_render_group, self.space, (0, -300), angle=0.4)
+        self.parking_place = ParkingPlace(
+            self.down_render_group, self.space, (0, -300), angle=0.4
+        )
 
         ######################
         # Screen Elements
@@ -276,7 +279,22 @@ class GameScene:
         if keys.get(arcade.key.F7, False):
             self.car_m.change_health(1000)
 
-        self.car_m.controlling(keys)
+        if isinstance(self.car_m.controller, AIController):
+            self.car_m.controlling(
+                np.array(
+                    [
+                        self.car_m.car_model.body.position[0],
+                        self.car_m.car_model.body.position[1],
+                        self.car_m.car_model.body.angle,
+                        self.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5,
+                        self.parking_place.parking_model.inner_body.position[0],
+                        self.parking_place.parking_model.inner_body.position[1],
+                        self.parking_place.parking_model.inner_body.angle,
+                    ]
+                )
+            )
+        else:
+            self.car_m.controlling(keys)
 
         for car in self.cars:
             if car == self.car_m:
