@@ -22,13 +22,13 @@ from src.render.sprites.BasicSprite import BasicSprite
 
 
 class GameScene:
-    def __init__(self):
+    def __init__(self, train):
         self.down_render_group = RenderGroup()
         self.render_group = RenderGroup()
         self.top_render_group = RenderGroup()
         self.particle_show = ParticleShow()
         self.score: list[int] = [10000]
-
+        self.train = train
         ######################
         # Setup physics
         ######################
@@ -83,11 +83,18 @@ class GameScene:
             render_group=self.render_group,
             space=self.space,
             object_type="car",
-            position=(-500, -100),
+            position=(
+                (random.randint(-300, 300), random.randint(-300, 300))
+                #if self.train
+                #else (500, -300)
+            ),
             car_model="blue_car",
         )
 
-        self.car_m.switch_controller(AIController("baseline"))
+        if not self.train:
+            self.car_m.switch_controller(AIController("sklearn"))
+        else:
+            self.car_m.switch_controller(KeyboardController())
         # self.car_m.set_hook("dead_hook", lambda _: print("You dead"))
         # self.car_m.set_hook("parked_hook", lambda _: print("You win"))
         # self.car_m.set_hook("unparked_hook", lambda _: print("You out"))
@@ -110,82 +117,82 @@ class GameScene:
         #     )
         #     self.cars.append(car)
 
-        self.traffic_cones = []
-        for i in range(-5, 5):
-            self.traffic_cones.append(
-                ObjectFactory.create_object(
-                    render_group=self.render_group,
-                    space=self.space,
-                    object_type="movable_obstacle",
-                    position=(70 * i, -170),
-                    movable_obstacle_model="cone",
-                )
-            )
-
-        self.traffic_cones.append(
-            ObjectFactory.create_object(
-                self.render_group,
-                self.space,
-                "movable_obstacle",
-                (70 * -5 - 35, -70),
-                movable_obstacle_model="cone",
-            )
-        )
-        self.traffic_cones.append(
-            ObjectFactory.create_object(
-                self.render_group,
-                self.space,
-                "movable_obstacle",
-                (70 * -5 - 40, -100),
-                movable_obstacle_model="cone",
-            )
-        )
-        self.traffic_cones.append(
-            ObjectFactory.create_object(
-                self.render_group,
-                self.space,
-                "movable_obstacle",
-                (70 * -5 - 35, -130),
-                movable_obstacle_model="cone",
-            )
-        )
-
-        self.traffic_cones.append(
-            ObjectFactory.create_object(
-                self.render_group,
-                self.space,
-                "movable_obstacle",
-                (70 * 4 + 35, -70),
-                movable_obstacle_model="cone",
-            )
-        )
-        self.traffic_cones.append(
-            ObjectFactory.create_object(
-                self.render_group,
-                self.space,
-                "movable_obstacle",
-                (70 * 4 + 40, -100),
-                movable_obstacle_model="cone",
-            )
-        )
-        self.traffic_cones.append(
-            ObjectFactory.create_object(
-                self.render_group,
-                self.space,
-                "movable_obstacle",
-                (70 * 4 + 35, -130),
-                movable_obstacle_model="cone",
-            )
-        )
-
-        for i in range(-5, 5):
-            ObjectFactory.create_object(
-                self.top_render_group,
-                self.space,
-                "static_obstacle",
-                (70 * i, -10),
-                static_obstacle_model="tree",
-            )
+        # self.traffic_cones = []
+        # for i in range(-5, 5):
+        #     self.traffic_cones.append(
+        #         ObjectFactory.create_object(
+        #             render_group=self.render_group,
+        #             space=self.space,
+        #             object_type="movable_obstacle",
+        #             position=(70 * i, -170),
+        #             movable_obstacle_model="cone",
+        #         )
+        #     )
+        #
+        # self.traffic_cones.append(
+        #     ObjectFactory.create_object(
+        #         self.render_group,
+        #         self.space,
+        #         "movable_obstacle",
+        #         (70 * -5 - 35, -70),
+        #         movable_obstacle_model="cone",
+        #     )
+        # )
+        # self.traffic_cones.append(
+        #     ObjectFactory.create_object(
+        #         self.render_group,
+        #         self.space,
+        #         "movable_obstacle",
+        #         (70 * -5 - 40, -100),
+        #         movable_obstacle_model="cone",
+        #     )
+        # )
+        # self.traffic_cones.append(
+        #     ObjectFactory.create_object(
+        #         self.render_group,
+        #         self.space,
+        #         "movable_obstacle",
+        #         (70 * -5 - 35, -130),
+        #         movable_obstacle_model="cone",
+        #     )
+        # )
+        #
+        # self.traffic_cones.append(
+        #     ObjectFactory.create_object(
+        #         self.render_group,
+        #         self.space,
+        #         "movable_obstacle",
+        #         (70 * 4 + 35, -70),
+        #         movable_obstacle_model="cone",
+        #     )
+        # )
+        # self.traffic_cones.append(
+        #     ObjectFactory.create_object(
+        #         self.render_group,
+        #         self.space,
+        #         "movable_obstacle",
+        #         (70 * 4 + 40, -100),
+        #         movable_obstacle_model="cone",
+        #     )
+        # )
+        # self.traffic_cones.append(
+        #     ObjectFactory.create_object(
+        #         self.render_group,
+        #         self.space,
+        #         "movable_obstacle",
+        #         (70 * 4 + 35, -130),
+        #         movable_obstacle_model="cone",
+        #     )
+        # )
+        #
+        # for i in range(-5, 5):
+        #     ObjectFactory.create_object(
+        #         self.top_render_group,
+        #         self.space,
+        #         "static_obstacle",
+        #         (70 * i, -10),
+        #         static_obstacle_model="tree",
+        #     )
 
         ###
         # Parking lots
@@ -193,23 +200,23 @@ class GameScene:
 
         # for i in range(-5, 5):
         #     ParkingPlace(self.down_render_group, self.space, (70 * i, -100))
-        for i in range(-5, 4):
-            ObjectFactory.create_object(
-                self.render_group,
-                self.space,
-                "static_obstacle",
-                (70 * i + 35, -100),
-                90,
-                static_obstacle_model="metal_pipe",
-            )
-        for i in range(-5, 5):
-            ObjectFactory.create_object(
-                self.render_group,
-                self.space,
-                "static_obstacle",
-                (70 * i, -45),
-                static_obstacle_model="rubbish_line",
-            )
+        # for i in range(-5, 4):
+        #     ObjectFactory.create_object(
+        #         self.render_group,
+        #         self.space,
+        #         "static_obstacle",
+        #         (70 * i + 35, -100),
+        #         90,
+        #         static_obstacle_model="metal_pipe",
+        #     )
+        # for i in range(-5, 5):
+        #     ObjectFactory.create_object(
+        #         self.render_group,
+        #         self.space,
+        #         "static_obstacle",
+        #         (70 * i, -45),
+        #         static_obstacle_model="rubbish_line",
+        #     )
 
         ###
         # Barriers
@@ -245,7 +252,11 @@ class GameScene:
         )
 
         self.parking_place = ParkingPlace(
-            self.down_render_group, self.space, (0, -300), angle=0.4
+            self.down_render_group, self.space, position=(
+                (random.randint(-500, 500), random.randint(-500, 500))
+                if self.train
+                else (500, -300)
+            ), angle=random.randint(0, 360) if self.train else 0.4
         )
 
         ######################
@@ -294,6 +305,16 @@ class GameScene:
                 )
             )
         else:
+            # with open('actions.txt', 'w') as file:
+            #     print([
+            #             self.car_m.car_model.body.position[0],
+            #             self.car_m.car_model.body.position[1],
+            #             self.car_m.car_model.body.angle,
+            #             self.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5,
+            #             self.parking_place.parking_model.inner_body.position[0],
+            #             self.parking_place.parking_model.inner_body.position[1],
+            #             self.parking_place.parking_model.inner_body.angle,
+            #         ], file=file)
             self.car_m.controlling(keys)
 
         for car in self.cars:
@@ -311,9 +332,9 @@ class GameScene:
             for emitter in car.tyre_emitters:
                 emitter.update()
 
-        for cone in self.traffic_cones:
-            cone.apply_friction()
-            cone.sync()
+        # for cone in self.traffic_cones:
+        #     cone.apply_friction()
+        #     cone.sync()
 
         zoom_factor = 1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
 

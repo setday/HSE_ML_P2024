@@ -8,7 +8,7 @@ from gym_game.envs.Game import Game
 class CustomEnv(gym.Env):
     def __init__(self):
         self.game = Game()
-        self.action_space = spaces.Discrete(5)
+        self.action_space = spaces.Discrete(9)
         self.observation_space = spaces.Box(
             np.array(
                 [-10000, -10000, -10000, -10000, -10000, -10000, -10000],
@@ -28,7 +28,7 @@ class CustomEnv(gym.Env):
         if not hasattr(self, "game"):
             self.game = Game()
         else:
-            self.game.core.scene = GameScene()
+            self.game.core.scene = GameScene(True)
         self.game.time = 0
         return self.game.observe(), {}
 

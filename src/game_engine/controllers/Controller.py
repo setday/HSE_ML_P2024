@@ -3,7 +3,7 @@ import pickle
 import arcade
 import numpy as np
 import torch
-from stable_baselines3 import DQN
+from stable_baselines3 import DQN, A2C, PPO
 from models.DQNPolicy import DQNPolicy
 
 
@@ -87,21 +87,21 @@ class AIController(Controller):
         super().__init__()
         self.agent_type = agent_type
         if agent_type == "pytorch":
-            self.agent = DQNPolicy(5, 7)  # TODO: make parameters of the ctor
-            self.agent.dqn.load_state_dict(torch.load("../models_bin/torch.pt"))
+            self.agent = DQNPolicy(9, 7)  # TODO: make parameters of the ctor
+            self.agent.dqn.load_state_dict(torch.load("models_bin/torch.pt"))
         elif agent_type == "sklearn":
-            with open("../models_bin/CEM.pkl", "rb") as model:
+            with open("models_bin/CEM5.pkl", "rb") as model:
                 self.agent = pickle.load(model)
         else:
-            self.agent = DQN.load("../models_bin/my_model")
+            self.agent = PPO.load("models_bin/PPO")
 
     def handle_input(self, keys):
         if self.agent_type == "pytorch":
             with torch.no_grad():
-                action = torch.argmax(self.agent.dqn(torch.tensor(keys))).item()
+                action = self.agent.make_action(keys)
         elif self.agent_type == "sklearn":
             probs = self.agent.predict_proba([keys])[0]
-            action = np.random.choice(list(range(5)), p=probs)
+            action = np.random.choice(list(range(9)), p=probs)
         else:
             action, _ = self.agent.predict(keys)
         if action == 0:
@@ -114,6 +114,18 @@ class AIController(Controller):
             self.car.backward_acceleration()
         if action == 4:
             self.car.car_model.body.velocity = (0, 0)
+        if action == 5:
+            self.car.forward_accelerate()
+            self.car.turn_left()
+        if action == 6:
+            self.car.forward_accelerate()
+            self.car.turn_right()
+        if action == 7:
+            self.car.backward_acceleration()
+            self.car.turn_left()
+        if action == 8:
+            self.car.backward_acceleration()
+            self.car.turn_right()
 
         # if keys.get(arcade.key.SPACE, False):
         #     self.car.hand_brake()
