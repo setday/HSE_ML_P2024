@@ -29,8 +29,6 @@ class Train:
         self.scene.link_models(nets)
         self.scene.link_genomes(genomes)
 
-        print("Scene reset")
-
     def run(self) -> None:
         config = neat.config.Config(
             neat.DefaultGenome,
@@ -48,7 +46,6 @@ class Train:
         arcade.run()
 
         stats.save()
-        # print(winner)
 
     def on_update(self, io_controller: IOController, delta_time: float) -> None:
         self.scene.update(io_controller, delta_time)
