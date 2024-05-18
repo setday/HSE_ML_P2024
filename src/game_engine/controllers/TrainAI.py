@@ -35,7 +35,7 @@ class Train:
             neat.DefaultReproduction,
             neat.DefaultSpeciesSet,
             neat.DefaultStagnation,
-            os.path.join(os.path.dirname(__file__), "config.txt")
+            os.path.join(os.path.dirname(__file__), "config.txt"),
         )
 
         self.pop = neat.Population(config)
@@ -53,7 +53,9 @@ class Train:
         if self.scene.state == 0:
             self.scene.update_cars_fitness()
             self.pop.run(lambda a, b: None, 1)
-            self.update_scene_genomes(list(iteritems(self.pop.population)), self.pop.config)
+            self.update_scene_genomes(
+                list(iteritems(self.pop.population)), self.pop.config
+            )
 
     def on_draw(self) -> None:
         self.scene.draw()
