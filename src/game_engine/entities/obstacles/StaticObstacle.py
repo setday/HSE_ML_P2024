@@ -18,7 +18,6 @@ class StaticObstacle:
         image_path: str | None = "assets/pic/obstacles/Tree_1.png",
         shape_type=None,
     ):
-
         self.obstacle_view = None
         if image_path is not None:
             self.obstacle_view = BasicSprite(image_path, position)
