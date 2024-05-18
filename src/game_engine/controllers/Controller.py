@@ -94,7 +94,7 @@ class AIController(Controller):
         # print(probs)
 
         # TODO: choose "right weight" instead of 0.5
-        action_kinds = [(probs[i] >= 0.5) for i in range(5) ] 
+        action_kinds = [(probs[i] >= 0.5) for i in range(5)]
         if action_kinds[0]:
             self.car.forward_accelerate()
         if action_kinds[1]:
