@@ -22,7 +22,7 @@ class KeyboardController(Controller):
     def __init__(self):
         super().__init__()
 
-    def handle_input(self, keys):
+    def handle_input(self, keys: dict) -> None:
         if keys.get(arcade.key.LEFT, False) or keys.get(arcade.key.A, False):
             self.car.turn_left(keys.get(arcade.key.SPACE, False))
         if keys.get(arcade.key.RIGHT, False) or keys.get(arcade.key.D, False):
@@ -90,7 +90,7 @@ class AIController(Controller):
             self.agent = DQNPolicy(9, 7)  # TODO: make parameters of the ctor
             self.agent.dqn.load_state_dict(torch.load("models_bin/torch.pt"))
         elif agent_type == "sklearn":
-            with open("models_bin/CEM5.pkl", "rb") as model:
+            with open("models_bin/CEM6.pkl", "rb") as model:
                 self.agent = pickle.load(model)
         else:
             self.agent = PPO.load("models_bin/PPO")

@@ -42,9 +42,9 @@ class GameScene:
         h_10_30 = self.space.add_collision_handler(10, 30)
         h_10_30.begin = CollisionHandlers.collision_car_with_obstacle
 
-        h_10_10.data["score"] = h_10_20.data["score"] = h_10_30.data["score"] = (
-            self.score
-        )
+        h_10_10.data["score"] = h_10_20.data["score"] = h_10_30.data[
+            "score"
+        ] = self.score
         h_10_10.data["debris_emitter"] = h_10_20.data["debris_emitter"] = h_10_30.data[
             "debris_emitter"
         ] = self.particle_show
@@ -63,12 +63,12 @@ class GameScene:
         for i in range(0, 40):
             if i == 10:
                 continue
-            self.space.add_collision_handler(i, 40).begin = (
-                CollisionHandlers.skip_collision
-            )
-            self.space.add_collision_handler(i, 41).begin = (
-                CollisionHandlers.skip_collision
-            )
+            self.space.add_collision_handler(
+                i, 40
+            ).begin = CollisionHandlers.skip_collision
+            self.space.add_collision_handler(
+                i, 41
+            ).begin = CollisionHandlers.skip_collision
 
         ######################
         # Setup game objects
@@ -85,14 +85,14 @@ class GameScene:
             object_type="car",
             position=(
                 (random.randint(-300, 300), random.randint(-300, 300))
-                #if self.train
-                #else (500, -300)
+                # if self.train
+                # else (500, -300)
             ),
             car_model="blue_car",
         )
 
         if not self.train:
-            self.car_m.switch_controller(AIController("sklearn"))
+            self.car_m.switch_controller(AIController("sklear"))
         else:
             self.car_m.switch_controller(KeyboardController())
         # self.car_m.set_hook("dead_hook", lambda _: print("You dead"))
@@ -252,11 +252,14 @@ class GameScene:
         )
 
         self.parking_place = ParkingPlace(
-            self.down_render_group, self.space, position=(
+            self.down_render_group,
+            self.space,
+            position=(
                 (random.randint(-500, 500), random.randint(-500, 500))
                 if self.train
                 else (500, -300)
-            ), angle=random.randint(0, 360) if self.train else 0.4
+            ),
+            angle=random.randint(0, 360) if self.train else 0.4,
         )
 
         ######################

@@ -52,7 +52,7 @@ class Game:
     def evaluate(self):
         car_pos = self.core.scene.car_m.car_model.body.position
         car_angle = self.core.scene.car_m.car_model.body.angle
-        # car_speed = self.core.scene.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5
+        car_speed = self.core.scene.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5
         pp_pos = self.core.scene.parking_place.parking_model.inner_body.position
         pp_angle = self.core.scene.parking_place.parking_model.inner_body.angle
         dst = (car_pos[0] - pp_pos[0]) ** 2 + (car_pos[1] - pp_pos[1]) ** 2
@@ -62,5 +62,5 @@ class Game:
             - (int(abs(car_angle - pp_angle)) % 180) / (dst + 0.01)
             + self.core.scene.car_m.health / 100
             - self.time
-            + self.core.scene.car_m.is_car_parked * 1000
-        ) / 100
+            + self.core.scene.car_m.is_car_parked * (1000 - min(1000, car_speed))
+        ) / 1000
