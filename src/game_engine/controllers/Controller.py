@@ -1,24 +1,24 @@
 import random
-
+from src.game_engine.entities.Car import Car
 import arcade
 
 
 class Controller:
-    def __init__(self):
-        self.car = None
+    def __init__(self) -> None:
+        self.car: Car | None = None
 
-    def handle_input(self, keys):
+    def handle_input(self, keys: dict) -> None:
         pass
 
-    def connect_car(self, car):
+    def connect_car(self, car: Car) -> None:
         self.car = car
 
 
 class KeyboardController(Controller):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
-    def handle_input(self, keys):
+    def handle_input(self, keys: dict) -> None:
         if keys.get(arcade.key.LEFT, False) or keys.get(arcade.key.A, False):
             self.car.turn_left(keys.get(arcade.key.SPACE, False))
         if keys.get(arcade.key.RIGHT, False) or keys.get(arcade.key.D, False):
@@ -35,25 +35,25 @@ class KeyboardController(Controller):
 
 
 class RandomController(Controller):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.timer = 0
-        self.action_kind = 0
-        self.probabilities = [
+        self.timer: float = 0
+        self.action_kind: int = 0
+        self.probabilities: list[int] = [
             10,  # accelerate
             5,  # turn left
             15,  # turn right
             0,  # brake
             5,  # hand_break
         ]
-        self.probabilities = list(
+        self.probabilities: list[float] = list(
             map(lambda x: x / sum(self.probabilities), self.probabilities)
         )
-        self.probabilities = [
+        self.probabilities: list[float] = [
             sum(self.probabilities[:i]) for i in range(len(self.probabilities) + 1)
         ]
 
-    def handle_input(self, keys):
+    def handle_input(self, keys: dict) -> None:
         if self.timer == 0:
             self.action_kind = random.random()
             self.timer = 30
@@ -71,13 +71,13 @@ class RandomController(Controller):
 
 
 class BrakeController(Controller):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
-    def handle_input(self, keys):
+    def handle_input(self, keys: dict) -> None:
         self.car.hand_brake()
 
 
 class AIController(BrakeController):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()

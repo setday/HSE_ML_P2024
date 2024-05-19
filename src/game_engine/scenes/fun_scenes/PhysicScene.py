@@ -8,26 +8,30 @@ from src.render.RenderGroup import RenderGroup
 
 class PhysicScene:
     def __init__(self):
-        self.render_group = RenderGroup()
+        self.render_group: RenderGroup = RenderGroup()
 
-        self.space = pymunk.Space()
+        self.space: pymunk.Space = pymunk.Space()
         self.space.gravity = (0, -1000)
 
-        self.ground = pymunk.Segment(self.space.static_body, (0, 100), (600, 100), 1)
+        self.ground: pymunk.Segment = pymunk.Segment(
+            self.space.static_body, (0, 100), (600, 100), 1
+        )
         self.ground.elasticity = 0.95
         self.space.add(self.ground)
 
-        self.ball_mass = 1
-        self.ball_radius = 30
-        self.moment = pymunk.moment_for_circle(self.ball_mass, 0, self.ball_radius)
-        self.ball_body = pymunk.Body(self.ball_mass, self.moment)
+        self.ball_mass: float = 1
+        self.ball_radius: int = 30
+        self.moment: pymunk.moment_for_circle = pymunk.moment_for_circle(
+            self.ball_mass, 0, self.ball_radius
+        )
+        self.ball_body: pymunk.Body = pymunk.Body(self.ball_mass, self.moment)
         self.ball_body.position = (300, 300)
         self.ball_shape = pymunk.Circle(self.ball_body, self.ball_radius)
         self.ball_shape.elasticity = 0.95
         self.space.add(self.ball_body, self.ball_shape)
 
     def update(self, io_controller, delta_time):
-        keys = io_controller.keyboard
+        keys: dict = io_controller.keyboard
 
         delta_time *= 1
 

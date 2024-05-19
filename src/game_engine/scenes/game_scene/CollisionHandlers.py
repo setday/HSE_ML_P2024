@@ -1,18 +1,21 @@
 import random
 
+import pymunk
+
+from src.game_engine.entities.ParkingPlace import ParkingPlace
 from src.game_engine.entities.Car import Car
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
 
 
-def skip_collision(arbiter, _, __):
+def skip_collision(___, _, __) -> bool:
     return False
 
 
-def collision_car_with_car(arbiter, _, data):
+def collision_car_with_car(arbiter: pymunk.Arbiter, _, data: dict) -> bool:
     car1: Car = arbiter.shapes[0].super
     car2: Car = arbiter.shapes[1].super
 
-    delta_score = (
+    delta_score: float = (
         car1.car_model.body.velocity - car2.car_model.body.velocity
     ).get_length_sqrd() / 30
     data["score"][0] -= delta_score
@@ -26,16 +29,16 @@ def collision_car_with_car(arbiter, _, data):
             ],
         )
 
-    health_decreation = delta_score
+    health_decreation: float = delta_score
     car1.change_health(-health_decreation)
     car2.change_health(-health_decreation)
 
     return True
 
 
-def collision_car_with_base_parking_place(arbiter, _, data):
-    car = arbiter.shapes[0].super
-    parking_place = arbiter.shapes[1].super
+def collision_car_with_base_parking_place(arbiter: pymunk.Arbiter, _, __) -> bool:
+    car: Car | ParkingPlace = arbiter.shapes[0].super
+    parking_place: ParkingPlace | Car = arbiter.shapes[1].super
 
     if isinstance(parking_place, Car):
         car, parking_place = parking_place, car
@@ -44,9 +47,9 @@ def collision_car_with_base_parking_place(arbiter, _, data):
     return False
 
 
-def end_collision_car_with_base_parking_place(arbiter, _, data):
-    car = arbiter.shapes[0].super
-    parking_place = arbiter.shapes[1].super
+def end_collision_car_with_base_parking_place(arbiter: pymunk.Arbiter, _, __) -> bool:
+    car: Car | ParkingPlace = arbiter.shapes[0].super
+    parking_place: Car | ParkingPlace = arbiter.shapes[1].super
 
     if isinstance(parking_place, Car):
         car, parking_place = parking_place, car
@@ -55,9 +58,9 @@ def end_collision_car_with_base_parking_place(arbiter, _, data):
     return False
 
 
-def collision_car_with_dead_parking_place(arbiter, _, data):
-    car = arbiter.shapes[0].super
-    parking_place = arbiter.shapes[1].super
+def collision_car_with_dead_parking_place(arbiter: pymunk.Arbiter, _, __) -> bool:
+    car: Car | ParkingPlace = arbiter.shapes[0].super
+    parking_place: Car | ParkingPlace = arbiter.shapes[1].super
 
     if isinstance(parking_place, Car):
         car, parking_place = parking_place, car
@@ -66,9 +69,9 @@ def collision_car_with_dead_parking_place(arbiter, _, data):
     return False
 
 
-def end_collision_car_with_dead_parking_place(arbiter, _, data):
-    car = arbiter.shapes[0].super
-    parking_place = arbiter.shapes[1].super
+def end_collision_car_with_dead_parking_place(arbiter: pymunk.Arbiter, _, __) -> bool:
+    car: Car | ParkingPlace = arbiter.shapes[0].super
+    parking_place: Car | ParkingPlace = arbiter.shapes[1].super
 
     if isinstance(parking_place, Car):
         car, parking_place = parking_place, car
@@ -77,7 +80,7 @@ def end_collision_car_with_dead_parking_place(arbiter, _, data):
     return False
 
 
-def collision_car_with_obstacle(arbiter, _, data):
+def collision_car_with_obstacle(arbiter: pymunk.Arbiter, _, data: dict) -> None:
     car = arbiter.shapes[0].super
     cone = arbiter.shapes[1].super
 
@@ -102,8 +105,8 @@ def collision_car_with_obstacle(arbiter, _, data):
 
         return True
 
-    health_decreation = 33
-    delta_score = 5
+    health_decreation: int = 33
+    delta_score: int = 5
     data["score"][0] -= delta_score
     cone.health -= health_decreation
 

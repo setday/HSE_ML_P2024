@@ -1,16 +1,22 @@
 import random
 from math import radians, degrees
-
+from src.render.RenderGroup import RenderGroup
 import arcade
-from pymunk import Vec2d
-
+from pymunk import Vec2d, Space
 from src.physics.models.CarPhysicsModel import CarPhysicsModel
 from src.render.sprites.BasicSprite import BasicSprite
 
 
 class Car:
-    def __init__(self, render_group, space, position=(300, 300), angle=0, skin_id=-1):
-        skins = [
+    def __init__(
+        self,
+        render_group: RenderGroup,
+        space: Space,
+        position: Vec2d | tuple[float, float] = (300, 300),
+        angle: float = 0,
+        skin_id: int = -1,
+    ) -> None:
+        skins: list[str] = [
             "assets/pic/cars/car_2.png",
             "assets/pic/cars/car_3.png",
             "assets/pic/cars/car_1.png",
@@ -21,23 +27,25 @@ class Car:
 
         x, y = position
 
-        self.car_view = BasicSprite(skin, position)
-        self.car_model = CarPhysicsModel((x, y), self.car_view.get_hit_box())
+        self.car_view: BasicSprite = BasicSprite(skin, position)
+        self.car_model: CarPhysicsModel = CarPhysicsModel(
+            (x, y), self.car_view.get_hit_box()
+        )
 
         self.car_model.body.angle = angle
 
         render_group.add(self.car_view)
 
-        self.space = space
-        self.render_group = render_group
+        self.space: Space = space
+        self.render_group: RenderGroup = render_group
 
         self.car_model.shape.super = self
 
         self.space.add(self.car_model.body, self.car_model.shape)
 
-        self.health = 100
+        self.health: int = 100
 
-        self.tyre_emitters = [
+        self.tyre_emitters: list[arcade.emitter] = [
             arcade.make_interval_emitter(
                 center_xy=center,
                 filenames_and_textures=[
@@ -52,15 +60,15 @@ class Car:
             )
             for center in CarPhysicsModel.wheels_offset
         ]
-        self.tyre_state = 0
+        self.tyre_state: float = 0
 
-        self.is_hand_braking = False
+        self.is_hand_braking: bool = False
 
         self.controller = None
 
-        self.dead_zones_intersect = 0
-        self.inside_parking_place = 0
-        self.is_car_parked = False
+        self.dead_zones_intersect: float = 0
+        self.inside_parking_place: float = 0
+        self.is_car_parked: bool = False
 
         self.hooks: dict[str, callable] = {
             "dead_hook": None,
@@ -70,37 +78,37 @@ class Car:
 
         self.sync()
 
-    def controlling(self, keys):
+    def controlling(self, keys: dict) -> None:
         self.controller.handle_input(keys)
 
-    def switch_controller(self, controller):
+    def switch_controller(self, controller) -> None:
         self.controller = controller
         controller.connect_car(self)
 
-    def apply_friction(self):
+    def apply_friction(self) -> None:
         self.car_model.apply_friction()
 
-    def turn_left(self, hold_brake=False):
+    def turn_left(self, hold_brake: bool = False) -> None:
         self.car_model.turn_left(-radians(1), hold_brake)
 
-    def turn_right(self, hold_brake=False):
+    def turn_right(self, hold_brake: bool = False) -> None:
         self.car_model.turn_left(radians(1), hold_brake)
 
-    def forward_accelerate(self):
+    def forward_accelerate(self) -> None:
         if self.health <= 0:
             return
         self.car_model.accelerate(4)
 
-    def backward_acceleration(self):
+    def backward_acceleration(self) -> None:
         if self.health <= 0:
             return
         self.car_model.accelerate(-4)
 
-    def hand_brake(self):
+    def hand_brake(self) -> None:
         self.car_model.brake()
         self.is_hand_braking = True
 
-    def _stop_tyring(self):
+    def _stop_tyring(self) -> None:
         if self.tyre_state == 0:
             return
 
@@ -108,7 +116,7 @@ class Car:
             emitter.rate_factory = arcade.EmitterIntervalWithTime(999999999, 999999999)
         self.tyre_state = 0
 
-    def _start_tyring(self):
+    def _start_tyring(self) -> None:
         if self.tyre_state == 1:
             return
 
@@ -116,7 +124,7 @@ class Car:
             emitter.rate_factory = arcade.EmitterIntervalWithTime(0.03, 999999999)
         self.tyre_state = 1
 
-    def sync(self):
+    def sync(self) -> None:
         d_angle = degrees(self.car_model.body.angle)
 
         self.car_view.update_position(self.car_model.body.position)
@@ -165,17 +173,17 @@ class Car:
             self.tyre_emitters[i].center_x = -offset.x
             self.tyre_emitters[i].center_y = offset.y
 
-            self.tyre_emitters[i].particle_factory = (
-                lambda emitter: arcade.FadeParticle(
-                    filename_or_texture="assets/pic/extra/tyre_trail.png",
-                    change_xy=(0, 0),
-                    lifetime=1,
-                    scale=1,
-                    angle=90 - d_angle,
-                )
+            self.tyre_emitters[
+                i
+            ].particle_factory = lambda emitter: arcade.FadeParticle(
+                filename_or_texture="assets/pic/extra/tyre_trail.png",
+                change_xy=(0, 0),
+                lifetime=1,
+                scale=1,
+                angle=90 - d_angle,
             )
 
-    def change_health(self, delta: float):
+    def change_health(self, delta: float) -> None:
         if self.health <= 0 and delta <= 0:
             return
         if self.health >= 100 and delta >= 0:
