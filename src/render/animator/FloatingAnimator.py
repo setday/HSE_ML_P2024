@@ -1,3 +1,4 @@
+import random
 from math import sin
 from typing import Any
 
@@ -27,6 +28,7 @@ class FloatingAnimator(BasicAnimator):
         limits_x: tuple[float, float] = (0, 0),
         limits_y: tuple[float, float] = (-10, 10),
         speed: float = 1,
+        random_phase: bool = True,
     ):
         if not hasattr(instance, "x") or not hasattr(instance, "y"):
             raise ValueError("Instance must have x and y attributes")
@@ -35,8 +37,11 @@ class FloatingAnimator(BasicAnimator):
 
         self.speed = speed
 
-        self.xAnimator = FloatingParameterAnimator(limits_x[0], limits_x, speed)
-        self.yAnimator = FloatingParameterAnimator(limits_y[0], limits_y, speed)
+        start_x = random.uniform(*limits_x) if random_phase else limits_x[0]
+        start_y = random.uniform(*limits_y) if random_phase else limits_y[0]
+
+        self.xAnimator = FloatingParameterAnimator(start_x, limits_x, speed)
+        self.yAnimator = FloatingParameterAnimator(start_y, limits_y, speed)
 
     def update(self, dt: float) -> None:
         super().update(dt)

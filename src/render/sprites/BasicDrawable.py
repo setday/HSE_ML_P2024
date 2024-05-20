@@ -22,6 +22,9 @@ class BasicDrawable(arcade.Sprite):
 
         self.position = inverse_y(position)
 
+    def draw(self, *, filter_option=None, pixelated=None, blend_function=None):
+        super().draw(filter=filter_option, pixelated=pixelated or True, blend_function=blend_function)
+
     @property
     def x(self) -> float:
         return self.center_x
