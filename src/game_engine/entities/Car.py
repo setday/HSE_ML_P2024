@@ -23,7 +23,6 @@ class Car:
 
         self.car_view = BasicSprite(skin, position)
         self.car_model = CarPhysicsModel((x, y), self.car_view.get_hit_box())
-
         self.car_model.body.angle = angle
 
         render_group.add(self.car_view)
@@ -57,7 +56,6 @@ class Car:
         self.is_hand_braking = False
 
         self.controller = None
-
         self.dead_zones_intersect = 0
         self.inside_parking_place = 0
         self.is_car_parked = False
