@@ -24,7 +24,9 @@ class Indicator:
         if hasattr(owner, "health") and isinstance(owner.health, int):
             self.owner = owner
         else:
-            raise ValueError(f"Invalid owner type: {type(owner)} has no health attribute")
+            raise ValueError(
+                f"Invalid owner type: {type(owner)} has no health attribute"
+            )
 
         self.target_health = 0
         self.current_health = 0
@@ -104,16 +106,22 @@ class Indicator:
     def _set_score_box(self, new_width) -> None:
         self.score_box_1.width = new_width
         self.score_box_2.width = new_width + self.border_width
-        self.score_box_2.left = self.score_box_1.left = self.center_x - self.half_box_width
+        self.score_box_2.left = self.score_box_1.left = (
+            self.center_x - self.half_box_width
+        )
 
     def _set_trail_box(self, new_width) -> None:
         self.trail_box_1.width = new_width
         self.trail_box_2.width = new_width + self.border_width
-        self.trail_box_2.left = self.trail_box_1.left = self.center_x - self.half_box_width
+        self.trail_box_2.left = self.trail_box_1.left = (
+            self.center_x - self.half_box_width
+        )
 
         self.trail_shadow_box_1.width = new_width + self.border_width
         self.trail_shadow_box_2.width = new_width + self.border_width * 2
-        self.trail_shadow_box_2.left = self.trail_shadow_box_1.left = self.center_x - self.half_box_width
+        self.trail_shadow_box_2.left = self.trail_shadow_box_1.left = (
+            self.center_x - self.half_box_width
+        )
 
     def _set_target_health(self, new_health) -> None:
         self.target_health = new_health
@@ -124,7 +132,9 @@ class Indicator:
             self._set_trail_box(self.target_health)
 
     def _update_current_health(self) -> None:
-        self.current_health -= (self.current_health - self.target_health) * self.change_speed
+        self.current_health -= (
+            self.current_health - self.target_health
+        ) * self.change_speed
         if abs(self.current_health - self.target_health) < 1:
             self.current_health = self.target_health
 

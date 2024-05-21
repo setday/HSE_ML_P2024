@@ -28,28 +28,39 @@ class GameScene:
         self.space = pymunk.Space()
 
         h_10_10 = self.space.add_collision_handler(10, 10)
-        h_10_10.begin = collision_car_with_car
+        h_10_10.begin = CollisionHandlers.collision_car_with_car
         h_10_20 = self.space.add_collision_handler(10, 20)
-        h_10_20.begin = collision_car_with_obstacle
+        h_10_20.begin = CollisionHandlers.collision_car_with_obstacle
         h_10_30 = self.space.add_collision_handler(10, 30)
-        h_10_30.begin = collision_car_with_obstacle
+        h_10_30.begin = CollisionHandlers.collision_car_with_obstacle
 
-        h_10_10.data["score"] = h_10_20.data["score"] = h_10_30.data["score"] = self.score
-        h_10_10.data["debris_emitter"] = h_10_20.data["debris_emitter"] = \
-            h_10_30.data["debris_emitter"] = self.particle_show
+        h_10_10.data["score"] = h_10_20.data["score"] = h_10_30.data[
+            "score"
+        ] = self.score
+        h_10_10.data["debris_emitter"] = h_10_20.data["debris_emitter"] = h_10_30.data[
+            "debris_emitter"
+        ] = self.particle_show
 
         base_handler = self.space.add_collision_handler(10, 40)
-        base_handler.begin = collision_car_with_base_parking_place
-        base_handler.separate = end_collision_car_with_base_parking_place
+        base_handler.begin = CollisionHandlers.collision_car_with_base_parking_place
+        base_handler.separate = (
+            CollisionHandlers.end_collision_car_with_base_parking_place
+        )
         dead_handler = self.space.add_collision_handler(10, 41)
-        dead_handler.begin = collision_car_with_dead_parking_place
-        dead_handler.separate = end_collision_car_with_dead_parking_place
+        dead_handler.begin = CollisionHandlers.collision_car_with_dead_parking_place
+        dead_handler.separate = (
+            CollisionHandlers.end_collision_car_with_dead_parking_place
+        )
 
         for i in range(0, 40):
             if i == 10:
                 continue
-            self.space.add_collision_handler(i, 40).begin = skip_collision
-            self.space.add_collision_handler(i, 41).begin = skip_collision
+            self.space.add_collision_handler(
+                i, 40
+            ).begin = CollisionHandlers.skip_collision
+            self.space.add_collision_handler(
+                i, 41
+            ).begin = CollisionHandlers.skip_collision
 
 
 
@@ -75,12 +86,18 @@ class GameScene:
         self.screen_group = RenderGroup()
         camera_offset = self.screen_group.camera.get_position(1, 1)
 
-        self.indicator = Indicator(owner=self.car_m, position=camera_offset - Vector2D(200, 100))
+        self.indicator = Indicator(
+            owner=self.car_m, position=camera_offset - Vector2D(200, 100)
+        )
         self.screen_group.add(self.indicator.sprite_list)
 
-        self.score_board = ScoreDisplay(score=self.score[0], position=camera_offset - Vector2D(200, 170),
-                                        color=(255, 220, 40),
-                                        font_path='assets/fnt/ka1.ttf', font_name='Karmatic Arcade')
+        self.score_board = ScoreDisplay(
+            score=self.score[0],
+            position=camera_offset - Vector2D(200, 170),
+            color=(255, 220, 40),
+            font_path="assets/fnt/ka1.ttf",
+            font_name="Karmatic Arcade",
+        )
         self.screen_group.add(self.score_board.sprite_list)
 
     def update(self, io_controller, delta_time):

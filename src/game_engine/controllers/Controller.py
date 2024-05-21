@@ -44,10 +44,14 @@ class RandomController(Controller):
             5,  # turn left
             15,  # turn right
             0,  # brake
-            5  # hand_break
+            5,  # hand_break
         ]
-        self.probabilities = list(map(lambda x: x / sum(self.probabilities), self.probabilities))
-        self.probabilities = [sum(self.probabilities[:i]) for i in range(len(self.probabilities) + 1)]
+        self.probabilities = list(
+            map(lambda x: x / sum(self.probabilities), self.probabilities)
+        )
+        self.probabilities = [
+            sum(self.probabilities[:i]) for i in range(len(self.probabilities) + 1)
+        ]
 
     def handle_input(self, keys):
         if self.timer == 0:

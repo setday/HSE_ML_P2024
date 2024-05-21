@@ -14,7 +14,9 @@ class BasicRect(BasicDrawable):
 
         self.color = (255, 255, 255)
 
-        self.src_surface = Texture.create_filled(hash(self).__str__(), (width, height), (0, 0, 0))
+        self.src_surface = Texture.create_filled(
+            hash(self).__str__(), (width, height), (0, 0, 0)
+        )
         self.texture = self.src_surface
 
         self.border_width = 2
@@ -38,14 +40,21 @@ class BasicRect(BasicDrawable):
 
         self.update_color(self.color)
 
-    def update_color(self, color: Tuple[int, int, int] | Tuple[int, int, int, int]) -> None:
+    def update_color(
+        self, color: Tuple[int, int, int] | Tuple[int, int, int, int]
+    ) -> None:
         self.color = color
 
-        data = [color] * self._top_bottom_skip + (
-                [color] * self.border_width +
-                [(0, 0, 0, 0)] * max(0, self._center_horizontal_skip) +
+        data = (
+            [color] * self._top_bottom_skip
+            + (
                 [color] * self.border_width
-        ) * max(0, self._center_vertical_skip) + [color] * self._top_bottom_skip
+                + [(0, 0, 0, 0)] * max(0, self._center_horizontal_skip)
+                + [color] * self.border_width
+            )
+            * max(0, self._center_vertical_skip)
+            + [color] * self._top_bottom_skip
+        )
 
         self.src_surface.image.putdata(data)
         self.texture = self.src_surface

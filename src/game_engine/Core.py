@@ -1,8 +1,6 @@
 import arcade
 
 from src.game_engine.scenes.game_scene.GameScene import GameScene
-from src.game_engine.scenes.fun_scenes.PhysicScene import PhysicScene
-from src.game_engine.scenes.fun_scenes.GameOfLifeScene import GameOfLifeScene
 from src.render.Window import Window, IOController
 
 
