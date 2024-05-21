@@ -1,4 +1,3 @@
-import math
 import random
 from math import radians, degrees
 
@@ -68,7 +67,6 @@ class Car:
         }
 
         self.sync()
-
 
     def controlling(self, keys):
         self.controller.handle_input(keys)

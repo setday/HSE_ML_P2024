@@ -1,11 +1,12 @@
 import time
+import random
 
 import arcade.key
 import pymunk
 from pyglet.math import Vec2 as Vector2D
 
-from src.game_engine.controllers.Controller import *
-from src.game_engine.scenes.game_scene.CollisionHandlers import *
+import src.game_engine.controllers.Controller as Controller
+import src.game_engine.scenes.game_scene.CollisionHandlers as CollisionHandlers
 from src.render.RenderGroup import RenderGroup
 from src.render.particle.ParticleShow import ParticleShow
 from src.render.screen_elements.Indicator import Indicator
@@ -62,23 +63,26 @@ class GameScene:
                 i, 41
             ).begin = CollisionHandlers.skip_collision
 
-
-
         ######################
         # Setup game objects
         ######################
-
 
         # self.car_m.set_hook("dead_hook", lambda _: print("You dead"))
         # self.car_m.set_hook("parked_hook", lambda _: print("You win"))
         # self.car_m.set_hook("unparked_hook", lambda _: print("You out"))
 
-
-
-        SceneSetup(self, 'assets/MapConfigs/ParkWithObstacles.json')
+        SceneSetup(self, "assets/MapConfigs/ParkWithObstacles.json")
 
         for car in self.cars[1:]:
-            car.switch_controller(random.choice([RandomController(), AIController(), BrakeController()]))
+            car.switch_controller(
+                random.choice(
+                    [
+                        Controller.RandomController(),
+                        Controller.AIController(),
+                        Controller.BrakeController(),
+                    ]
+                )
+            )
         ######################
         # Screen Elements
         ######################
