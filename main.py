@@ -1,6 +1,5 @@
-from src.game_engine.controllers.TrainAI import Train
-
+from src.game_engine.Core import Core
 
 if __name__ == "__main__":
-    train = Train(view_mode=False, spectate_mode=False)
-    train.run()
+    core = Core()
+    core.run()
