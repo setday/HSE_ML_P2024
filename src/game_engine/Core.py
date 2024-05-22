@@ -7,7 +7,6 @@ from src.render.Window import Window, IOController
 class Core:
     def __init__(self):
         self.window = Window(1920, 1080, "Park me")
-
         self.scene = GameScene()
         # self.scene = PhysicScene()
         # self.scene = GameOfLifeScene()
