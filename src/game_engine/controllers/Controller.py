@@ -90,10 +90,10 @@ class AIController(Controller):
             self.agent = DQNPolicy(9, 7)  # TODO: make parameters of the ctor
             self.agent.dqn.load_state_dict(torch.load("models_bin/torch.pt"))
         elif agent_type == "sklearn":
-            with open("models_bin/CEM6.pkl", "rb") as model:
+            with open("models_bin/CEM8.pkl", "rb") as model:
                 self.agent = pickle.load(model)
         else:
-            self.agent = PPO.load("models_bin/PPO")
+            self.agent = PPO.load("models_bin/PPO_NEW3")
 
     def handle_input(self, keys):
         if self.agent_type == "pytorch":

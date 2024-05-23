@@ -8,13 +8,13 @@ from src.render.screen_elements.Indicator import Indicator
 from src.render.screen_elements.ScoreDisplay import ScoreDisplay
 
 
-def test_core():
+def test_core() -> None:
     core = Core()
     assert hasattr(core, "scene"), "Game must have scene"
     assert hasattr(core, "window"), "Game must have window"
 
 
-def test_main_car():
+def test_main_car() -> None:
     core = Core()
     assert hasattr(core.scene, "car_m"), "Game must have main character"
     assert isinstance(core.scene.car_m, Car), "Main character must be a car"
@@ -28,7 +28,7 @@ def test_main_car():
     ), "Controller must be keyboard"
 
 
-def test_object_factory():
+def test_object_factory() -> None:
     core = Core()
     car = ObjectFactory.create_object(
         render_group=core.scene.render_group,
@@ -85,7 +85,7 @@ def test_object_factory():
             assert obj.obstacle_view is None, f"{model} view must be None"
 
 
-def test_scene_setup():
+def test_scene_setup() -> None:
     core = Core()
     assert hasattr(core.scene, "cars"), "Game must have at least one car"
     for car in core.scene.cars:

@@ -32,7 +32,6 @@ class GameScene:
         ######################
         # Setup physics
         ######################
-
         self.space = pymunk.Space()
 
         h_10_10 = self.space.add_collision_handler(10, 10)
@@ -85,8 +84,6 @@ class GameScene:
             object_type="car",
             position=(
                 (random.randint(-300, 300), random.randint(-300, 300))
-                # if self.train
-                # else (500, -300)
             ),
             car_model="blue_car",
         )
@@ -255,11 +252,9 @@ class GameScene:
             self.down_render_group,
             self.space,
             position=(
-                (random.randint(-500, 500), random.randint(-500, 500))
-                if self.train
-                else (500, -300)
+                (self.car_m.car_model.body.position[0] + random.randint(-500, 500),self.car_m.car_model.body.position[1] + random.randint(-50, 50))
             ),
-            angle=random.randint(0, 360) if self.train else 0.4,
+            angle=random.randint(-90, 90),  # if self.train else 0.4,
         )
 
         ######################
@@ -294,30 +289,30 @@ class GameScene:
             self.car_m.change_health(1000)
 
         if isinstance(self.car_m.controller, AIController):
+            # print((self.car_m.car_model.body.position[0]
+            #             - self.parking_place.parking_model.inner_body.position[0]) ** 2 +
+            #       (self.car_m.car_model.body.position[1]
+            #             - self.parking_place.parking_model.inner_body.position[1]) ** 2)
             self.car_m.controlling(
                 np.array(
                     [
-                        self.car_m.car_model.body.position[0],
-                        self.car_m.car_model.body.position[1],
-                        self.car_m.car_model.body.angle,
+                        self.car_m.car_model.body.position[0]
+                        - self.parking_place.parking_model.inner_body.position[0],
+                        self.car_m.car_model.body.position[1]
+                        - self.parking_place.parking_model.inner_body.position[1],
+                        int(
+                            abs(
+                                self.car_m.car_model.body.angle
+                                - self.parking_place.parking_model.inner_body.angle
+                            )
+                        )
+                        % 180,
                         self.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5,
-                        self.parking_place.parking_model.inner_body.position[0],
-                        self.parking_place.parking_model.inner_body.position[1],
-                        self.parking_place.parking_model.inner_body.angle,
+                        # self.parking_place.parking_model.inner_body.angle,
                     ]
                 )
             )
         else:
-            # with open('actions.txt', 'w') as file:
-            #     print([
-            #             self.car_m.car_model.body.position[0],
-            #             self.car_m.car_model.body.position[1],
-            #             self.car_m.car_model.body.angle,
-            #             self.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5,
-            #             self.parking_place.parking_model.inner_body.position[0],
-            #             self.parking_place.parking_model.inner_body.position[1],
-            #             self.parking_place.parking_model.inner_body.angle,
-            #         ], file=file)
             self.car_m.controlling(keys)
 
         for car in self.cars:
