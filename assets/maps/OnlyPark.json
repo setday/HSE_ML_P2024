@@ -1,0 +1,15 @@
+{
+  "trees_positions": [],
+  "cones_positions": [],
+  "cars_positions": [],
+  "barriers_positions": [],
+  "parking_positions": [
+    [
+      0,
+      -300,
+      0.4
+    ]
+  ],
+  "background": "assets/pic/map/Map.jpg",
+  "scale": 10
+}

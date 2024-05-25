@@ -23,10 +23,10 @@ class Car:
 
         self.car_view = BasicSprite(skin, position)
         self.car_model = CarPhysicsModel((x, y), self.car_view.get_hit_box())
-
         self.car_model.body.angle = angle
 
-        render_group.add(self.car_view)
+        self.render_group = render_group
+        self.render_group.add(self.car_view)
 
         self.space = space
         self.render_group = render_group
@@ -57,7 +57,6 @@ class Car:
         self.is_hand_braking = False
 
         self.controller = None
-
         self.dead_zones_intersect = 0
         self.inside_parking_place = 0
         self.is_car_parked = False
@@ -70,8 +69,20 @@ class Car:
 
         self.sync()
 
-    def controlling(self, keys):
-        self.controller.handle_input(keys)
+    def select(self):
+        self.car_view.kill()
+        self.car_view = BasicSprite("assets/pic/cars/car_3.png", (0, 0))
+        self.render_group.add(self.car_view)
+        self.sync()
+
+    def deselect(self):
+        self.car_view.kill()
+        self.car_view = BasicSprite("assets/pic/cars/car_2.png", (0, 0))
+        self.render_group.add(self.car_view)
+        self.sync()
+
+    def controlling(self, keys, observation=None):
+        self.controller.handle_input(keys, observation)
 
     def switch_controller(self, controller):
         self.controller = controller
