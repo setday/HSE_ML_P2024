@@ -1,4 +1,3 @@
-import random
 from src.game_engine.entities.Car import Car
 import arcade
 import random
@@ -77,7 +76,6 @@ class BrakeController(Controller):
 
     def handle_input(self, keys: dict = None, observation=None) -> None:
         self.car.hand_brake()
-
 
 
 class AIController(Controller):
