@@ -23,7 +23,7 @@ src = [
     "src/render/sprites/BasicSprite.py",
     "src/render/screen_elements/Indicator.py",
     "src/render/screen_elements/ScoreDisplay.py"
-    ]
+]
 py_binary(
     name = "main",
     srcs = ["main.py"] + src

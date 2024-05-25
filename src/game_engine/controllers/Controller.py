@@ -1,13 +1,14 @@
 import random
 from src.game_engine.entities.Car import Car
 import arcade
+import random
 
 
 class Controller:
     def __init__(self) -> None:
         self.car: Car | None = None
 
-    def handle_input(self, keys: dict) -> None:
+    def handle_input(self, keys=None, observation=None) -> None:
         pass
 
     def connect_car(self, car: Car) -> None:
@@ -18,7 +19,7 @@ class KeyboardController(Controller):
     def __init__(self) -> None:
         super().__init__()
 
-    def handle_input(self, keys: dict) -> None:
+    def handle_input(self, keys=None, observation=None) -> None:
         if keys.get(arcade.key.LEFT, False) or keys.get(arcade.key.A, False):
             self.car.turn_left(keys.get(arcade.key.SPACE, False))
         if keys.get(arcade.key.RIGHT, False) or keys.get(arcade.key.D, False):
@@ -53,7 +54,7 @@ class RandomController(Controller):
             sum(self.probabilities[:i]) for i in range(len(self.probabilities) + 1)
         ]
 
-    def handle_input(self, keys: dict) -> None:
+    def handle_input(self, keys=None, observation=None) -> None:
         if self.timer == 0:
             self.action_kind = random.random()
             self.timer = 30
@@ -74,10 +75,32 @@ class BrakeController(Controller):
     def __init__(self) -> None:
         super().__init__()
 
-    def handle_input(self, keys: dict) -> None:
+    def handle_input(self, keys: dict = None, observation=None) -> None:
         self.car.hand_brake()
 
 
-class AIController(BrakeController):
-    def __init__(self) -> None:
+
+class AIController(Controller):
+    def __init__(self, weights_file=None):
         super().__init__()
+
+    def link_model(self, model):
+        # for the begining input: car pos & ang and park_plc pos & ang
+        self.model = model
+
+    def handle_input(self, keys=None, observation=None):
+        # order: accelerate, turn_left, turn_right, brake, hand_brake
+        probs = self.model.activate(observation)
+
+        # TODO: choose "right weight" instead of 0.5
+        action_kinds = [(probs[i] >= 0.5) for i in range(5)]
+        if action_kinds[0]:
+            self.car.forward_accelerate()
+        if action_kinds[1]:
+            self.car.turn_left(action_kinds[4])
+        if action_kinds[2]:
+            self.car.turn_right(action_kinds[4])
+        if action_kinds[3]:
+            self.car.backward_acceleration()
+        if action_kinds[4]:
+            self.car.hand_brake()
