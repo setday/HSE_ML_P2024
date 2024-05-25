@@ -1,12 +1,13 @@
 from typing import Tuple
-
+from pyglet.math import Vec2 as Vector2D
 from arcade import Texture
-
 from src.render.sprites.BasicDrawable import BasicDrawable
 
 
 class BasicRect(BasicDrawable):
-    def __init__(self, width: int, height: int, position):
+    def __init__(
+        self, width: int, height: int, position: Vector2D | tuple[float, float]
+    ) -> None:
         super().__init__(position)
 
         self.width = int(width)

@@ -1,5 +1,4 @@
 from math import radians
-
 from pyglet.math import Vec2 as Vector2D
 from pymunk import Space
 
@@ -17,7 +16,7 @@ class ObjectFactory:
         object_type: str = "car",
         position: Vector2D | tuple[float, float] = (0, 0),
         angle: float = 0,
-        **kwargs,
+        **kwargs: dict,
     ) -> Car | MovableObstacle | StaticObstacle:
         if object_type == "car":
             return ObjectFactory.create_car(

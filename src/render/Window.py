@@ -2,12 +2,12 @@ import arcade
 
 
 class IOController:
-    def __init__(self):
-        self.keyboard = {}
-        self.mouse = {}
+    def __init__(self) -> None:
+        self.keyboard: dict = {}
+        self.mouse: dict = {}
 
-        self.mouse_position = (0, 0)
-        self.mouse_delta = (0, 0)
+        self.mouse_position: tuple[float, float] = (0, 0)
+        self.mouse_delta: tuple[float, float] = (0, 0)
 
 
 class Window(arcade.Window):
@@ -17,9 +17,9 @@ class Window(arcade.Window):
         self._update_hook = None
         self._draw_hook = None
 
-        self.background_color = arcade.color.AMAZON
+        self.background_color: arcade.color = arcade.color.AMAZON
 
-        self._controller = IOController()
+        self._controller: IOController = IOController()
         self._controller.keyboard = {}
 
     def set_update_hook(self, hook: callable) -> None:
