@@ -8,22 +8,22 @@ from src.render.Window import IOController
 class Game:
     def __init__(self):
         self.core = Core(True)
-        # self.time = 1
-        # car_pos = self.core.scene.car_m.car_model.body.position
-        # car_angle = self.core.scene.car_m.car_model.body.angle
-        # car_speed = (
-        #         self.core.scene.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5
-        # )
-        # pp_pos = self.core.scene.parking_place.parking_model.inner_body.position
-        # pp_angle = self.core.scene.parking_place.parking_model.inner_body.angle
-        # self.state = np.array(
-        #     [
-        #         car_pos[0] - pp_pos[0],
-        #         car_pos[1] - pp_pos[1],
-        #         int(abs(car_angle - pp_angle)) % 180,
-        #         car_speed,
-        #     ]
-        # )
+        self.time = 1
+        car_pos = self.core.scene.car_m.car_model.body.position
+        car_angle = self.core.scene.car_m.car_model.body.angle
+        car_speed = (
+                self.core.scene.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5
+        )
+        pp_pos = self.core.scene.parking_place.parking_model.inner_body.position
+        pp_angle = self.core.scene.parking_place.parking_model.inner_body.angle
+        self.state = np.array(
+            [
+                car_pos[0] - pp_pos[0],
+                car_pos[1] - pp_pos[1],
+                int(abs(car_angle - pp_angle)) % 180,
+                car_speed,
+            ]
+        )
 
     def observe(self):
         car_pos = self.core.scene.car_m.car_model.body.position
@@ -64,23 +64,23 @@ class Game:
     def evaluate(self):
         car_pos = self.core.scene.car_m.car_model.body.position
         car_angle = self.core.scene.car_m.car_model.body.angle
-        # car_speed = (
-        #     self.core.scene.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5
-        # )
+        car_speed = (
+            self.core.scene.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5
+        )
         pp_pos = self.core.scene.parking_place.parking_model.inner_body.position
         pp_angle = self.core.scene.parking_place.parking_model.inner_body.angle
-        # delta_x = abs(self.state[0]) - abs(car_pos[0] - pp_pos[0])
-        # delta_y = abs(self.state[1]) - abs(car_pos[1] - pp_pos[1])
-        # delta_angle = self.state[2] - int(abs(car_angle - pp_angle)) % 180
-        # self.state = np.array(
-        #     [
-        #         car_pos[0] - pp_pos[0],
-        #         car_pos[1] - pp_pos[1],
-        #         int(abs(car_angle - pp_angle)) % 180,
-        #         car_speed,
-        #     ]
-        # )
-        dst = (car_pos[0] - pp_pos[0]) ** 2 + (car_pos[1] - pp_pos[1]) ** 2
+        delta_x = abs(self.state[0]) - abs(car_pos[0] - pp_pos[0])
+        delta_y = abs(self.state[1]) - abs(car_pos[1] - pp_pos[1])
+        delta_angle = self.state[2] - abs(car_angle - pp_angle) % 180
+        self.state = np.array(
+            [
+                car_pos[0] - pp_pos[0],
+                car_pos[1] - pp_pos[1],
+                abs(car_angle - pp_angle) % 180,
+                car_speed,
+            ]
+        )
+        dst = (car_pos[0] - pp_pos[0]) ** 2 + (car_pos[1] - pp_pos[1]) ** 2 + 0.01
         angle = abs(car_angle - pp_angle) % 180 + 0.001
-        return self.core.scene.car_m.is_car_parked * 1000000 + min(1 / dst, 1 / angle, 1e6)
+        return self.core.scene.car_m.is_car_parked * 1000000 + delta_x + delta_y + delta_angle + car_speed + 1 / dst + 1 / angle
 
