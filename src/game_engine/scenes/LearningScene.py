@@ -58,7 +58,7 @@ class LearningScene:
 
         self.down_render_group.add(self.background)
 
-        self.population_size = 20
+        self.population_size = 100
         self.cars = []
         for i in range(self.population_size):
             angle = 2 * math.pi * random.random()

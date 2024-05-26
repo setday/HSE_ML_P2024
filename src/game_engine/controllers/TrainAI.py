@@ -34,19 +34,12 @@ class Train:
             self.window.set_update_hook(self.on_update)
             self.window.set_draw_hook(self.on_draw)
 
-        config = neat.config.Config(
-            neat.DefaultGenome, 
-            neat.DefaultReproduction, 
-            neat.DefaultSpeciesSet, 
-            neat.DefaultStagnation, 
-            os.path.join(os.path.dirname(__file__), "config.txt")
-        )
+        local_dir = os.path.dirname(__file__)
+        config_path = os.path.join(local_dir, "config.txt")
+        config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet, neat.DefaultStagnation, config_path)
         pop = neat.Population(config)
-        stats = neat.StatisticsReporter()
-        pop.add_reporter(stats)
-        winner = pop.run(gen, 10)
-        stats.save()
-        print(winner)
+        winner = pop.run(gen, 10000)
+        print(f"{winner}?")
 
         
     def on_update(self, io_controller: IOController, delta_time: float) -> None:
