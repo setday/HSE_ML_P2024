@@ -35,9 +35,9 @@ class GameScene:
         h_10_30 = self.space.add_collision_handler(10, 30)
         h_10_30.begin = CollisionHandlers.collision_car_with_obstacle
 
-        h_10_10.data["score"] = h_10_20.data["score"] = h_10_30.data["score"] = (
-            self.score
-        )
+        h_10_10.data["score"] = h_10_20.data["score"] = h_10_30.data[
+            "score"
+        ] = self.score
         h_10_10.data["debris_emitter"] = h_10_20.data["debris_emitter"] = h_10_30.data[
             "debris_emitter"
         ] = self.particle_show
