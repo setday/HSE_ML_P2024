@@ -99,5 +99,3 @@ class AIController(Controller):
             self.car.turn_right(action_kinds[4])
         if action_kinds[3]:
             self.car.backward_acceleration()
-        if action_kinds[4]:
-            self.car.hand_brake()

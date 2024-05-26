@@ -25,8 +25,7 @@ class Car:
         self.car_model = CarPhysicsModel((x, y), self.car_view.get_hit_box())
         self.car_model.body.angle = angle
 
-        self.render_group = render_group
-        self.render_group.add(self.car_view)
+        render_group.add(self.car_view)
 
         self.space = space
         self.render_group = render_group
@@ -67,18 +66,6 @@ class Car:
             "unparked_hook": None,
         }
 
-        self.sync()
-
-    def select(self):
-        self.car_view.kill()
-        self.car_view = BasicSprite("assets/pic/cars/car_3.png", (0, 0))
-        self.render_group.add(self.car_view)
-        self.sync()
-
-    def deselect(self):
-        self.car_view.kill()
-        self.car_view = BasicSprite("assets/pic/cars/car_2.png", (0, 0))
-        self.render_group.add(self.car_view)
         self.sync()
 
     def controlling(self, keys, observation=None):

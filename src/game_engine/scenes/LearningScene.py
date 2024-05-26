@@ -68,26 +68,12 @@ class LearningScene:
 
         self.screen_group = RenderGroup()
 
-        self.radius = 500
-        self.tick_lim = self.radius / 10
+        self.tick_lim = 20
 
         self.genomes = None
         self.state = -1
         self.ticks_elapsed = 0
         self.gen = 0
-
-        # ======================================================================
-
-        self.selected_id = 0
-        self.cars[0].select()
-        self.render_group.camera.snap_to_sprite(self.cars[0].car_view)
-
-        # ======================================================================
-
-        self.avg_fit = 0
-        self.overall_best = 0
-
-        self.file = open("plot.txt", "w")
 
         self.reset()
 
@@ -96,15 +82,12 @@ class LearningScene:
         for i in range(self.population_size):
             angle = 2 * math.pi * random.random()
             self.cars[i].car_model.body.position = (
-                (self.radius + random.random() * self.radius / 2) * math.cos(angle),
-                (self.radius + random.random() * self.radius / 2) * math.sin(angle),
+                250 * math.cos(angle),
+                250 * math.sin(angle),
             )
             self.cars[i].car_model.body.angle = (
-                # 2 * math.pi * random.random()
-                angle
-                - math.pi / 2
-                + math.pi * (random.random() - 0.5) * 0.5
-            )
+                angle - math.pi / 2
+            )  # very simple task, just drive forward
         self.ticks_elapsed = 0
 
         self.fitnesses = [0 for i in range(self.population_size)]
@@ -118,23 +101,8 @@ class LearningScene:
 
     def update_cars_fitness(self):
         self.gen += 1
-        self.file.write(
-            f"{self.gen} {round(max(self.fitnesses), 2)} {round(sum(self.fitnesses) / self.population_size, 1)}\n"
-        )
-        print(
-            f"\
-Gen #{self.gen}\
- | {round(max(self.fitnesses), 1)}\
- | {round(sum(self.fitnesses) / self.population_size, 1)}\
- | {round(self.overall_best, 1)}\
- | {round(self.avg_fit / self.gen / self.population_size, 1)}\
-            ",
-            end="\r",
-        )
-        self.avg_fit += sum(self.fitnesses)
-        self.overall_best = max(self.overall_best, max(self.fitnesses))
+        print(f"Gen #{self.gen}", end="\r")
         for i, car in enumerate(self.cars):
-            car.car_model.body.velocity = (0, 0)
             self.genomes[i][1].fitness = self.fitnesses[i]
 
     def update(self, io_controller, delta_time):
@@ -147,6 +115,9 @@ Gen #{self.gen}\
             car_pos = car.car_model.body.position
             pp_pos = self.parking_place.parking_model.inner_body.position
 
+            car_angle = car.car_model.body.angle
+            pp_angle = self.parking_place.parking_model.inner_body.angle
+
             car_speed = car.car_model.body.velocity.get_length_sqrd() ** 0.5
 
             car.controlling(
@@ -154,7 +125,7 @@ Gen #{self.gen}\
                 [
                     car_pos[0] - pp_pos[0],
                     car_pos[1] - pp_pos[1],
-                    math.atan2(car_pos[1] - pp_pos[1], car_pos[0] - pp_pos[0]),
+                    car_angle - pp_angle,
                     car_speed,
                 ],
             )
@@ -166,7 +137,6 @@ Gen #{self.gen}\
         if self.ticks_elapsed > self.tick_lim:
             self.state = 0
 
-        best = 0
         for i, car in enumerate(self.cars):
             car_pos = car.car_model.body.position
             pp_pos = self.parking_place.parking_model.inner_body.position
@@ -178,39 +148,18 @@ Gen #{self.gen}\
                 car_pos[1] - pp_pos[1]
             ) * (car_pos[1] - pp_pos[1])
 
-            car_speed = car.car_model.body.velocity.get_length_sqrd()
+            car_speed = car.car_model.body.velocity.get_length_sqrd() ** 0.5
 
-            def get_ang(car_ang, pp_ang):
-                cx, cy = math.cos(car_ang), math.sin(car_ang)
-                px, py = math.cos(pp_ang), math.sin(pp_ang)
-                ang1 = abs(math.atan2(cy, cx) - math.atan2(py, px))
-                ang2 = abs(math.atan2(-cy, -cx) - math.atan2(py, px))
-                return min(min(ang1, 2 * math.pi - ang1), min(ang2, 2 * math.pi - ang2))
-
+            # self.fitnesses[i] +=  -1 + 100 / (dst ** 0.5 + 1) - 10 / (car_speed + 1)
             self.fitnesses[i] += (
-                -1 / self.radius
-                + self.radius / (dst + 1)
-                + (0.2 / self.radius) / (get_ang(car_angle, pp_angle) + 1)
-                # - (0.01 / self.radius) * car_speed
+                -(dst**0.5)
+                - abs(car_angle - pp_angle) * (dst**0.5 / 100)
+                + 10000 * int(car.is_car_parked)
             )
-
-            if self.fitnesses[i] > self.fitnesses[best]:
-                best = i
-
-            # print(car_angle, pp_angle)
-            # self.fitnesses[i] += (
-            #     300 - (dst**0.5)
-            #     - abs(car_angle - pp_angle) * (dst**0.5 / 100)
-            #     + 10000 * int(car.is_car_parked)
-            # )
-            # self.fitnesses[i] +=  -0.1 + (30 / (dst ** 0.5 + 1))
+            # self.fitnesses[i] +=  1 / (abs(car_angle - pp_angle) + 10) + 100 / (dst ** 0.5 + 1) - 10 / (car_speed + 1)
 
             car.apply_friction()
             car.sync()
-        self.cars[self.selected_id].deselect()
-        self.selected_id = best
-        self.cars[self.selected_id].select()
-        self.render_group.camera.snap_to_sprite(self.cars[self.selected_id].car_view)
 
     def draw(self):
         if self.state == 0:
