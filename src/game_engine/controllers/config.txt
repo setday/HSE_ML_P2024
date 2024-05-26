@@ -1,7 +1,7 @@
 [NEAT]
 fitness_criterion     = max
-fitness_threshold     = 1000000
-pop_size              = 205
+fitness_threshold     = 1000000000
+pop_size              = 100
 reset_on_extinction   = True
 
 [DefaultGenome]
