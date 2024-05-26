@@ -17,14 +17,13 @@ from src.render.screen_elements.ScoreDisplay import ScoreDisplay
 from src.render.sprites.BasicSprite import BasicSprite
 
 
-# async def sleep_zero():
-#     await asyncio.sleep(0)
+async def sleep_zero():
+    await asyncio.sleep(0)
 
 
 def switch_task():
-    print("SWITCH from Scene!")
-    # loop = asyncio.get_event_loop()
-    # loop.run_until_complete(sleep_zero())
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(sleep_zero())
 
 
 class LearningScene:
