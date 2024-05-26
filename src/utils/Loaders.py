@@ -21,14 +21,15 @@ def load_image(path: str) -> AbstractImage:
         return pyglet_load_image("assets/missing.png")
 
 
-def load_texture(path: str, pixelated: bool = True) -> Texture:
+def load_texture(path: str, pixelated: bool = True, **kwargs) -> Texture:
     """
     @brief: Load an image from disk and create a texture. (Arcade)
     @param path: Path to the image file on disk.
+    @param pixelated: If True, the texture will be pixelated.
     @return: Texture object.
     """
     try:
-        texture = arcade_load_texture(path)
+        texture = arcade_load_texture(path, **kwargs)
         texture_to_mimic(texture, pixelated)
         return texture
     except Exception as e:

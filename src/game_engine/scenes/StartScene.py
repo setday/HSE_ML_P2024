@@ -6,7 +6,7 @@ from pyglet import gl
 from src.game_engine.scenes.game_scene.GameScene import GameScene
 from src.render.animator.FloatingAnimator import FloatingAnimator
 from src.render.animator.WanderAnimator import WanderAnimator
-from src.render.screen_elements.UIAnimatorWidget import UIAnimatableWidget
+from src.render.screen_elements.UIAnimatorWidget import UIAnimatableWidget, UIFullScreenLayout, UISuperAnchorWidget
 from src.render.sprites.BasicSprite import BasicSprite
 from src.utils.Loaders import load_texture
 
@@ -38,20 +38,18 @@ class StartScene:
         # Text
         #
 
-        self.title = arcade.gui.UITextureButton(
-            texture=load_texture("assets/pic/Logo.png"),
-            width=98 * 7,
-            height=64 * 7,
-        )
         self.title_animator = UIAnimatableWidget(
             anchor_x="center",
             anchor_y="top",
             align_y=-50,
-            child=self.title,
+            child=arcade.gui.UITextureButton(
+                texture=load_texture("assets/pic/Logo.png"),
+                width=98 * 7,
+                height=64 * 7,
+            ),
             animator_type=FloatingAnimator,
             animator_params={"speed": 1.0},
         )
-        self.manager.add(self.title_animator)
 
         #
         # Play button
@@ -63,13 +61,9 @@ class StartScene:
             texture_pressed=load_texture("assets/pic/buttons/PLAY_pressed.png"),
             width=74,
             height=18,
-            scale=9,
-            style={
-                "border_color": arcade.color.BLACK,
-                "bg_color": arcade.color.WHITE,
-            },
+            scale=9
         )
-        self.play_button.on_click = self.start_game
+        self.play_button.on_click = self.go_game_selector
 
         self.credits_button = arcade.gui.UITextureButton(
             texture=load_texture("assets/pic/buttons/CREDITS.png"),
@@ -77,28 +71,26 @@ class StartScene:
             texture_pressed=load_texture("assets/pic/buttons/CREDITS_pressed.png"),
             width=74,
             height=18,
-            scale=9,
-            style={
-                "border_color": arcade.color.BLACK,
-                "bg_color": arcade.color.WHITE,
-            },
+            scale=9
         )
-        self.credits_button.on_click = self.open_credits
-
-        self.button_group = arcade.gui.UIBoxLayout(
-            children=[self.play_button, self.credits_button],
-            space_between=20,
-        )
+        self.credits_button.on_click = self.go_credits
 
         self.button_animator = UIAnimatableWidget(
             anchor_x="center",
             anchor_y="bottom",
             align_y=150,
-            child=self.button_group,
+            relative_x=True,
+            child=arcade.gui.UIBoxLayout(
+                children=[self.play_button, self.credits_button],
+                space_between=20,
+            ),
             animator_type=FloatingAnimator,
             animator_params={"speed": 1.0},
         )
-        self.manager.add(self.button_animator)
+
+        self.main_screen_layout = UIFullScreenLayout(
+            children=[self.title_animator, self.button_animator]
+        )
 
         ###
         # Credits
@@ -123,13 +115,121 @@ class StartScene:
             child=self.credits,
         )
 
-        self.manager.add(self.credits_wrapper)
+        self.credits_back_button = arcade.gui.UITextureButton(
+            texture=load_texture("assets/pic/buttons/BACK.png"),
+            texture_hovered=load_texture("assets/pic/buttons/BACK_hovered.png"),
+            texture_pressed=load_texture("assets/pic/buttons/BACK_pressed.png"),
+            width=74,
+            height=18,
+            scale=9
+        )
+        self.credits_back_button.on_click = self.go_main
+
+        self.credits_layout = UIFullScreenLayout(
+            children=[
+                arcade.gui.UIAnchorWidget(child=self.credits_back_button)
+            ]
+        )
+
+        ###
+        # Game Selector
+        ###
+
+        self.credits_back_button = arcade.gui.UITextureButton(
+            texture=load_texture("assets/pic/buttons/BACK.png", flipped_horizontally=True),
+            texture_hovered=load_texture("assets/pic/buttons/BACK_hovered.png", flipped_horizontally=True),
+            texture_pressed=load_texture("assets/pic/buttons/BACK_pressed.png", flipped_horizontally=True),
+            width=74,
+            height=18,
+            scale=9
+        )
+        self.credits_back_button.on_click = self.go_main
+
+        self.game_one_button = arcade.gui.UIFlatButton(
+            text="Game 1",
+            width=300,
+            height=100,
+            font_size=30,
+            # font_name="Karmatic Arcade",
+            style={
+                "font_color": arcade.color.WHITE,
+                "bg_color": arcade.color.BLUE,
+                "hover_font_color": arcade.color.WHITE,
+                "hover_bg_color": arcade.color.BLUE,
+                "clicked_font_color": arcade.color.WHITE,
+                "clicked_bg_color": arcade.color.BLUE,
+            }
+        )
+        self.game_one_button.on_click = self.start_game
+
+        self.game_two_button = arcade.gui.UIFlatButton(
+            text="Game 2",
+            width=300,
+            height=100,
+            font_size=30,
+            # font_name="Karmatic Arcade",
+            style={
+                "font_color": arcade.color.WHITE,
+                "bg_color": arcade.color.BLUE,
+                "hover_font_color": arcade.color.WHITE,
+                "hover_bg_color": arcade.color.BLUE,
+                "clicked_font_color": arcade.color.WHITE,
+                "clicked_bg_color": arcade.color.BLUE,
+            }
+        )
+        self.game_two_button.on_click = self.no_game
+
+        self.game_three_button = arcade.gui.UIFlatButton(
+            text="Game 3",
+            width=300,
+            height=100,
+            font_size=30,
+            # font_name="Karmatic Arcade",
+            style={
+                "font_color": arcade.color.WHITE,
+                "bg_color": arcade.color.BLUE,
+                "hover_font_color": arcade.color.WHITE,
+                "hover_bg_color": arcade.color.BLUE,
+                "clicked_font_color": arcade.color.WHITE,
+                "clicked_bg_color": arcade.color.BLUE,
+            }
+        )
+        self.game_three_button.on_click = self.no_game
+
+        self.game_selector_layout = UIFullScreenLayout(
+            children=[arcade.gui.UIAnchorWidget(
+                child=arcade.gui.UIBoxLayout(
+                    children=[self.game_one_button, self.game_two_button, self.game_three_button, self.credits_back_button],
+                    space_between=20,
+                )
+            )]
+        )
+
+        ###
+        # Screen Layout
+        ###
+
+        self.screen_layout = UISuperAnchorWidget(
+            anchor_x="center",
+            anchor_y="center",
+            relative_x=True,
+            relative_y=True,
+            child=arcade.gui.UIBoxLayout(
+                children=[self.credits_layout, self.main_screen_layout, self.game_selector_layout],
+                vertical=False
+            ),
+        )
+        self.manager.add(self.screen_layout)
+
+        self._target_offset = 0
 
     def update(self, io_controller, delta_time):
         self.background_animator.update(delta_time)
 
         self.button_animator.update_animation(delta_time)
         self.title_animator.update_animation(delta_time)
+
+        self.screen_layout.align_x += (self._target_offset - self.screen_layout.align_x) * 0.1
 
     def draw(self):
         self.background.draw()
@@ -139,6 +239,14 @@ class StartScene:
     def start_game(self, event):
         self.core_instance.set_scene(GameScene)
 
-    def open_credits(self, event):
-        #move screen left
-        pass
+    def no_game(self, event):
+        print("No game found.")
+
+    def go_credits(self, event):
+        self._target_offset = 1
+
+    def go_main(self, event):
+        self._target_offset = 0
+
+    def go_game_selector(self, event):
+        self._target_offset = -1
