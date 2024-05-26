@@ -56,12 +56,12 @@ class GameScene:
         for i in range(0, 40):
             if i == 10:
                 continue
-            self.space.add_collision_handler(i, 40).begin = (
-                CollisionHandlers.skip_collision
-            )
-            self.space.add_collision_handler(i, 41).begin = (
-                CollisionHandlers.skip_collision
-            )
+            self.space.add_collision_handler(
+                i, 40
+            ).begin = CollisionHandlers.skip_collision
+            self.space.add_collision_handler(
+                i, 41
+            ).begin = CollisionHandlers.skip_collision
 
         ######################
         # Setup game objects

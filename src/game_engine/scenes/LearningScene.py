@@ -1,20 +1,18 @@
+import time
 import random
 
+import arcade.key
 import pymunk
+from pyglet.math import Vec2 as Vector2D
 import math
 
-from src.game_engine.controllers.Controller import AIController
+from src.game_engine.controllers.Controller import *
 from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.entities.ParkingPlace import ParkingPlace
-from src.game_engine.scenes.game_scene.CollisionHandlers import (
-    skip_collision,
-    collision_car_with_base_parking_place,
-    collision_car_with_dead_parking_place,
-    end_collision_car_with_base_parking_place,
-    end_collision_car_with_dead_parking_place,
-)
+from src.game_engine.scenes.game_scene.CollisionHandlers import *
 from src.render.RenderGroup import RenderGroup
 from src.render.particle.ParticleShow import ParticleShow
+from src.render.screen_elements.ScoreDisplay import ScoreDisplay
 from src.render.sprites.BasicSprite import BasicSprite
 
 
