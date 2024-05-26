@@ -9,14 +9,9 @@ from src.render.Window import Window, IOController
 
 
 class Train:
-    def __init__(self, view_mode=False):
-        self.view_mode = view_mode
-        if self.view_mode:
-            self.window = Window(1920, 1080, "Train me (view mode)")
-        else:
-            self.window = Window(100, 100, "Train me")
-        self.scene = LearningScene(self.view_mode)
-        self.window.set_update_rate(1 / 60)
+    def __init__(self):
+        self.window = Window(1920, 1080, "Train me")
+        self.scene = LearningScene()
         self.window.set_update_hook(self.on_update)
         self.window.set_draw_hook(self.on_draw)
 
@@ -63,5 +58,4 @@ class Train:
             )
 
     def on_draw(self) -> None:
-        if self.view_mode:
-            self.scene.draw()
+        self.scene.draw()

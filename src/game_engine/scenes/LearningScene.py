@@ -2,7 +2,6 @@ import random
 
 import pymunk
 import math
-import arcade
 
 from src.game_engine.controllers.Controller import AIController
 from src.game_engine.entities.ObjectFactory import ObjectFactory
@@ -20,7 +19,7 @@ from src.render.sprites.BasicSprite import BasicSprite
 
 
 class LearningScene:
-    def __init__(self, view_mode):
+    def __init__(self):
         self.down_render_group = RenderGroup()
         self.render_group = RenderGroup()
         self.top_render_group = RenderGroup()
@@ -69,8 +68,6 @@ class LearningScene:
 
         self.screen_group = RenderGroup()
 
-        self.view_mode = view_mode
-
         self.radius = 500
         self.tick_lim = self.radius / 10
 
@@ -79,10 +76,13 @@ class LearningScene:
         self.ticks_elapsed = 0
         self.gen = 0
 
-        if self.view_mode:
-            self.selected_id = 0
-            self.cars[0].select()
-            self.render_group.camera.snap_to_sprite(self.cars[0].car_view)
+        # ======================================================================
+
+        self.selected_id = 0
+        self.cars[0].select()
+        self.render_group.camera.snap_to_sprite(self.cars[0].car_view)
+
+        # ======================================================================
 
         self.avg_fit = 0
         self.overall_best = 0
@@ -100,10 +100,12 @@ class LearningScene:
                 (self.radius + random.random() * self.radius / 2) * math.sin(angle),
             )
             self.cars[i].car_model.body.angle = (
-                angle - math.pi / 2 + math.pi * (random.random() - 0.5) * 0.5
+                # 2 * math.pi * random.random()
+                angle
+                - math.pi / 2
+                + math.pi * (random.random() - 0.5) * 0.5
             )
         self.ticks_elapsed = 0
-        self.iters = 0
 
         self.fitnesses = [0 for i in range(self.population_size)]
 
@@ -117,26 +119,16 @@ class LearningScene:
     def update_cars_fitness(self):
         self.gen += 1
         self.file.write(
-            " ".join(
-                [
-                    str(self.gen),
-                    str(round(max(self.fitnesses), 2)),
-                    str(round(sum(self.fitnesses) / self.population_size, 1)),
-                ]
-            )
-            + "\n"
+            f"{self.gen} {round(max(self.fitnesses), 2)} {round(sum(self.fitnesses) / self.population_size, 1)}\n"
         )
         print(
-            " | ".join(
-                [
-                    f"Gen #{self.gen}",
-                    str(self.iters),
-                    str(round(max(self.fitnesses), 1)),
-                    str(round(sum(self.fitnesses) / self.population_size, 1)),
-                    str(round(self.overall_best, 1)),
-                    str(round(self.avg_fit / self.gen / self.population_size, 1)),
-                ]
-            ),
+            f"\
+Gen #{self.gen}\
+ | {round(max(self.fitnesses), 1)}\
+ | {round(sum(self.fitnesses) / self.population_size, 1)}\
+ | {round(self.overall_best, 1)}\
+ | {round(self.avg_fit / self.gen / self.population_size, 1)}\
+            ",
             end="\r",
         )
         self.avg_fit += sum(self.fitnesses)
@@ -148,7 +140,6 @@ class LearningScene:
     def update(self, io_controller, delta_time):
         if self.state == 0:
             return
-        self.iters += 1
 
         keys = io_controller.keyboard
 
@@ -197,36 +188,38 @@ class LearningScene:
                 return min(min(ang1, 2 * math.pi - ang1), min(ang2, 2 * math.pi - ang2))
 
             self.fitnesses[i] += (
-                1.25
-                - dst**0.5 / self.radius
-                # + self.radius / (dst + 1)
-                # + (0.2 / self.radius) / (get_ang(car_angle, pp_angle) + 1)
+                -1 / self.radius
+                + self.radius / (dst + 1)
+                + (0.2 / self.radius) / (get_ang(car_angle, pp_angle) + 1)
                 # - (0.01 / self.radius) * car_speed
             )
 
-            if self.view_mode and self.fitnesses[i] > self.fitnesses[best]:
+            if self.fitnesses[i] > self.fitnesses[best]:
                 best = i
+
+            # print(car_angle, pp_angle)
+            # self.fitnesses[i] += (
+            #     300 - (dst**0.5)
+            #     - abs(car_angle - pp_angle) * (dst**0.5 / 100)
+            #     + 10000 * int(car.is_car_parked)
+            # )
+            # self.fitnesses[i] +=  -0.1 + (30 / (dst ** 0.5 + 1))
 
             car.apply_friction()
             car.sync()
-
-        if self.view_mode:
-            self.cars[self.selected_id].deselect()
-            self.selected_id = best
-            self.cars[self.selected_id].select()
-            self.render_group.camera.snap_to_sprite(
-                self.cars[self.selected_id].car_view
-            )
+        self.cars[self.selected_id].deselect()
+        self.selected_id = best
+        self.cars[self.selected_id].select()
+        self.render_group.camera.snap_to_sprite(self.cars[self.selected_id].car_view)
 
     def draw(self):
         if self.state == 0:
             return
 
-        if self.view_mode:
-            self.render_group.camera.use()
-            self.down_render_group.draw()
-            self.render_group.draw()
-            self.top_render_group.draw()
+        self.render_group.camera.use()
+        self.down_render_group.draw()
+        self.render_group.draw()
+        self.top_render_group.draw()
 
-            self.screen_group.camera.use()
-            self.screen_group.draw()
+        self.screen_group.camera.use()
+        self.screen_group.draw()
