@@ -141,3 +141,4 @@ class StartScene:
 
     def open_credits(self, event):
         #move screen left
+        pass
