@@ -87,7 +87,10 @@ class AIController(Controller):
 
     def handle_input(self, keys=None, observation=None):
         # order: accelerate, turn_left, turn_right, brake, hand_brake
+        # probs = self.model.predict(numpy.array(observation))
+
         probs = self.model.activate(observation)
+        # print(probs)
 
         # TODO: choose "right weight" instead of 0.5
         action_kinds = [(probs[i] >= 0.5) for i in range(5)]
