@@ -17,15 +17,6 @@ from src.render.screen_elements.ScoreDisplay import ScoreDisplay
 from src.render.sprites.BasicSprite import BasicSprite
 
 
-async def sleep_zero():
-    await asyncio.sleep(0)
-
-
-def switch_task():
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(sleep_zero())
-
-
 class LearningScene:
     def __init__(self):
         self.down_render_group = RenderGroup()
@@ -120,20 +111,25 @@ class LearningScene:
             # self.genomes[i][1].fitness += 1 / (abs(car_angle - pp_angle) + 10) + 1000 / (dst + 1) - 1 / (car_speed + 10)
             self.genomes[i][1].fitness += 100 / (dst + 1)
 
+            # self.genomes[i][1].fitness += (self.best_car_dst[i] - dst) / (self.best_car_dst[i] + dst + 0.1 ** 10)
+            # self.best_car_dst[i] = max(self.best_car_dst[i], dst)
+
         delta_time *= 16
 
         self.space.step(delta_time)
         self.ticks_elapsed += delta_time
         if self.ticks_elapsed > self.tick_lim:
             self.state = 0
-            switch_task()
-            # asyncio.run(asyncio.sleep(0))
+            return
 
         for car in self.cars:
             car.apply_friction()
             car.sync()
             for emitter in car.tyre_emitters:
                 emitter.update()
+
+        # self.particle_show.update()
+
 
     def draw(self):
         if self.state == 0:
@@ -142,7 +138,12 @@ class LearningScene:
         self.render_group.camera.use()
         self.down_render_group.draw()
         self.render_group.draw()
+        # self.particle_show.draw()
         self.top_render_group.draw()
+
+        ######################
+        # Screen Elements Draw
+        ######################
 
         self.screen_group.camera.use()
         self.screen_group.draw()
