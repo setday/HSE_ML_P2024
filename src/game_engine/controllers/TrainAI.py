@@ -7,14 +7,6 @@ from src.game_engine.scenes.LearningScene import LearningScene
 from src.render.Window import Window, IOController
 
 
-async def run_neat(pop, gen, iters):
-    await pop.run(gen, iters)
-
-
-async def run_arcade():
-    await arcade.run()
-
-
 class Train:
     def __init__(self):
         self.window = Window(1920, 1080, "Train me")
@@ -24,11 +16,11 @@ class Train:
 
 
     def run(self) -> None:
-        def gen(genomes, config):
+        async def gen(genomes, config):
             nonlocal self
 
             while self.scene.state == 1:
-                pass
+                await asyncio.sleep(0)
 
             self.scene.reset()      
 
@@ -41,7 +33,7 @@ class Train:
             self.scene.link_genomes(genomes)
 
             self.scene.state = 1
-            # await asyncio.sleep(0)
+            await asyncio.sleep(0)
             # arcade.run()
             # self.window = Window(1920, 1080, "Train me")
             # self.window.set_update_hook(self.on_update)
@@ -59,8 +51,8 @@ class Train:
         pop.add_reporter(stats)
 
         loop = asyncio.get_event_loop()
-        task1 = loop.create_task(run_neat(pop, gen, 100))
-        task2 = loop.create_task(run_arcade())
+        task1 = loop.create_task(pop.run(gen, 100))
+        task2 = loop.create_task(arcade.run())
         loop.run_until_complete(asyncio.wait([task1, task2]))
 
         # winner = pop.run(gen, 100)
