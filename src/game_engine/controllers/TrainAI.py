@@ -2,10 +2,9 @@ import arcade
 import neat
 import os
 
-from neat.six_util import iteritems
-
 from src.game_engine.scenes.LearningScene import LearningScene
 from src.render.Window import Window, IOController
+
 
 
 class Train:
@@ -17,7 +16,7 @@ class Train:
 
         self.pop = None
 
-    def update_scene_genomes(self, genomes, config):
+    def gen(self, genomes, config):
         self.scene.reset()
         self.scene.state = 1
 
@@ -44,7 +43,7 @@ class Train:
         stats = neat.StatisticsReporter()
         self.pop.add_reporter(stats)
 
-        self.update_scene_genomes(list(iteritems(self.pop.population)), self.pop.config)
+        self.pop.run(self.gen, 1)
         arcade.run()
 
         stats.save()
@@ -52,11 +51,8 @@ class Train:
 
     def on_update(self, io_controller: IOController, delta_time: float) -> None:
         self.scene.update(io_controller, delta_time)
-
         if self.scene.state == 0:
-            self.scene.update_cars_fitness()
-            self.pop.run(lambda a, b: None, 1)
-            self.update_scene_genomes(list(iteritems(self.pop.population)), self.pop.config)
+            self.pop.run(self.gen, 1)
 
     def on_draw(self) -> None:
         self.scene.draw()
