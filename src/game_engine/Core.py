@@ -1,3 +1,5 @@
+import time
+
 import arcade
 
 from src.game_engine.scenes.StartScene import StartScene
@@ -30,6 +32,10 @@ class Core:
         arcade.exit()
 
     def on_update(self, io_controller: IOController, delta_time: float) -> None:
+        if io_controller.is_key_clicked(arcade.key.F6):
+            image = arcade.get_image()
+            image.save(f"data/screenshots/{time.time()}.png")
+
         if self.scene is not None:
             self.scene.update(io_controller, delta_time)
 

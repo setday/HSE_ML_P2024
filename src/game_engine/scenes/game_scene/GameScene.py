@@ -1,5 +1,4 @@
 import random
-import time
 
 import arcade.key
 import pymunk
@@ -322,10 +321,6 @@ class GameScene:
 
         if self.is_escape_layout_open:
             return
-
-        if io_controller.is_key_clicked(arcade.key.F6):
-            image = arcade.get_image()
-            image.save(f"data/screenshots/{time.time()}.png")
 
         keys = io_controller.keyboard
 
