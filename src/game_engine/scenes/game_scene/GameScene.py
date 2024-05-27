@@ -19,7 +19,11 @@ from src.render.RenderGroup import RenderGroup
 from src.render.particle.ParticleShow import ParticleShow
 from src.render.screen_elements.Indicator import Indicator
 from src.render.screen_elements.ScoreDisplay import ScoreDisplay
+from src.render.screen_elements.effect_animator.effects.TextPrinter import TextPrinter
 from src.render.sprites.BasicSprite import BasicSprite
+
+from src.render.screen_elements.effect_animator.EffectAnimator import EffectAnimator
+from src.render.screen_elements.effect_animator.effects.FadeEffect import FadeEffect
 
 
 class GameScene:
@@ -270,18 +274,6 @@ class GameScene:
         )
         self.screen_group.add(self.score_board.sprite_list)
 
-        camera_offset = self.screen_group.camera.get_position(0, 0)
-        self.end_text = arcade.Text(
-            "ENDDDDDDD",
-            camera_offset.x,
-            camera_offset.y,
-            arcade.color.WHITE,
-            100,
-            anchor_x="center",
-            anchor_y="center",
-            font_name="Karmatic Arcade",
-        )
-
         ######################
         # Shaders Setup
         ######################
@@ -291,12 +283,16 @@ class GameScene:
         shader_sourcecode = file.read()
         self.shader_vin = Shadertoy((1920, 1080), shader_sourcecode)
 
-        file = open("src/shaders/color_filters/grayscale.glsl")
-        shader_sourcecode = file.read()
-        self.shader_gray = Shadertoy((1920, 1080), shader_sourcecode)
-
         self.tick = 0
-        self.reset_timer = 7
+
+        ######################
+        # Effects
+        ######################
+
+        self.effect_animator = EffectAnimator()
+        self.effect_animator.add_effect(FadeEffect(1, 0, None, (255, 255, 255, 255), False))
+
+        self.is_end_state = False
 
     def update(self, io_controller, delta_time):
         keys = io_controller.keyboard
@@ -342,11 +338,42 @@ class GameScene:
         self.indicator.update_bar()
         self.score_board.update_score(self.score[0])
 
-        if self.car_m.health <= 0:
-            self.reset_timer -= delta_time
+        if self.car_m.health <= 0 and not self.is_end_state:
+            self.is_end_state = True
 
-            if self.reset_timer <= 0:
-                self.core_instance.set_scene(None)
+            self.effect_animator.add_effect(
+                FadeEffect(
+                    1,
+                    0,
+                    None,
+                    (0, 0, 0, 200),
+                    True,
+                    True
+                )
+            )
+            self.effect_animator.add_effect(
+                TextPrinter(
+                    2.3,
+                    0,
+                    None,
+                    "You   LOSE",
+                    True,
+                    None,
+                    True
+                )
+            )
+            self.effect_animator.add_effect(
+                FadeEffect(
+                    2,
+                    2,
+                    lambda: self.core_instance.set_scene(None),
+                    (255, 255, 255, 255),
+                    True,
+                    True
+                )
+            )
+
+        self.effect_animator.update(delta_time)
 
     def draw(self):
         self.render_group.camera.use()
@@ -373,18 +400,7 @@ class GameScene:
         self.tick += 1
 
         self.shader_vin.render(
-            time=self.tick / 125, time_delta=self.car_m.health, mouse_position=(0, 0)
+            time=self.tick / 125, time_delta=self.car_m.health
         )
 
-        if self.car_m.health <= 0:
-            first_black_screen_trans = min((7.0 - self.reset_timer) * 0.6, 0.8)
-            self.shader_gray.render(
-                time=first_black_screen_trans, mouse_position=(0, 0)
-            )
-
-            text_len = int(max((6.0 - self.reset_timer) * 7, 0.0))
-            self.end_text.text = "You   LOSE"[:text_len]
-            self.end_text.draw()
-
-            last_black_screen_trans = (3.0 - self.reset_timer) * 0.6
-            self.shader_gray.render(time=last_black_screen_trans, mouse_position=(0, 0))
+        self.effect_animator.draw()

@@ -10,8 +10,10 @@ class FadeEffect(BasicEffect):
             delay: float = 0,
             finish_callback=None,
 
-            fade_color: tuple[int, int, int] = (0, 0, 0),
+            fade_color: tuple[int, int, int] | tuple[int, int, int, int] = (0, 0, 0),
             fade_in: bool = True,
+
+            stay_after_finish: bool = False,
     ):
         """
         Fade effect
@@ -21,30 +23,38 @@ class FadeEffect(BasicEffect):
         @param finish_callback: callback when fade is finished
         @param fade_color: color to fade to
         @param fade_in: True = fade in, False = fade out
+        @param stay_after_finish: if True, effect will stay after finish
         """
 
-        super().__init__(duration, delay, finish_callback)
+        super().__init__(duration, delay, finish_callback, stay_after_finish)
 
-        self.fade_color = fade_color
+        self.alpha_multiplier = 255
+        if len(fade_color) == 4:
+            self.alpha_multiplier = fade_color[3]
+        self.fade_color = fade_color[:3]
         self.fade_in = fade_in
         self.fade_progress = 0
 
-    def update(self, delta_time: float):
+    def update(self, delta_time: float) -> None:
         super().update(delta_time)
 
         self.fade_progress = self.time_elapsed / self.duration
 
-    def draw(self):
+    def draw(self) -> None:
         alpha = self.fade_progress
         if not self.fade_in:
             alpha = 1 - alpha
+        alpha *= self.alpha_multiplier
+
+        color = self.fade_color + (alpha, )
+
         arcade.draw_xywh_rectangle_filled(
             0,
             0,
             arcade.get_window().width,
             arcade.get_window().height,
-            color=(*self.fade_color, alpha * 255),
+            color,
         )
 
-    def is_finished(self):
+    def is_finished(self) -> bool:
         return self.time_elapsed >= self.duration
