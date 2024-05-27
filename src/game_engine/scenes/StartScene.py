@@ -33,13 +33,18 @@ class StartScene:
         # Background
         #
 
-        self.background = BasicSprite("assets/pic/map/Map.jpg", Vector2D(0, 0))
-        # self.background = BasicSprite("assets/pic/extra/grass.png", Vector2D(0, 0))
-        self.background.update_scale(10)
-
-        self.background_animator = WanderAnimator(
-            self.background, limits_x=(-1000, 1000), limits_y=(-1000, 1000), speed=0.05
+        self.background_animator = UIAnimatableWidget(
+            anchor_x="center",
+            anchor_y="bottom",
+            child=UITexture(
+                texture=load_texture("assets/pic/extra/Clouds.png"),
+                scale=15
+            ),
+            animator_type=WanderAnimator,
+            animator_params={"limits_x": (-3000, 3000), "limits_y": (0, 0), "speed": 0.02},
         )
+
+        self.manager.add(self.background_animator)
 
         ###
         # Main Menu
@@ -241,7 +246,7 @@ class StartScene:
                         children=[credits_layout, main_screen_layout, game_selector_layout],
                         vertical=False
                     ),
-                    settings_layout
+                    settings_layout,
                 ]
             ),
         )
@@ -262,7 +267,7 @@ class StartScene:
         )
 
     def update(self, io_controller, delta_time):
-        self.background_animator.update(delta_time)
+        self.background_animator.update_animation(delta_time)
 
         self.button_animator.update_animation(delta_time)
         self.title_animator.update_animation(delta_time)
@@ -279,8 +284,6 @@ class StartScene:
         self._effect_animator.update(delta_time)
 
     def draw(self):
-        self.background.draw()
-
         self.manager.draw()
 
         self._effect_animator.draw()

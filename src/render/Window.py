@@ -48,7 +48,7 @@ class Window(arcade.Window):
         self._update_hook = None
         self._draw_hook = None
 
-        self.background_color = arcade.color.AMAZON
+        self.background_color = (90, 150, 225)
 
         self._controller = IOController()
         self._controller.keyboard = {}
