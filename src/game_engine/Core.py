@@ -18,7 +18,7 @@ class Core:
         self.window.set_update_hook(self.on_update)
         self.window.set_draw_hook(self.on_draw)
 
-    def set_scene(self, scene = None) -> None:
+    def set_scene(self, scene) -> None:
         if scene is None:
             scene = StartScene
         self.scene = scene(self)

@@ -3,17 +3,16 @@ import arcade.gui
 from pyglet.math import Vec2 as Vector2D
 
 from src.game_engine.scenes.game_scene.GameScene import GameScene
+from src.game_engine.scenes.layouts.CreditsLayout import CreditsLayout
+from src.game_engine.scenes.layouts.SettingLayout import SettingLayout
 from src.render.animator.FloatingAnimator import FloatingAnimator
 from src.render.animator.WanderAnimator import WanderAnimator
 from src.render.screen_elements.ui_components.UIAnimatorWidget import UIAnimatableWidget
 from src.render.screen_elements.ui_components.UIFullScreenLayout import UIFullScreenLayout
 from src.render.screen_elements.ui_components.UISuperAnchorWidget import UISuperAnchorWidget
-from src.render.screen_elements.ui_components.UISuperText import UISuperText
 from src.render.screen_elements.ui_components.UITexture import UITexture
 from src.render.sprites.BasicSprite import BasicSprite
 from src.utils.Loaders import load_texture
-
-import src.render.particle.ParticleShow as ParticleShow
 
 from src.render.screen_elements.effect_animator.EffectAnimator import EffectAnimator
 from src.render.screen_elements.effect_animator.effects.FadeEffect import FadeEffect
@@ -121,93 +120,7 @@ class StartScene:
         # Credits
         ###
 
-        credits_texture = UITexture(
-            texture=load_texture("assets/pic/extra/textured_plane.png"),
-            scale=8,
-        )
-        credits_text = arcade.gui.UIBoxLayout(
-            space_between=20,
-            children=[
-                UISuperText(
-                    text="CREDITS",
-                    width=credits_texture.width - 100,
-                    font_size=40,
-                    align="center",
-                    bold=True,
-                ),
-                UISuperText(
-                    text="Alexander Serkov\n"
-                         "-----------------------------------\n"
-                         "|         Game Physics        |\n"
-                         "=> |  Game Design / Visuals  | <=\n"
-                         "| Concepts | Code design |\n"
-                         "-----------------------------------",
-                    width=credits_texture.width - 100,
-                    multiline=True,
-                    font_size=32,
-                    align="center",
-                    bold=True,
-                ),
-                UISuperText(
-                    text="Artem Batygin\n"
-                         "-----------------------------------\n"
-                         "=> | Game AI | Game Interfaces | <=\n"
-                         "-----------------------------------",
-                    width=credits_texture.width - 100,
-                    multiline=True,
-                    font_size=32,
-                    align="center",
-                    bold=True,
-                ),
-                UISuperText(
-                    text="Vladimir Zakharov\n"
-                         "-----------------------------------\n"
-                         "=> | Level design | Game AI | <=\n"
-                         "-----------------------------------\n",
-                    width=credits_texture.width - 100,
-                    multiline=True,
-                    font_size=32,
-                    align="center",
-                    bold=True,
-                ),
-                UISuperText(
-                    text="Made with infinite ♥",
-                    width=credits_texture.width - 100,
-                    text_color=arcade.color.WHITE,
-                    font_size=32,
-                    align="center",
-                ),
-            ]
-        )
-        credits_texture.add(arcade.gui.UIAnchorWidget(
-            child=credits_text,
-            anchor_x="center",
-            anchor_y="top",
-            align_y=-30,
-        ))
-
-        back_button = arcade.gui.UITextureButton(
-            texture=load_texture("assets/pic/buttons/Arrows/Right/normal.png"),
-            texture_hovered=load_texture("assets/pic/buttons/Arrows/Right/hovered.png"),
-            texture_pressed=load_texture("assets/pic/buttons/Arrows/Right/pressed.png"),
-            scale=7
-        )
-        back_button.on_click = self.go_main
-
-        credits_layout = UIFullScreenLayout(
-            children=[
-                arcade.gui.UIAnchorWidget(
-                    child=back_button,
-                    anchor_x="right",
-                    anchor_y="bottom",
-                    align_y=75,
-                    align_x=-75,
-                ),
-                arcade.gui.UIAnchorWidget(
-                    child=credits_texture
-                ),
-            ]
-        )
+        credits_layout = CreditsLayout(self.go_main)
 
         ###
         # Game Selector
@@ -299,67 +212,7 @@ class StartScene:
         # Settings
         ###
 
-        self.sound_button = arcade.gui.UIFlatButton(
-            text="Sound On",
-            width=300,
-            height=100,
-            font_size=30,
-            # font_name="Karmatic Arcade",
-            style={
-                "font_color": arcade.color.WHITE,
-                "bg_color": arcade.color.GREEN,
-                "hover_font_color": arcade.color.WHITE,
-                "hover_bg_color": arcade.color.GREEN,
-                "clicked_font_color": arcade.color.WHITE,
-                "clicked_bg_color": arcade.color.GREEN,
-            }
-        )
-        self.sound_button.on_click = self.switch_sound
-
-        self.particles_button = arcade.gui.UIFlatButton(
-            text="Particles On",
-            width=300,
-            height=100,
-            font_size=30,
-            # font_name="Karmatic Arcade",
-            style={
-                "font_color": arcade.color.WHITE,
-                "bg_color": arcade.color.GREEN,
-                "hover_font_color": arcade.color.WHITE,
-                "hover_bg_color": arcade.color.GREEN,
-                "clicked_font_color": arcade.color.WHITE,
-                "clicked_bg_color": arcade.color.GREEN,
-            }
-        )
-        self.particles_button.on_click = self.switch_particles
-
-        back_button = arcade.gui.UITextureButton(
-            texture=load_texture("assets/pic/buttons/Arrows/Up/normal.png"),
-            texture_hovered=load_texture("assets/pic/buttons/Arrows/Up/hovered.png"),
-            texture_pressed=load_texture("assets/pic/buttons/Arrows/Up/pressed.png"),
-            scale=7
-        )
-        back_button.on_click = self.go_main
-
-        settings_layout = UIFullScreenLayout(
-            children=[
-                arcade.gui.UIAnchorWidget(
-                    child=arcade.gui.UIBoxLayout(
-                        children=[
-                            self.sound_button,
-                            self.particles_button,
-                        ],
-                        space_between=20,
-                    )
-                ),
-                arcade.gui.UIAnchorWidget(
-                    child=back_button,
-                    anchor_x="center",
-                    anchor_y="top",
-                    align_y=-75,
-                )
-            ]
-        )
+        settings_layout = SettingLayout(self.go_main)
 
         ###
         # Screen Layout
@@ -370,7 +223,7 @@ class StartScene:
             anchor_y="top",
             relative_x=True,
             relative_y=True,
-            align_y=-10,
+            align_y=-1,
             child=arcade.gui.UIBoxLayout(
                 children=[
                     arcade.gui.UIBoxLayout(
@@ -385,9 +238,6 @@ class StartScene:
 
         self._target_offset_x = 0
         self._target_offset_y = -1
-
-        self._is_sound_on = True
-        self._is_particles_on = True
 
         self._effect_animator = EffectAnimator()
         self._effect_animator.add_effect(
@@ -406,7 +256,7 @@ class StartScene:
         self.button_animator.update_animation(delta_time)
         self.title_animator.update_animation(delta_time)
 
-        if io_controller.is_key_pressed(arcade.key.ESCAPE) or io_controller.is_key_pressed(arcade.key.BACKSPACE):
+        if io_controller.is_key_clicked(arcade.key.ESCAPE) or io_controller.is_key_clicked(arcade.key.BACKSPACE):
             self.go_main(None)
 
         delta_translation = delta_time / 16 * 50
@@ -449,28 +299,3 @@ class StartScene:
     def go_settings(self, _):
         self._target_offset_x = 0
         self._target_offset_y = 1
-
-    def switch_sound(self, _):
-        self._is_sound_on = not self._is_sound_on
-        self.sound_button.text = "Sound On" if self._is_sound_on else "Sound Off"
-        self.sound_button._style = {
-            "font_color": arcade.color.WHITE,
-            "bg_color": arcade.color.GREEN if self._is_sound_on else arcade.color.RED,
-            "hover_font_color": arcade.color.WHITE,
-            "hover_bg_color": arcade.color.GREEN if self._is_sound_on else arcade.color.RED,
-            "clicked_font_color": arcade.color.WHITE,
-            "clicked_bg_color": arcade.color.GREEN if self._is_sound_on else arcade.color.RED,
-        }
-
-    def switch_particles(self, _):
-        self._is_particles_on = not self._is_particles_on
-        ParticleShow.particles_on = self._is_particles_on
-        self.particles_button.text = "Particles On" if self._is_particles_on else "Particles Off"
-        self.particles_button._style = {
-            "font_color": arcade.color.WHITE,
-            "bg_color": arcade.color.GREEN if self._is_particles_on else arcade.color.RED,
-            "hover_font_color": arcade.color.WHITE,
-            "hover_bg_color": arcade.color.GREEN if self._is_particles_on else arcade.color.RED,
-            "clicked_font_color": arcade.color.WHITE,
-            "clicked_bg_color": arcade.color.GREEN if self._is_particles_on else arcade.color.RED,
-        }

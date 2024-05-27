@@ -15,6 +15,7 @@ from src.game_engine.controllers.Controller import (
 )
 from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.entities.ParkingPlace import ParkingPlace
+from src.game_engine.scenes.layouts.EscapeLayout import EscapeMenuLayout
 from src.render.RenderGroup import RenderGroup
 from src.render.particle.ParticleShow import ParticleShow
 from src.render.screen_elements.Indicator import Indicator
@@ -275,6 +276,17 @@ class GameScene:
         self.screen_group.add(self.score_board.sprite_list)
 
         ######################
+        # Escape Layout
+        ######################
+
+        self.escape_layout = EscapeMenuLayout(
+            close_callback=lambda _: self.switch_escape_layout(),
+            home_callback=lambda _: self.go_home(),
+        )
+        self.is_escape_layout_open = False
+        self.is_escape_layout_renders = False
+
+        ######################
         # Shaders Setup
         ######################
 
@@ -292,14 +304,30 @@ class GameScene:
         self.effect_animator = EffectAnimator()
         self.effect_animator.add_effect(FadeEffect(1, 0, None, (255, 255, 255, 255), False))
 
+        self.upper_effect_animator = EffectAnimator()
+
         self.is_end_state = False
 
     def update(self, io_controller, delta_time):
-        keys = io_controller.keyboard
+        self.effect_animator.update(delta_time)
 
-        if keys.get(arcade.key.F6, False):
+        if self.is_escape_layout_renders:
+            self.escape_layout.update(io_controller, delta_time)
+
+            self.upper_effect_animator.update(delta_time)
+        else:
+            if io_controller.is_key_clicked(arcade.key.ESCAPE):
+                self.switch_escape_layout()
+                return
+
+        if self.is_escape_layout_open:
+            return
+
+        if io_controller.is_key_clicked(arcade.key.F6):
             image = arcade.get_image()
             image.save(f"data/screenshots/{time.time()}.png")
+
+        keys = io_controller.keyboard
 
         if keys.get(arcade.key.F7, False):
             self.car_m.change_health(1000)
@@ -373,8 +401,6 @@ class GameScene:
                 )
             )
 
-        self.effect_animator.update(delta_time)
-
     def draw(self):
         self.render_group.camera.use()
         self.down_render_group.draw()
@@ -404,3 +430,57 @@ class GameScene:
         )
 
         self.effect_animator.draw()
+
+        if self.is_escape_layout_renders:
+            self.escape_layout.draw()
+
+            self.upper_effect_animator.draw()
+
+    def switch_escape_layout(self):
+        if self.is_end_state:
+            return
+
+        self.is_escape_layout_open = not self.is_escape_layout_open
+
+        if self.is_escape_layout_open:
+            self.effect_animator.add_effect(
+                FadeEffect(
+                    0.5,
+                    0,
+                    None,
+                    (0, 0, 0, 100),
+                    True,
+                    True
+                )
+            )
+            self.is_escape_layout_renders = True
+            self.escape_layout.show()
+        else:
+            self.effect_animator.clear_effects()
+            self.effect_animator.clear_post_effects()
+            self.effect_animator.add_effect(
+                FadeEffect(
+                    0.5,
+                    0,
+                    lambda: self.show_escape_layout(False),
+                    (0, 0, 0, 100),
+                    False
+                )
+            )
+            self.escape_layout.hide()
+
+    def go_home(self):
+        self.is_end_state = True
+        self.upper_effect_animator.add_effect(
+            FadeEffect(
+                1,
+                0,
+                lambda: self.core_instance.set_scene(None),
+                (255, 255, 255, 255),
+                True,
+                True
+            )
+        )
+
+    def show_escape_layout(self, show: bool):
+        self.is_escape_layout_renders = show

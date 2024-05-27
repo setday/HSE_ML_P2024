@@ -8,11 +8,33 @@ class IOController:
         self.keyboard = {}
         self.mouse = {}
 
+        self.keyboard_clicked = {}
+
         self.mouse_position = (0, 0)
         self.mouse_delta = (0, 0)
 
+        self.clicked = False
+
     def is_key_pressed(self, key: int) -> bool:
         return self.keyboard.get(key, False)
+
+    def is_key_released(self, key: int) -> bool:
+        return not self.keyboard.get(key, False)
+
+    def is_key_clicked(self, key: int) -> bool:
+        return self.keyboard_clicked.get(key, False)
+
+    def update_key_state(self, key: int, state: bool) -> None:
+        if not state:
+            self.keyboard_clicked[key] = True
+            self.clicked = True
+        self.keyboard[key] = state
+
+    def reset_click(self) -> None:
+        if self.clicked:
+            for key in self.keyboard:
+                self.keyboard_clicked[key] = False
+        self.clicked = False
 
 
 class Window(arcade.Window):
@@ -51,11 +73,13 @@ class Window(arcade.Window):
         if self._update_hook is not None:
             self._update_hook(self._controller, delta_time)
 
+        self._controller.reset_click()
+
     def on_key_press(self, symbol: int, modifiers: int) -> None:
-        self._controller.keyboard[symbol] = True
+        self._controller.update_key_state(symbol, True)
 
     def on_key_release(self, symbol: int, modifiers: int) -> None:
-        self._controller.keyboard[symbol] = False
+        self._controller.update_key_state(symbol, False)
 
     def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> None:
         self._controller.mouse[button] = True
