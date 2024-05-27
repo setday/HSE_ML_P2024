@@ -34,11 +34,9 @@ class Car:
 
         self.car_model.body.angle = angle
 
-        self.render_group = render_group
-        self.render_group.add(self.car_view)
-
         self.space: Space = space
         self.render_group: RenderGroup = render_group
+        self.render_group.add(self.car_view)
 
         self.car_model.shape.super = self
 
@@ -79,19 +77,19 @@ class Car:
 
         self.sync()
 
-    def select(self):
+    def select(self) -> None:
         self.car_view.kill()
         self.car_view = BasicSprite("assets/pic/cars/car_3.png", (0, 0))
         self.render_group.add(self.car_view)
         self.sync()
 
-    def deselect(self):
+    def deselect(self) -> None:
         self.car_view.kill()
         self.car_view = BasicSprite("assets/pic/cars/car_2.png", (0, 0))
         self.render_group.add(self.car_view)
         self.sync()
 
-    def controlling(self, keys, observation=None):
+    def controlling(self, keys: dict, observation: list[float] | np.ndarray = None) -> None:
         self.controller.handle_input(keys, observation)
 
     def switch_controller(self, controller) -> None:
@@ -173,8 +171,8 @@ class Car:
         if self.tyre_state == 0:
             return
 
-        fwd = Vec2d(1, 0).rotated(self.car_model.body.angle)
-        lft = Vec2d(0, 1).rotated(self.car_model.body.angle)
+        fwd: Vect2d = Vec2d(1, 0).rotated(self.car_model.body.angle)
+        lft: Vec2d = Vec2d(0, 1).rotated(self.car_model.body.angle)
 
         for i in range(4):
             offset = (
