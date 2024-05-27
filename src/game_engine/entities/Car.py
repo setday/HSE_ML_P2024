@@ -5,6 +5,7 @@ import arcade
 from pymunk import Vec2d, Space
 from src.physics.models.CarPhysicsModel import CarPhysicsModel
 from src.render.sprites.BasicSprite import BasicSprite
+import numpy as np
 
 
 class Car:
