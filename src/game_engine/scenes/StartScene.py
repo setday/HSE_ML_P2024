@@ -126,6 +126,16 @@ class StartScene:
         # Game Selector
         ###
 
+        game_selector_title = arcade.gui.UIAnchorWidget(
+            anchor_x="center",
+            anchor_y="top",
+            align_y=-50,
+            child=UITexture(
+                texture=load_texture("assets/pic/boards/Games.png"),
+                scale=7,
+            ),
+        )
+
         back_button = arcade.gui.UITextureButton(
             texture=load_texture("assets/pic/buttons/Arrows/Left/normal.png"),
             texture_hovered=load_texture("assets/pic/buttons/Arrows/Left/hovered.png"),
@@ -135,7 +145,7 @@ class StartScene:
         back_button.on_click = self.go_main
 
         game_one_button = arcade.gui.UIFlatButton(
-            text="Game 1",
+            text="PARK ME",
             width=300,
             height=100,
             font_size=30,
@@ -152,7 +162,7 @@ class StartScene:
         game_one_button.on_click = self.start_game
 
         game_two_button = arcade.gui.UIFlatButton(
-            text="Game 2",
+            text="Death Match",
             width=300,
             height=100,
             font_size=30,
@@ -169,7 +179,7 @@ class StartScene:
         game_two_button.on_click = no_game
 
         game_three_button = arcade.gui.UIFlatButton(
-            text="Game 3",
+            text="A => B",
             width=300,
             height=100,
             font_size=30,
@@ -205,6 +215,7 @@ class StartScene:
                     align_y=75,
                     align_x=75,
                 ),
+                game_selector_title,
             ]
         )
 

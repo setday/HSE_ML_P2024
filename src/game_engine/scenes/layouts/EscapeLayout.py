@@ -2,6 +2,7 @@ from arcade.gui import UITextureButton, UIBoxLayout, UIAnchorWidget, UIManager
 from arcade.key import ESCAPE, BACKSPACE
 
 from src.game_engine.scenes.layouts.SettingLayout import SettingLayout
+from src.render.screen_elements.ui_components.UITexture import UITexture
 from src.utils.Loaders import load_texture
 
 from src.render.screen_elements.ui_components.UIFullScreenLayout import UIFullScreenLayout
@@ -16,6 +17,16 @@ class EscapeMenuLayout:
 
         self.manager = UIManager()
         self.manager.enable()
+
+        self.title = UIAnchorWidget(
+            anchor_x="center",
+            anchor_y="top",
+            align_y=-50,
+            child=UITexture(
+                texture=load_texture("assets/pic/boards/Pause.png"),
+                scale=7,
+            ),
+        )
 
         back_button = UITextureButton(
             texture=load_texture("assets/pic/buttons/Close/normal.png"),

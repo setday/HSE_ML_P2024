@@ -14,6 +14,16 @@ class CreditsLayout(UIFullScreenLayout):
         # Credits
         ###
 
+        title = UIAnchorWidget(
+            anchor_x="center",
+            anchor_y="top",
+            align_y=-10,
+            child=UITexture(
+                texture=load_texture("assets/pic/boards/Credits.png"),
+                scale=7,
+            ),
+        )
+
         credits_texture = UITexture(
             texture=load_texture("assets/pic/extra/textured_plane.png"),
             scale=8,
@@ -99,5 +109,6 @@ class CreditsLayout(UIFullScreenLayout):
                 UIAnchorWidget(
                     child=credits_texture
                 ),
+                title,
             ]
         )
