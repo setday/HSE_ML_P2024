@@ -128,7 +128,7 @@ class AIController(Controller):
                 self.car.hand_brake()
             return
         elif self.type == "sklearn":
-            probs = self.model.predict_proba(observation)[0]
+            probs = self.model.predict_proba([observation])[0]
             action = np.random.choice(list(range(9)), p=probs)
         elif self.type == "pytorch":
             with torch.no_grad():

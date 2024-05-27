@@ -77,36 +77,37 @@ class GameScene:
             ),
             angle=random.randint(0, 360)
         )
+        controllers = [
+            {
+                "type": "sklearn",
+                "path": "models_bin/CEM.pkl"
+            },
+            {
+                "type": "pytorch",
+                "path": "models_bin/torch.pt"
+            },
+            {
+                "type": "stable_baselines",
+                "policy": "DQN",
+                "path": "models_bin/DQN"
+            },
+            {
+                "type": "stable_baselines",
+                "policy": "A2C",
+                "path": "models_bin/A2C"
+            },
+            {
+                "type": "stable_baselines",
+                "policy": "PPO",
+                "path": "models_bin/PPO"
+            }
+        ]
         for car in self.cars[1:]:
             car.switch_controller(
                 random.choice(
                     [
                         Controller.RandomController(),
-                        Controller.AIController(random.choice([
-                            {
-                                "type": "sklearn",
-                                "path": "models_bin/CEM.pkl"
-                            },
-                            {
-                                "type": "pytorch",
-                                "path": "models_bin/torch.pt"
-                            },
-                            {
-                                "type": "stable_baselines",
-                                "policy": "DQN",
-                                "path": "models_bin/DQN"
-                            },
-                            {
-                                "type": "stable_baselines",
-                                "policy": "A2C",
-                                "path": "models_bin/A2C"
-                            },
-                            {
-                                "type": "stable_baselines",
-                                "policy": "PPO",
-                                "path": "models_bin/PPO"
-                            }
-                        ])),
+                        Controller.AIController(random.choice(controllers)),
                         Controller.BrakeController(),
                     ]
                 )
@@ -144,13 +145,9 @@ class GameScene:
             self.car_m.change_health(1000)
 
         if isinstance(self.car_m.controller, Controller.AIController):
-            # print((self.car_m.car_model.body.position[0]
-            #             - self.parking_place.parking_model.inner_body.position[0]) ** 2 +
-            #       (self.car_m.car_model.body.position[1]
-            #             - self.parking_place.parking_model.inner_body.position[1]) ** 2)
             self.car_m.controlling(
                 keys,
-                (np.array(
+                np.array(
                     [
                         self.car_m.car_model.body.position[0]
                         - self.parking_place.parking_model.inner_body.position[0],
@@ -161,9 +158,8 @@ class GameScene:
                             - self.parking_place.parking_model.inner_body.angle
                         ) % 180,
                         self.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5,
-                        # self.parking_place.parking_model.inner_body.angle,
                     ]
-                ),)
+                )
             )
         else:
             self.car_m.controlling(keys)
@@ -202,9 +198,9 @@ class GameScene:
             for emitter in car.tyre_emitters:
                 emitter.update()
 
-        # for cone in self.traffic_cones:
-        #     cone.apply_friction()
-        #     cone.sync()
+        for cone in self.traffic_cones:
+            cone.apply_friction()
+            cone.sync()
 
         zoom_factor: float = (
             1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
