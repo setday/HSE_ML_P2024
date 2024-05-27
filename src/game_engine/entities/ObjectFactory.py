@@ -73,6 +73,7 @@ class ObjectFactory:
     ) -> MovableObstacle:
         movable_obstacle_model_dict = {
             "cone": "assets/pic/obstacles/Traffic_Cone.png",
+            "coin": "assets/coin.png",
         }
         return MovableObstacle(
             render_group,

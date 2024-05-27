@@ -5,6 +5,7 @@ import arcade
 from pymunk import Vec2d, Space
 from src.physics.models.CarPhysicsModel import CarPhysicsModel
 from src.render.sprites.BasicSprite import BasicSprite
+import numpy as np
 
 
 class Car:
@@ -89,7 +90,9 @@ class Car:
         self.render_group.add(self.car_view)
         self.sync()
 
-    def controlling(self, keys: dict, observation: list[float] | np.ndarray = None) -> None:
+    def controlling(
+        self, keys: dict, observation: list[float] | np.ndarray = None
+    ) -> None:
         self.controller.handle_input(keys, observation)
 
     def switch_controller(self, controller) -> None:
@@ -184,14 +187,14 @@ class Car:
             self.tyre_emitters[i].center_x = -offset.x
             self.tyre_emitters[i].center_y = offset.y
 
-            self.tyre_emitters[
-                i
-            ].particle_factory = lambda emitter: arcade.FadeParticle(
-                filename_or_texture="assets/pic/extra/tyre_trail.png",
-                change_xy=(0, 0),
-                lifetime=1,
-                scale=1,
-                angle=90 - d_angle,
+            self.tyre_emitters[i].particle_factory = (
+                lambda emitter: arcade.FadeParticle(
+                    filename_or_texture="assets/pic/extra/tyre_trail.png",
+                    change_xy=(0, 0),
+                    lifetime=1,
+                    scale=1,
+                    angle=90 - d_angle,
+                )
             )
 
     def change_health(self, delta: float) -> None:

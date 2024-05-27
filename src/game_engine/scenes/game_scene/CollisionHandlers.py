@@ -104,7 +104,10 @@ def collision_car_with_obstacle(arbiter: pymunk.Arbiter, _, data: dict) -> None:
         car.change_health(-health_decreation)
 
         return True
-
+    if cone.type == "coin":
+        data["score"][0] += 100
+        cone.remove()
+        return True
     health_decreation: int = 33
     delta_score: int = 5
     data["score"][0] -= delta_score

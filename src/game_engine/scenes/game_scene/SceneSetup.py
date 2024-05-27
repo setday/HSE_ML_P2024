@@ -17,7 +17,7 @@ def SceneSetup(scene, path):
         render_group=scene.render_group,
         space=scene.space,
         object_type="car",
-        position=(random.randint(-500, 500), random.randint(-500, 500)) if scene.train else (0, -100),
+        position=(0, -100),
         car_model="blue_car",
     )
 
@@ -25,7 +25,7 @@ def SceneSetup(scene, path):
     scene.render_group.camera.snap_to_sprite(scene.car_m.car_view)
 
     scene.cars = [scene.car_m]
-    trees = [tuple(elem) for elem in config["trees_positions"]]
+    trees = [tuple(elem) for elem in config.get("trees_positions", [])]
     for position in set(trees):
         ObjectFactory.create_object(
             scene.top_render_group,
@@ -34,7 +34,7 @@ def SceneSetup(scene, path):
             position=position,
             static_obstacle_model="tree",
         )
-    cones = [tuple(elem) for elem in config["cones_positions"]]
+    cones = [tuple(elem) for elem in config.get("cones_positions", [])]
     for position in set(random.choices(cones, k=random.randint(0, len(cones)))):
         scene.traffic_cones.append(
             ObjectFactory.create_object(
@@ -48,7 +48,7 @@ def SceneSetup(scene, path):
         scene.traffic_cones[-1].apply_friction()
         scene.traffic_cones[-1].sync()
     cars = random.choices(
-        config["cars_positions"], k=random.randint(0, len(config["cars_positions"]))
+        config.get("cars_positions", []), k=10
     )
     for x, y, angle in set([tuple(car) for car in cars]):
         scene.cars.append(
@@ -61,8 +61,27 @@ def SceneSetup(scene, path):
                 angle=angle,
             )
         )
-
-    for x, y, angle in config["barriers_positions"]:
+    controllers = [
+        {"type": "sklearn", "path": "models_bin/CEM.pkl"},
+        {"type": "pytorch", "path": "models_bin/torch.pt"},
+        {"type": "stable_baselines", "policy": "DQN", "path": "models_bin/DQN"},
+        {"type": "stable_baselines", "policy": "A2C", "path": "models_bin/A2C"},
+        {"type": "stable_baselines", "policy": "PPO", "path": "models_bin/PPO"},
+    ]
+    for car in scene.cars[1:]:
+        car.switch_controller(
+            Controller.AIController(controllers[-1]) if scene.mode == "survive"
+            else random.choice(
+                [
+                    Controller.RandomController(),
+                    Controller.AIController(random.choice(controllers)),
+                    Controller.BrakeController(),
+                ]
+            )
+        )
+        if scene.mode == "survive":
+            car.health = 1000
+    for x, y, angle in config.get("barriers_positions", []):
         ObjectFactory.create_object(
             render_group=scene.render_group,
             space=scene.space,
@@ -71,5 +90,13 @@ def SceneSetup(scene, path):
             angle=angle,
             static_obstacle_model="metal_pipe",
         )
-    for x, y, angle in config["parking_positions"]:
+    for x, y, angle in config.get("parking_positions", []):
         ParkingPlace(scene.down_render_group, scene.space, (x, y), angle=angle)
+    for _ in range(20):
+        ObjectFactory.create_object(
+            render_group=scene.render_group,
+            space=scene.space,
+            object_type="movable_obstacle",
+            position=(random.randint(-1000, 1000), random.randint(-1000, 1000)),
+            movable_obstacle_model="coin",
+        )

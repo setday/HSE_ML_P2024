@@ -66,9 +66,9 @@ class GameOfLifeScene:
         if x < 0 or y < 0 or x > 500 or y > 500:
             return
 
-        self.field.grid[
-            y // self.RESOLUTION, x // self.RESOLUTION
-        ] = not self.field.grid[y // self.RESOLUTION, x // self.RESOLUTION]
+        self.field.grid[y // self.RESOLUTION, x // self.RESOLUTION] = (
+            not self.field.grid[y // self.RESOLUTION, x // self.RESOLUTION]
+        )
 
     def draw(self):
         for i in range(self.ROWS):

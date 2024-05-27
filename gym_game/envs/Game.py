@@ -58,7 +58,14 @@ class Game:
                 car_speed,
             ]
         )
-        dst = dx ** 2 + dy ** 2 + 0.01
+        dst = dx**2 + dy**2 + 0.01
         angle = abs(dangle) % 180 + 0.001
-        return self.core.scene.car_m.is_car_parked * 1000000 + delta_x + delta_y + delta_angle + car_speed + 1 / dst + 1 / angle
-
+        return (
+            self.core.scene.car_m.is_car_parked * 1000000
+            + delta_x
+            + delta_y
+            + delta_angle
+            + car_speed
+            + 1 / dst
+            + 1 / angle
+        )
