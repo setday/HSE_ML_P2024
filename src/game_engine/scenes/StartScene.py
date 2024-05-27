@@ -5,15 +5,18 @@ from pyglet.math import Vec2 as Vector2D
 from src.game_engine.scenes.game_scene.GameScene import GameScene
 from src.render.animator.FloatingAnimator import FloatingAnimator
 from src.render.animator.WanderAnimator import WanderAnimator
-from src.render.screen_elements.UIAnimatorWidget import UIAnimatableWidget
-from src.render.screen_elements.UIFullScreenLayout import UIFullScreenLayout
-from src.render.screen_elements.UISuperAnchorWidget import UISuperAnchorWidget
-from src.render.screen_elements.UISuperText import UISuperText
-from src.render.screen_elements.UITexture import UITexture
+from src.render.screen_elements.ui_components.UIAnimatorWidget import UIAnimatableWidget
+from src.render.screen_elements.ui_components.UIFullScreenLayout import UIFullScreenLayout
+from src.render.screen_elements.ui_components.UISuperAnchorWidget import UISuperAnchorWidget
+from src.render.screen_elements.ui_components.UISuperText import UISuperText
+from src.render.screen_elements.ui_components.UITexture import UITexture
 from src.render.sprites.BasicSprite import BasicSprite
 from src.utils.Loaders import load_texture
 
 import src.render.particle.ParticleShow as ParticleShow
+
+from src.render.screen_elements.effect_animator.EffectAnimator import EffectAnimator
+from src.render.screen_elements.effect_animator.effects.FadeEffect import FadeEffect
 
 
 def no_game(_):
@@ -381,10 +384,21 @@ class StartScene:
         self.manager.add(self.screen_layout)
 
         self._target_offset_x = 0
-        self._target_offset_y = 0
+        self._target_offset_y = -1
 
         self._is_sound_on = True
         self._is_particles_on = True
+
+        self._effect_animator = EffectAnimator()
+        self._effect_animator.add_effect(
+            FadeEffect(
+                duration=1,
+                delay=0.5,
+                fade_color=(255, 255, 255),
+                fade_in=False,
+                finish_callback=lambda: self.go_main(None)
+            )
+        )
 
     def update(self, io_controller, delta_time):
         self.background_animator.update(delta_time)
@@ -395,16 +409,30 @@ class StartScene:
         if io_controller.is_key_pressed(arcade.key.ESCAPE) or io_controller.is_key_pressed(arcade.key.BACKSPACE):
             self.go_main(None)
 
-        self.screen_layout.align_x += (self._target_offset_x - self.screen_layout.align_x) * 0.05
-        self.screen_layout.align_y += (self._target_offset_y - self.screen_layout.align_y) * 0.05
+        delta_translation = delta_time / 16 * 50
+        delta_translation = min(delta_translation, 0.5)
+
+        self.screen_layout.align_x += (self._target_offset_x - self.screen_layout.align_x) * delta_translation
+        self.screen_layout.align_y += (self._target_offset_y - self.screen_layout.align_y) * delta_translation
+
+        self._effect_animator.update(delta_time)
 
     def draw(self):
         self.background.draw()
 
         self.manager.draw()
 
+        self._effect_animator.draw()
+
     def start_game(self, _):
-        self.core_instance.set_scene(GameScene)
+        # self.core_instance.set_scene(GameScene)
+        self._effect_animator.add_effect(
+            FadeEffect(
+                duration=1,
+                fade_color=(255, 255, 255),
+                finish_callback=lambda: self.core_instance.set_scene(GameScene)
+            )
+        )
 
     def go_credits(self, _):
         self._target_offset_x = 1

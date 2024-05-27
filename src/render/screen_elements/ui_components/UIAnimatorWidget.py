@@ -1,6 +1,6 @@
 from arcade.gui import UIWidget
 
-from src.render.screen_elements.UISuperAnchorWidget import UISuperAnchorWidget
+from src.render.screen_elements.ui_components.UISuperAnchorWidget import UISuperAnchorWidget
 
 
 class UIAnimatableWidget(UISuperAnchorWidget):
