@@ -78,12 +78,13 @@ class RandomController(Controller):
 class BrakeController(Controller):
     def __init__(self) -> None:
         super().__init__()
-
-    def handle_input(self, keys: dict = None, observation=None) -> None:
+    
+    def handle_input(self, keys: dict = None, observation: list[float] | np.ndarray = None) -> None:
         self.car.hand_brake()
 
 
 class AIController(Controller):
+
     def __init__(self, configs: dict) -> None:
         super().__init__()
         self.type = configs.get("type")

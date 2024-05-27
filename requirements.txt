@@ -30,3 +30,4 @@ sklearn~=0.0.post1
 scikit-learn~=1.2.1
 ipython~=8.20.0
 stable_baselines3==2.2.1
+neat-python==0.92

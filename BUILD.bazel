@@ -1,14 +1,5 @@
 load("@rules_python//python:defs.bzl", "py_binary")
 load("@python_deps//:requirements.bzl", "requirement")
-# load("@bazel_skylib//rules:common_settings.bzl", "strip_prefix")
-
-filegroup(
-    name = "fonts",
-    srcs = [
-        "assets/fnt/ka1.ttf",
-    ],
-    visibility = ["//visibility:public"]
-)
 
 src = [
     "src/game_engine/Core.py",
@@ -37,9 +28,7 @@ src = [
 
 py_binary(
     name = "main",
-    srcs = ["main.py"] + src,
-    data = [":fonts"],
-    deps = [requirement("arcade")]
+    srcs = ["main.py"] + src
 )
 
 load("//tools/pytest:defs.bzl", "pytest_test")
