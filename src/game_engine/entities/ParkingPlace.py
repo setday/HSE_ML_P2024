@@ -1,8 +1,6 @@
 from math import degrees
-
 from pyglet.math import Vec2 as Vector2D
 from pymunk import Space
-
 from src.physics.models.ParkingPlacePhysicModel import ParkingPlacePhysicsModel
 from src.render.RenderGroup import RenderGroup
 from src.render.sprites.BasicRect import BasicRect
@@ -19,9 +17,11 @@ class ParkingPlace:
     ):
         # self.base_view = BasicSprite("assets/parking_place_background.png", position)
         # self.dead_view = BasicSprite("assets/parking_place_face.png", position)
-        self.parking_model = ParkingPlacePhysicsModel(position, size, angle)
+        self.parking_model: ParkingPlacePhysicsModel = ParkingPlacePhysicsModel(
+            position, size, angle
+        )
 
-        self.border_box = BasicRect(int(size[0]), int(size[1]), position)
+        self.border_box: BasicRect = BasicRect(int(size[0]), int(size[1]), position)
         self.border_box.update_angle(degrees(angle))
         self.border_box.set_border_width(4)
 
@@ -33,8 +33,8 @@ class ParkingPlace:
 
         render_group.add(self.border_box)
 
-        self.space = space
-        self.render_group = render_group
+        self.space: Space = space
+        self.render_group: RenderGroup = render_group
 
         self.parking_model.inner_shape.super = self
         for i in range(len(self.parking_model.dead_zones)):
