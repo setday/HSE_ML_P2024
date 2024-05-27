@@ -11,6 +11,9 @@ class IOController:
         self.mouse_position = (0, 0)
         self.mouse_delta = (0, 0)
 
+    def is_key_pressed(self, key: int) -> bool:
+        return self.keyboard.get(key, False)
+
 
 class Window(arcade.Window):
     def __init__(self, width: int, height: int, title: str):

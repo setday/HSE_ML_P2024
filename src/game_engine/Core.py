@@ -26,6 +26,9 @@ class Core:
     def run(self) -> None:
         arcade.run()
 
+    def stop(self) -> None:
+        arcade.exit()
+
     def on_update(self, io_controller: IOController, delta_time: float) -> None:
         if self.scene is not None:
             self.scene.update(io_controller, delta_time)

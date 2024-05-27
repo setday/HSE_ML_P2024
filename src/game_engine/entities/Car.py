@@ -7,6 +7,8 @@ from pymunk import Vec2d
 from src.physics.models.CarPhysicsModel import CarPhysicsModel
 from src.render.sprites.BasicSprite import BasicSprite
 
+import src.render.particle.ParticleShow as ParticleShow
+
 
 class Car:
     def __init__(self, render_group, space, position=(300, 300), angle=0, skin_id=-1):
@@ -109,7 +111,7 @@ class Car:
         self.tyre_state = 0
 
     def _start_tyring(self):
-        if self.tyre_state == 1:
+        if self.tyre_state == 1 or self.health <= 0 or not ParticleShow.particles_on:
             return
 
         for emitter in self.tyre_emitters:
@@ -124,9 +126,9 @@ class Car:
 
         if self.hooks["parked_hook"] or self.hooks["unparked_hook"]:
             parked_state = (
-                self.car_model.body.velocity.get_length_sqrd() <= 0.2
-                and self.inside_parking_place
-                and self.dead_zones_intersect == 0
+                    self.car_model.body.velocity.get_length_sqrd() <= 0.2
+                    and self.inside_parking_place
+                    and self.dead_zones_intersect == 0
             )
             if parked_state != self.is_car_parked:
                 self.is_car_parked = parked_state
@@ -136,14 +138,14 @@ class Car:
                     self.hooks["unparked_hook"](self)
 
         if self.tyre_state != 0 and (
-            not self.is_hand_braking
-            or self.car_model.body.velocity.get_length_sqrd() < 10
+                not self.is_hand_braking
+                or self.car_model.body.velocity.get_length_sqrd() < 10
         ):
             self._stop_tyring()
         if (
-            self.tyre_state != 1
-            and self.is_hand_braking
-            and self.car_model.body.velocity.get_length_sqrd() > 10
+                self.tyre_state != 1
+                and self.is_hand_braking
+                and self.car_model.body.velocity.get_length_sqrd() > 10
         ):
             self._start_tyring()
 
@@ -157,9 +159,9 @@ class Car:
 
         for i in range(4):
             offset = (
-                fwd * CarPhysicsModel.wheels_offset[i][0]
-                + lft * CarPhysicsModel.wheels_offset[i][1]
-                - self.car_model.body.position
+                    fwd * CarPhysicsModel.wheels_offset[i][0]
+                    + lft * CarPhysicsModel.wheels_offset[i][1]
+                    - self.car_model.body.position
             )
 
             self.tyre_emitters[i].center_x = -offset.x
