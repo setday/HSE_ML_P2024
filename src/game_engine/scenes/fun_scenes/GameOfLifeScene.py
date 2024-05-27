@@ -5,15 +5,15 @@ from src.render.RenderGroup import RenderGroup
 
 
 class GameOfLifeField:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
+    def __init__(self, width: int, height: int):
+        self.width: int = width
+        self.height: int = height
 
         # Initialize the game grid
-        self.grid = np.zeros((height, width))
+        self.grid: np.ndarray = np.zeros((height, width))
 
     def update(self):
-        new_grid = self.grid.copy()
+        new_grid: np.ndarray = self.grid.copy()
 
         for i in range(self.height):
             for j in range(self.width):
@@ -41,12 +41,12 @@ class GameOfLifeField:
 
 class GameOfLifeScene:
     def __init__(self):
-        self.render_group = RenderGroup()
+        self.render_group: RenderGroup = RenderGroup()
 
-        self.RESOLUTION = 10
+        self.RESOLUTION: int = 10
         self.ROWS, self.COLS = 500 // self.RESOLUTION, 500 // self.RESOLUTION
 
-        self.field = GameOfLifeField(self.COLS, self.ROWS)
+        self.field: GameOfLifeField = GameOfLifeField(self.COLS, self.ROWS)
 
         for i in range(self.ROWS):
             for j in range(self.COLS):

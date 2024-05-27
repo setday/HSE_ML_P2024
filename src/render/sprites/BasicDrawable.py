@@ -4,7 +4,7 @@ from pyglet.math import Vec2 as Vector2D
 
 
 class BasicDrawable(arcade.Sprite):
-    def __init__(self, position: Vector2D | tuple[float, float] = (0, 0)):
+    def __init__(self, position: Vector2D | tuple[float, float] = (0, 0)) -> None:
         super().__init__()
 
         self.texture = arcade.Texture.create_empty("WT", (1, 1))

@@ -9,7 +9,7 @@ class RenderGroup(arcade.Scene):
     def __init__(self) -> None:
         super().__init__()
 
-        self.camera = Camera()
+        self.camera: Camera = Camera()
 
     def add(self, sprite: arcade.Sprite) -> None:
         if isinstance(sprite, arcade.Sprite):
@@ -19,6 +19,6 @@ class RenderGroup(arcade.Scene):
         else:
             raise ValueError(f"Invalid sprite type: {type(sprite)}")
 
-    def draw(self, names: Optional[List[str]] = None, **kwargs) -> None:
+    def draw(self, names: Optional[List[str]] = None, **kwargs: dict) -> None:
         kwargs["pixelated"] = kwargs.get("pixelated", True)
         super().draw(names, **kwargs)
