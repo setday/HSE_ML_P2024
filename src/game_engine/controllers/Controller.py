@@ -1,3 +1,7 @@
+import pickle
+import torch
+from stable_baselines3 import DQN, A2C, PPO
+from models.DQNPolicy import DQNPolicy
 from src.game_engine.entities.Car import Car
 import arcade
 import random
@@ -80,26 +84,77 @@ class BrakeController(Controller):
 
 
 class AIController(Controller):
-    def __init__(self, weights_file=None):
-        super().__init__()
 
-    def link_model(self, model):
+    def __init__(self, configs: dict) -> None:
+        super().__init__()
+        self.type = configs.get("type")
+        path = configs.get("path")
+        if self.type == "neat":
+            # TODO: load neat model
+            pass
+        elif self.type == "sklearn":
+            with open(path, "rb") as model:
+                self.model = pickle.load(model)
+        elif self.type == "pytorch":
+            self.model = DQNPolicy(9, 4)
+            self.model.dqn.load_state_dict(torch.load(path))
+        elif self.type == "stable_baselines":
+            if configs.get("policy") == "A2C":
+                self.model = A2C.load(path)
+            elif configs.get("policy") == "DQN":
+                self.model = DQN.load(path)
+            elif configs.get("policy") == "PPO":
+                self.model = PPO.load(path)
+
+    def link_model(self, model) -> None:
         # for the begining input: car pos & ang and park_plc pos & ang
         self.model = model
 
     def handle_input(self, keys: dict = None, observation: list[float] | np.ndarray = None) -> None:
-        # order: accelerate, turn_left, turn_right, brake, hand_brake
-        probs = self.model.activate(observation)
+        if self.type == "neat":
+            # order: accelerate, turn_left, turn_right, brake, hand_brake
+            probs = self.model.activate(observation)
 
-        # TODO: choose "right weight" instead of 0.5
-        action_kinds = [(probs[i] >= 0.5) for i in range(5)]
-        if action_kinds[0]:
+            # TODO: choose "right weight" instead of 0.5
+            action_kinds = [(probs[i] >= 0.5) for i in range(5)]
+            if action_kinds[0]:
+                self.car.forward_accelerate()
+            if action_kinds[1]:
+                self.car.turn_left(action_kinds[4])
+            if action_kinds[2]:
+                self.car.turn_right(action_kinds[4])
+            if action_kinds[3]:
+                self.car.backward_acceleration()
+            if action_kinds[4]:
+                self.car.hand_brake()
+            return
+        elif self.type == "sklearn":
+            probs = self.model.predict_proba([observation])[0]
+            action = np.random.choice(list(range(9)), p=probs)
+        elif self.type == "pytorch":
+            with torch.no_grad():
+                action = self.model.make_action(observation)
+        elif self.type == "stable_baselines":
+            action, _ = self.model.predict(observation)
+        if action == 0:
+            self.car.turn_left()
+        if action == 1:
+            self.car.turn_right()
+        if action == 2:
             self.car.forward_accelerate()
-        if action_kinds[1]:
-            self.car.turn_left(action_kinds[4])
-        if action_kinds[2]:
-            self.car.turn_right(action_kinds[4])
-        if action_kinds[3]:
+        if action == 3:
             self.car.backward_acceleration()
-        if action_kinds[4]:
-            self.car.hand_brake()
+        if action == 4:
+            self.car.car_model.body.velocity = (0, 0)
+        if action == 5:
+            self.car.forward_accelerate()
+            self.car.turn_left()
+        if action == 6:
+            self.car.forward_accelerate()
+            self.car.turn_right()
+        if action == 7:
+            self.car.backward_acceleration()
+            self.car.turn_left()
+        if action == 8:
+            self.car.backward_acceleration()
+            self.car.turn_right()

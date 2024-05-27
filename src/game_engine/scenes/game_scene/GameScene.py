@@ -1,10 +1,11 @@
 import time
 import random
 import arcade.key
+import numpy as np
 import pymunk
 from pyglet.math import Vec2 as Vector2D
 from pymunk import CollisionHandler
-
+from src.game_engine.entities.ParkingPlace import ParkingPlace
 import src.game_engine.controllers.Controller as Controller
 import src.game_engine.scenes.game_scene.CollisionHandlers as CollisionHandlers
 from src.render.RenderGroup import RenderGroup
@@ -16,13 +17,13 @@ from src.game_engine.scenes.game_scene.SceneSetup import SceneSetup
 
 
 class GameScene:
-    def __init__(self) -> None:
+    def __init__(self, train: bool) -> None:
         self.down_render_group: RenderGroup = RenderGroup()
         self.render_group: RenderGroup = RenderGroup()
         self.top_render_group: RenderGroup = RenderGroup()
         self.particle_show: ParticleShow = ParticleShow()
         self.score: list[int] = [10000]
-
+        self.train: bool = train
         ######################
         # Setup physics
         ######################
@@ -68,18 +69,50 @@ class GameScene:
         # Setup game objects
         ######################
 
-        SceneSetup(self, "assets/MapConfigs/ParkWithObstacles.json")
-
+        SceneSetup(self, "assets/maps/ParkWithEnemies.json")
+        self.parking_place = ParkingPlace(
+            self.down_render_group, self.space,
+            position=(
+                (random.randint(-500, 500), random.randint(-500, 500))
+            ),
+            angle=random.randint(0, 360)
+        )
+        controllers = [
+            {
+                "type": "sklearn",
+                "path": "models_bin/CEM.pkl"
+            },
+            {
+                "type": "pytorch",
+                "path": "models_bin/torch.pt"
+            },
+            {
+                "type": "stable_baselines",
+                "policy": "DQN",
+                "path": "models_bin/DQN"
+            },
+            {
+                "type": "stable_baselines",
+                "policy": "A2C",
+                "path": "models_bin/A2C"
+            },
+            {
+                "type": "stable_baselines",
+                "policy": "PPO",
+                "path": "models_bin/PPO"
+            }
+        ]
         for car in self.cars[1:]:
             car.switch_controller(
                 random.choice(
                     [
                         Controller.RandomController(),
-                        Controller.AIController(),
+                        Controller.AIController(random.choice(controllers)),
                         Controller.BrakeController(),
                     ]
                 )
             )
+
         ######################
         # Screen Elements
         ######################
@@ -111,12 +144,49 @@ class GameScene:
         if keys.get(arcade.key.F7, False):
             self.car_m.change_health(1000)
 
-        self.car_m.controlling(keys)
+        if isinstance(self.car_m.controller, Controller.AIController):
+            self.car_m.controlling(
+                keys,
+                np.array(
+                    [
+                        self.car_m.car_model.body.position[0]
+                        - self.parking_place.parking_model.inner_body.position[0],
+                        self.car_m.car_model.body.position[1]
+                        - self.parking_place.parking_model.inner_body.position[1],
+                        abs(
+                            self.car_m.car_model.body.angle
+                            - self.parking_place.parking_model.inner_body.angle
+                        ) % 180,
+                        self.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5,
+                    ]
+                )
+            )
+        else:
+            self.car_m.controlling(keys)
 
         for car in self.cars:
             if car == self.car_m:
                 continue
-            car.controlling(keys)
+            if isinstance(car.controller, Controller.AIController):
+                car.controlling(
+                keys,
+                np.array(
+                    [
+                        self.car_m.car_model.body.position[0]
+                        - self.parking_place.parking_model.inner_body.position[0],
+                        self.car_m.car_model.body.position[1]
+                        - self.parking_place.parking_model.inner_body.position[1],
+                        abs(
+                            self.car_m.car_model.body.angle
+                            - self.parking_place.parking_model.inner_body.angle
+                        ) % 180,
+                        self.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5,
+                        # self.parking_place.parking_model.inner_body.angle,
+                    ]
+                )
+            )
+            else:
+                car.controlling(keys)
 
         delta_time *= 16
 

@@ -17,7 +17,7 @@ def SceneSetup(scene, path):
         render_group=scene.render_group,
         space=scene.space,
         object_type="car",
-        position=(0, -100),
+        position=(random.randint(-500, 500), random.randint(-500, 500)) if scene.train else (0, -100),
         car_model="blue_car",
     )
 
@@ -50,7 +50,7 @@ def SceneSetup(scene, path):
     cars = random.choices(
         config["cars_positions"], k=random.randint(0, len(config["cars_positions"]))
     )
-    for x, y, angle in set(cars):
+    for x, y, angle in set([tuple(car) for car in cars]):
         scene.cars.append(
             ObjectFactory.create_object(
                 render_group=scene.render_group,
