@@ -8,7 +8,7 @@ from src.render.sprites.BasicDrawable import BasicDrawable
 
 class BasicRect(BasicDrawable):
     def __init__(
-            self, width: int, height: int, position: Vector2D | tuple[float, float]
+        self, width: int, height: int, position: Vector2D | tuple[float, float]
     ) -> None:
         super().__init__(position)
 
@@ -44,19 +44,19 @@ class BasicRect(BasicDrawable):
         self.update_color(self.color)
 
     def update_color(
-            self, color: Tuple[int, int, int] | Tuple[int, int, int, int]
+        self, color: Tuple[int, int, int] | Tuple[int, int, int, int]
     ) -> None:
         self.color = color
 
         data = (
-                [color] * self._top_bottom_skip
-                + (
-                        [color] * self.border_width
-                        + [(0, 0, 0, 0)] * max(0, self._center_horizontal_skip)
-                        + [color] * self.border_width
-                )
-                * max(0, self._center_vertical_skip)
-                + [color] * self._top_bottom_skip
+            [color] * self._top_bottom_skip
+            + (
+                [color] * self.border_width
+                + [(0, 0, 0, 0)] * max(0, self._center_horizontal_skip)
+                + [color] * self.border_width
+            )
+            * max(0, self._center_vertical_skip)
+            + [color] * self._top_bottom_skip
         )
 
         self.src_surface.image.putdata(data)

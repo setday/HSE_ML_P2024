@@ -11,7 +11,7 @@ class RenderGroup(arcade.Scene):
 
         self.camera: Camera = Camera()
 
-    def add(self, sprite: arcade.Sprite) -> None:
+    def add(self, sprite: arcade.Sprite | arcade.SpriteList) -> None:
         if isinstance(sprite, arcade.Sprite):
             self.add_sprite(hash(sprite).__str__(), sprite)
         elif isinstance(sprite, arcade.SpriteList):

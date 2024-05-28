@@ -4,11 +4,11 @@ from pymunk import Vec2d
 
 class StaticObstaclePhysicsModel:
     def __init__(
-            self,
-            position: Vec2d | tuple[float, float],
-            shape_type: str = "circle",
-            size: int = 10,
-            collision_points_set=None,
+        self,
+        position: Vec2d | tuple[float, float],
+        shape_type: str = "circle",
+        size: int = 10,
+        collision_points_set=None,
     ) -> None:
         self.body = pymunk.Body(body_type=pymunk.Body.STATIC)
         self.body.position = position

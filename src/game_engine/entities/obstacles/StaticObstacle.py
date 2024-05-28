@@ -10,13 +10,13 @@ from src.render.sprites.BasicSprite import BasicSprite
 
 class StaticObstacle:
     def __init__(
-            self,
-            render_group: RenderGroup,
-            space: Space,
-            position: Vector2D = (0, 0),
-            angle: float = 0,
-            image_path: str | None = "assets/pic/obstacles/Tree_1.png",
-            shape_type: str = None,
+        self,
+        render_group: RenderGroup,
+        space: Space,
+        position: Vector2D = (0, 0),
+        angle: float = 0,
+        image_path: str | None = "assets/pic/obstacles/Tree_1.png",
+        shape_type: str = None,
     ) -> None:
         self.obstacle_view: BasicSprite | None = None
         if image_path is not None:

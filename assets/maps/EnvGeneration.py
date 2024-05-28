@@ -2,7 +2,7 @@ import json
 import random
 
 
-def Map1InitPositions():
+def map1_init_positions():
     d = {
         "trees_positions": [],
         "cones_positions": [],
@@ -33,14 +33,14 @@ def Map1InitPositions():
     for i in range(-5, 5):
         if i == 0:
             continue
-        d["cars_positions"].append(((70 * i, -100, 90)))
+        d["cars_positions"].append((70 * i, -100, 90))
     for i in range(-5, 5):
         d["parking_positions"].append((70 * i, -100, 0))
     with open("../../../../assets/MapConfigs/ParkWithEnemies.json", "w") as file:
         json.dump(d, file)
 
 
-def Map2InitPositions():
+def map2_init_positions():
     d = {
         "trees_positions": [
             (30, 100),
@@ -97,10 +97,10 @@ def Map2InitPositions():
         d["cars_positions"].append((80, y, random.choice([90, -90])))
         d["cars_positions"].append((-440, y, random.choice([90, -90])))
         d["cars_positions"].append((380, y, random.choice([90, -90])))
-        for y in range(-1000, 100, 50):
-            d["barriers_positions"].append((-371, y, 90))
-            d["barriers_positions"].append((38, y, 90))
-            d["barriers_positions"].append((446, y, 90))
+        for z in range(-1000, 100, 50):
+            d["barriers_positions"].append((-371, z, 90))
+            d["barriers_positions"].append((38, z, 90))
+            d["barriers_positions"].append((446, z, 90))
     for y in range(-1010, 100, 63):
         d["barriers_positions"].append((-710, y, 0))
         d["barriers_positions"].append((-660, y, 0))
@@ -120,11 +120,11 @@ def Map2InitPositions():
         json.dump(d, file)
 
 
-def ReadPositions(path):
+def read_positions(path):
     with open(path) as file:
         return json.load(file)
 
 
 if __name__ == "__main__":
-    Map1InitPositions()
-    Map2InitPositions()
+    map1_init_positions()
+    map2_init_positions()

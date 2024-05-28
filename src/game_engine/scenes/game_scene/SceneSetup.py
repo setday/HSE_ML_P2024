@@ -3,14 +3,14 @@ import random
 from pyglet.math import Vec2 as Vector2D
 
 import src.game_engine.controllers.Controller as Controller
-from assets.maps.EnvGeneration import ReadPositions
+from assets.maps.EnvGeneration import read_positions
 from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.entities.ParkingPlace import ParkingPlace
 from src.render.sprites.BasicSprite import BasicSprite
 
 
-def SceneSetup(scene, path):
-    config = ReadPositions(path)
+def setup_scene(scene, path):
+    config = read_positions(path)
     scene.background = BasicSprite(config["background"], Vector2D(0, 0))
     scene.background.update_scale(config["scale"])
     scene.down_render_group.add(scene.background)
@@ -19,7 +19,11 @@ def SceneSetup(scene, path):
         render_group=scene.render_group,
         space=scene.space,
         object_type="car",
-        position=(random.randint(-500, 500), random.randint(-500, 500)) if scene.train else (0, -100),
+        position=(
+            (random.randint(-500, 500), random.randint(-500, 500))
+            if scene.train
+            else (0, -100)
+        ),
         car_model="blue_car",
     )
 

@@ -89,13 +89,17 @@ class LearningScene:
 
         self.file = open("plot.txt", "w")
 
+        self.iters = 0
+        self.prev_pos = []
+        self.fitnesses = []
+
         self.reset()
 
     def reset(self):
         self.state = 0
         angle = 2 * math.pi * random.random()
         dangle = -math.pi / 2 + math.pi * (
-                random.random() / 2 + 0.5
+            random.random() / 2 + 0.5
         ) / 4 * random.choice([-1, 1])
         pos = (
             self.radius * math.cos(angle),
@@ -107,9 +111,9 @@ class LearningScene:
         self.ticks_elapsed = 0
         self.iters = 0
 
-        self.prev_pos = [self.radius ** 2 for i in range(self.population_size)]
+        self.prev_pos = [self.radius**2 for _ in range(self.population_size)]
 
-        self.fitnesses = [0 for i in range(self.population_size)]
+        self.fitnesses = [0 for _ in range(self.population_size)]
 
     def link_models(self, models):
         for i in range(self.population_size):
@@ -190,7 +194,7 @@ class LearningScene:
             pp_angle = self.parking_place.parking_model.inner_body.angle
 
             dst = (car_pos[0] - pp_pos[0]) * (car_pos[0] - pp_pos[0]) + (
-                    car_pos[1] - pp_pos[1]
+                car_pos[1] - pp_pos[1]
             ) * (car_pos[1] - pp_pos[1])
 
             def get_ang(car_ang, pp_ang):
@@ -201,10 +205,10 @@ class LearningScene:
                 return min(min(ang1, 2 * math.pi - ang1), min(ang2, 2 * math.pi - ang2))
 
             self.fitnesses[i] += (
-                    0.1 * (self.prev_pos[i] - dst) / self.radius
-                    + self.radius / (dst + 5)
-                    + 10000 * car.is_car_parked
-                    + get_ang(car_angle, pp_angle) / (math.pi / 2)
+                0.1 * (self.prev_pos[i] - dst) / self.radius
+                + self.radius / (dst + 5)
+                + 10000 * car.is_car_parked
+                + get_ang(car_angle, pp_angle) / (math.pi / 2)
             )
             self.prev_pos[i] = dst
 

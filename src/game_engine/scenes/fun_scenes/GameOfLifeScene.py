@@ -19,13 +19,13 @@ class GameOfLifeField:
             for j in range(self.width):
                 state = self.grid[i, j]
                 neighbours = (
-                        np.sum(
-                            self.grid[
-                            max(0, i - 1): min(self.height, i + 2),
-                            max(0, j - 1): min(self.width, j + 2),
-                            ]
-                        )
-                        - state
+                    np.sum(
+                        self.grid[
+                            max(0, i - 1) : min(self.height, i + 2),
+                            max(0, j - 1) : min(self.width, j + 2),
+                        ]
+                    )
+                    - state
                 )
 
                 if state and not 2 <= neighbours <= 3:
@@ -53,7 +53,7 @@ class GameOfLifeScene:
                 if np.random.random() < 0.5:
                     self.field.grid[i, j] = 1
 
-    def update(self, io_controller, delta_time):
+    def update(self, io_controller, _):
         self.field.update()
 
         if not io_controller.mouse.get(1, False):
@@ -66,9 +66,9 @@ class GameOfLifeScene:
         if x < 0 or y < 0 or x > 500 or y > 500:
             return
 
-        self.field.grid[
-            y // self.RESOLUTION, x // self.RESOLUTION
-        ] = not self.field.grid[y // self.RESOLUTION, x // self.RESOLUTION]
+        self.field.grid[y // self.RESOLUTION, x // self.RESOLUTION] = (
+            not self.field.grid[y // self.RESOLUTION, x // self.RESOLUTION]
+        )
 
     def draw(self):
         for i in range(self.ROWS):

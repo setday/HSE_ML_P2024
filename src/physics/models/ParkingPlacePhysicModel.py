@@ -3,10 +3,10 @@ import pymunk
 
 class ParkingPlacePhysicsModel:
     def __init__(
-            self,
-            position: tuple[float, float],
-            size: tuple[float, float] = (70, 120),
-            angle: float = 0,
+        self,
+        position: tuple[float, float],
+        size: tuple[float, float] = (70, 120),
+        angle: float = 0,
     ) -> None:
         self.inner_body: pymunk.Body = pymunk.Body(body_type=pymunk.Body.STATIC)
         self.inner_body.position = position
