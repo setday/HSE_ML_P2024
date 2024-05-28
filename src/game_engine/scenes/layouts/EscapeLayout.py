@@ -72,6 +72,7 @@ class EscapeMenuLayout:
             anchor_y="top",
             relative_x=True,
             relative_y=True,
+            align_x=-0.1,
             child=UIBoxLayout(
                 children=[
                     UIFullScreenLayout(
@@ -85,7 +86,7 @@ class EscapeMenuLayout:
 
         self.close_callback = close_callback
 
-        self._target_offset_x = -0.1
+        self._target_offset_x = 0
         self._target_offset_y = 0
 
     def update(self, io_controller, delta_time):

@@ -140,6 +140,10 @@ class AIController(Controller):
                 action = self.model.make_action(observation)
         elif self.type == "stable_baselines":
             action, _ = self.model.predict(observation)
+
+        self.perform_action(action)
+
+    def perform_action(self, action):
         if action == 0:
             self.car.turn_left()
         if action == 1:

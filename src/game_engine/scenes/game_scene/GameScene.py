@@ -90,7 +90,7 @@ class GameScene:
             ),
             angle=random.randint(0, 360)
         )
-        controllers = [
+        controllers = [  # noqa: F841
             {
                 "type": "sklearn",
                 "path": "models_bin/CEM.pkl"
@@ -195,10 +195,14 @@ class GameScene:
         if self.is_escape_layout_open:
             return
 
-        keys: dict = io_controller.keyboard
-
-        if keys.get(arcade.key.F7, False):
+        if io_controller.is_key_clicked(arcade.key.F7):
             self.car_m.change_health(1000)
+
+        self.update_env(io_controller, delta_time)
+        self.update_screen()
+
+    def update_env(self, io_controller: IOController, delta_time: float) -> None:
+        keys: dict = io_controller.keyboard
 
         if isinstance(self.car_m.controller, Controller.AIController):
             self.car_m.controlling(
@@ -261,14 +265,14 @@ class GameScene:
         )
 
         self.render_group.camera.set_zoom(zoom_factor)
+        self.screen_group.camera.set_zoom(zoom_factor)
 
         self.particle_show.update()
 
+    def update_screen(self):
         ######################
         # Screen Elements Update
         ######################
-
-        self.screen_group.camera.set_zoom(zoom_factor)
 
         self.indicator.update_bar()
         self.score_board.update_score(self.score[0])
