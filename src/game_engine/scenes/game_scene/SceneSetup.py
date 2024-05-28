@@ -20,6 +20,7 @@ def setup_scene(scene, path):
         object_type="car",
         position=(0, -100),
         car_model="blue_car",
+        is_main_car=True,
     )
 
     scene.car_m.switch_controller(Controller.KeyboardController())
@@ -48,9 +49,8 @@ def setup_scene(scene, path):
         )
         scene.traffic_cones[-1].apply_friction()
         scene.traffic_cones[-1].sync()
-    cars = random.choices(
-        config.get("cars_positions", []), k=10
-    )
+    cars = config.get("cars_positions", [])
+    cars = random.choices(cars, k=min(len(cars), 10))
     for x, y, angle in set([tuple(car) for car in cars]):
         scene.cars.append(
             ObjectFactory.create_object(
@@ -63,15 +63,16 @@ def setup_scene(scene, path):
             )
         )
     controllers = [
-        {"type": "sklearn", "path": "models_bin/CEM.pkl"},
-        {"type": "pytorch", "path": "models_bin/torch.pt"},
-        {"type": "stable_baselines", "policy": "DQN", "path": "models_bin/DQN"},
-        {"type": "stable_baselines", "policy": "A2C", "path": "models_bin/A2C"},
+        # {"type": "sklearn", "path": "models_bin/CEM.pkl"},
+        # {"type": "pytorch", "path": "models_bin/torch.pt"},
+        # {"type": "stable_baselines", "policy": "DQN", "path": "models_bin/DQN"},
+        # {"type": "stable_baselines", "policy": "A2C", "path": "models_bin/A2C"},
         {"type": "stable_baselines", "policy": "PPO", "path": "models_bin/PPO"},
     ]
     for car in scene.cars[1:]:
         car.switch_controller(
-            Controller.AIController(controllers[-1]) if scene.mode == "survive"
+            Controller.AIController(controllers[-1])
+            if scene.mode == "survive"
             else random.choice(
                 [
                     Controller.RandomController(),
@@ -92,7 +93,9 @@ def setup_scene(scene, path):
             static_obstacle_model="metal_pipe",
         )
     for x, y, angle in config.get("parking_positions", []):
-        ParkingPlace(scene.down_render_group, scene.space, (x, y), angle=angle)
+        scene.parking_place = ParkingPlace(
+            scene.down_render_group, scene.space, (x, y), angle=angle
+        )
     for _ in range(20):
         ObjectFactory.create_object(
             render_group=scene.render_group,

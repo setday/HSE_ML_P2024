@@ -24,7 +24,7 @@ from src.render.screen_elements.effect_animator.effects.TextPrinter import TextP
 
 
 class GameScene:
-    def __init__(self, core_instance, train: bool = False, mode: str = 'survive') -> None:
+    def __init__(self, core_instance, mode: str = "park", train: bool = False) -> None:
         self.core_instance = core_instance
         self.down_render_group: RenderGroup = RenderGroup()
         self.render_group: RenderGroup = RenderGroup()
@@ -82,18 +82,14 @@ class GameScene:
         self.car_m: Car | None = None
         self.cars: list[Car] = []
         self.traffic_cones: list[MovableObstacle] = []
-        setup_scene(self, "assets/maps/Survive.json")
-        if self.mode == 'park':
-            self.parking_place = ParkingPlace(
-                self.down_render_group, self.space,
-                position=(
-                    (random.randint(-500, 500), random.randint(-500, 500))
-                ),
-                angle=random.randint(0, 360)
-            )
+        self.parking_place: ParkingPlace | None = None
 
-
-
+        if self.mode == "survive":
+            setup_scene(self, "assets/maps/Survive.json")
+        elif self.mode == "park":
+            setup_scene(self, "assets/maps/ParkWithEnemies.json")
+        elif self.mode == "a=>b":
+            pass
 
         ######################
         # Screen Elements
@@ -200,23 +196,29 @@ class GameScene:
             if car == self.car_m:
                 continue
             if isinstance(car.controller, Controller.AIController):
-                if self.mode == 'park':
+                if self.mode == "park":
                     car.controlling(
-                    keys,
-                    np.array(
-                        [
-                            car.car_model.body.position[0]
-                            - self.parking_place.parking_model.inner_body.position[0],
-                            car.car_model.body.position[1]
-                            - self.parking_place.parking_model.inner_body.position[1],
-                            abs(
-                                car.car_model.body.angle
-                                - self.parking_place.parking_model.inner_body.angle
-                            + 90) % 180,
-                            car.car_model.body.velocity.get_length_sqrd() ** 0.5,
-                        ]
+                        keys,
+                        np.array(
+                            [
+                                car.car_model.body.position[0]
+                                - self.parking_place.parking_model.inner_body.position[
+                                    0
+                                ],
+                                car.car_model.body.position[1]
+                                - self.parking_place.parking_model.inner_body.position[
+                                    1
+                                ],
+                                abs(
+                                    car.car_model.body.angle
+                                    - self.parking_place.parking_model.inner_body.angle
+                                    + 90
+                                )
+                                % 180,
+                                car.car_model.body.velocity.get_length_sqrd() ** 0.5,
+                            ]
+                        ),
                     )
-                )
                 else:
                     car.controlling(
                         keys,
@@ -229,10 +231,11 @@ class GameScene:
                                 abs(
                                     car.car_model.body.angle
                                     - self.car_m.car_model.body.angle
-                                ) % 180,
+                                )
+                                % 180,
                                 car.car_model.body.velocity.get_length_sqrd() ** 0.5,
                             ]
-                        )
+                        ),
                     )
 
             else:
@@ -266,21 +269,36 @@ class GameScene:
 
         self.indicator.update_bar()
         self.score_board.update_score(self.score[0])
-
-        if self.car_m.health <= 0 and not self.is_end_state:
+        print(self.car_m.is_car_parked)
+        if (
+            self.car_m.health <= 0
+            and not self.is_end_state
+            or self.mode == "park"
+            and self.car_m.is_car_parked
+            or self.mode == "survive"
+            and all([car.health <= 0 for car in self.cars[1:]])
+        ):
             self.is_end_state = True
 
             self.effect_animator.add_effect(
                 FadeEffect(1, 0, None, (0, 0, 0, 200), True, True)
             )
             self.effect_animator.add_effect(
-                TextPrinter(2.3, 0, None, "You   LOSE", True, None, True)
+                TextPrinter(
+                    2.3,
+                    0,
+                    None,
+                    "You   LOSE" if self.car_m.health <= 0 else "You WIN",
+                    True,
+                    None,
+                    True,
+                )
             )
             self.effect_animator.add_effect(
                 FadeEffect(
                     2,
                     2,
-                    lambda: self.core_instance.set_scene(None),
+                    lambda: self.core_instance.set_scene(None, None),
                     (255, 255, 255, 255),
                     True,
                     True,

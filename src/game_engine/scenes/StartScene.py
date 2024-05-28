@@ -24,7 +24,7 @@ def no_game(_):
 
 
 class StartScene:
-    def __init__(self, core_instance):
+    def __init__(self, core_instance, _):
         self.core_instance = core_instance
 
         self.manager = arcade.gui.UIManager()
@@ -167,7 +167,7 @@ class StartScene:
                 "clicked_bg_color": arcade.color.BLUE,
             },
         )
-        game_one_button.on_click = self.start_game
+        game_one_button.on_click = lambda _: self.start_game(self, "park")
 
         game_two_button = arcade.gui.UIFlatButton(
             text="Death Match",
@@ -183,7 +183,7 @@ class StartScene:
                 "clicked_bg_color": arcade.color.BLUE,
             },
         )
-        game_two_button.on_click = no_game
+        game_two_button.on_click = lambda _: self.start_game(self, "survive")
 
         game_three_button = arcade.gui.UIFlatButton(
             text="A => B",
@@ -295,13 +295,13 @@ class StartScene:
 
         self._effect_animator.draw()
 
-    def start_game(self, _):
+    def start_game(self, _, mode: str):
         # self.core_instance.set_scene(GameScene)
         self._effect_animator.add_effect(
             FadeEffect(
                 duration=1,
                 fade_color=(255, 255, 255),
-                finish_callback=lambda: self.core_instance.set_scene(GameScene),
+                finish_callback=lambda: self.core_instance.set_scene(GameScene, mode),
             )
         )
 

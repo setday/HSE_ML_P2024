@@ -20,6 +20,7 @@ class Car:
         position: Vec2d | tuple[float, float] = (300, 300),
         angle: float = 0,
         skin_id: int = -1,
+        is_main_car: bool = False,
     ) -> None:
         skins: list[str] = [
             "assets/pic/cars/car_2.png",
@@ -31,7 +32,7 @@ class Car:
         skin = skins[skin_id % len(skins)]
 
         x, y = position
-
+        self.is_main_car: bool = is_main_car
         self.car_view: BasicSprite = BasicSprite(skin, position)
         self.car_model: CarPhysicsModel = CarPhysicsModel(
             (x, y), self.car_view.get_hit_box()

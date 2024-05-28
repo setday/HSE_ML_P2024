@@ -1,5 +1,3 @@
-from math import degrees
-
 from pyglet.math import Vec2 as Vector2D
 from pymunk import Space
 
@@ -24,7 +22,7 @@ class ParkingPlace:
         )
 
         self.border_box: BasicRect = BasicRect(int(size[0]), int(size[1]), position)
-        self.border_box.update_angle(degrees(angle))
+        self.border_box.update_angle(angle)
         self.border_box.set_border_width(4)
 
         # self.base_view.update_angle(degrees(angle))
