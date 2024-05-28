@@ -1,11 +1,13 @@
 import pickle
+import random
+
+import arcade
+import numpy as np
 import torch
 from stable_baselines3 import DQN, A2C, PPO
+
 from models.DQNPolicy import DQNPolicy
 from src.game_engine.entities.Car import Car
-import arcade
-import random
-import numpy as np
 
 
 class Controller:
@@ -78,7 +80,7 @@ class RandomController(Controller):
 class BrakeController(Controller):
     def __init__(self) -> None:
         super().__init__()
-    
+
     def handle_input(self, keys: dict = None, observation: list[float] | np.ndarray = None) -> None:
         self.car.hand_brake()
 

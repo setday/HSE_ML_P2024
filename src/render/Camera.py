@@ -24,7 +24,7 @@ class Camera(arcade.Camera):
         self._target_position = position
 
     def get_position(
-        self, vertical_state: int = 0, horizontal_state: int = 0
+            self, vertical_state: int = 0, horizontal_state: int = 0
     ) -> Vector2D:
         """
         Returns the position of the camera.

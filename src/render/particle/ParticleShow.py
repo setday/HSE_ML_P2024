@@ -1,4 +1,5 @@
 from typing import Tuple, List
+
 import arcade
 
 
@@ -17,7 +18,7 @@ class ParticleShow:
             emitter.draw()
 
     def add_burst(
-        self, center_xy: Tuple[int, int], textures: List[str]
+            self, center_xy: Tuple[int, int], textures: List[str]
     ) -> arcade.Emitter:
         x, y = center_xy
 

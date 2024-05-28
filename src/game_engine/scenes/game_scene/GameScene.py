@@ -1,19 +1,21 @@
-import time
 import random
+import time
+
 import arcade.key
 import numpy as np
 import pymunk
 from pyglet.math import Vec2 as Vector2D
 from pymunk import CollisionHandler
-from src.game_engine.entities.ParkingPlace import ParkingPlace
+
 import src.game_engine.controllers.Controller as Controller
 import src.game_engine.scenes.game_scene.CollisionHandlers as CollisionHandlers
+from src.game_engine.entities.ParkingPlace import ParkingPlace
+from src.game_engine.scenes.game_scene.SceneSetup import SceneSetup
 from src.render.RenderGroup import RenderGroup
 from src.render.Window import IOController
 from src.render.particle.ParticleShow import ParticleShow
 from src.render.screen_elements.Indicator import Indicator
 from src.render.screen_elements.ScoreDisplay import ScoreDisplay
-from src.game_engine.scenes.game_scene.SceneSetup import SceneSetup
 
 
 class GameScene:
@@ -169,22 +171,22 @@ class GameScene:
                 continue
             if isinstance(car.controller, Controller.AIController):
                 car.controlling(
-                keys,
-                np.array(
-                    [
-                        self.car_m.car_model.body.position[0]
-                        - self.parking_place.parking_model.inner_body.position[0],
-                        self.car_m.car_model.body.position[1]
-                        - self.parking_place.parking_model.inner_body.position[1],
-                        abs(
-                            self.car_m.car_model.body.angle
-                            - self.parking_place.parking_model.inner_body.angle
-                        ) % 180,
-                        self.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5,
-                        # self.parking_place.parking_model.inner_body.angle,
-                    ]
+                    keys,
+                    np.array(
+                        [
+                            self.car_m.car_model.body.position[0]
+                            - self.parking_place.parking_model.inner_body.position[0],
+                            self.car_m.car_model.body.position[1]
+                            - self.parking_place.parking_model.inner_body.position[1],
+                            abs(
+                                self.car_m.car_model.body.angle
+                                - self.parking_place.parking_model.inner_body.angle
+                            ) % 180,
+                            self.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5,
+                            # self.parking_place.parking_model.inner_body.angle,
+                        ]
+                    )
                 )
-            )
             else:
                 car.controlling(keys)
 
@@ -203,7 +205,7 @@ class GameScene:
             cone.sync()
 
         zoom_factor: float = (
-            1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
+                1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
         )
 
         self.render_group.camera.set_zoom(zoom_factor)

@@ -1,7 +1,7 @@
-import arcade
-import neat
 import os
 
+import arcade
+import neat
 from neat.six_util import iteritems
 
 from src.game_engine.scenes.LearningScene import LearningScene

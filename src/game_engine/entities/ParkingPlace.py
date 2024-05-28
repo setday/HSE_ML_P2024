@@ -1,6 +1,8 @@
 from math import degrees
+
 from pyglet.math import Vec2 as Vector2D
 from pymunk import Space
+
 from src.physics.models.ParkingPlacePhysicModel import ParkingPlacePhysicsModel
 from src.render.RenderGroup import RenderGroup
 from src.render.sprites.BasicRect import BasicRect
@@ -8,12 +10,12 @@ from src.render.sprites.BasicRect import BasicRect
 
 class ParkingPlace:
     def __init__(
-        self,
-        render_group: RenderGroup,
-        space: Space,
-        position: Vector2D | tuple[float, float],
-        size: tuple[float, float] = (65, 110),
-        angle: float = 0,
+            self,
+            render_group: RenderGroup,
+            space: Space,
+            position: Vector2D | tuple[float, float],
+            size: tuple[float, float] = (65, 110),
+            angle: float = 0,
     ):
         # self.base_view = BasicSprite("assets/parking_place_background.png", position)
         # self.dead_view = BasicSprite("assets/parking_place_face.png", position)

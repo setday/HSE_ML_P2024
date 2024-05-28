@@ -11,7 +11,7 @@ class CarPhysicsModel:
     ]
 
     def __init__(
-        self, position: Vec2d | tuple[float, float], collision_points_set=None
+            self, position: Vec2d | tuple[float, float], collision_points_set=None
     ) -> None:
         self.body: pymunk.Body = pymunk.Body(
             2000, pymunk.moment_for_box(2000, (45, 87))
@@ -27,7 +27,7 @@ class CarPhysicsModel:
         self.shape.collision_type = 10
 
     def apply_friction(
-        self, friction_f: float = 1.02, friction_s: float = 1.06
+            self, friction_f: float = 1.02, friction_s: float = 1.06
     ) -> None:
         local_velocity: Vec2d = self.body.velocity.rotated(-self.body.angle)
         local_velocity: Vec2d = pymunk.Vec2d(
@@ -61,7 +61,7 @@ class CarPhysicsModel:
     def accelerate(self, force: float) -> None:
         force *= self.body.mass
         is_accel: bool = (
-            self.body.velocity.rotated(-self.body.angle).dot((0, -force)) > 0
+                self.body.velocity.rotated(-self.body.angle).dot((0, -force)) > 0
         )
         if is_accel and self.body.velocity.length > 40:
             return

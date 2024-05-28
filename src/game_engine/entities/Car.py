@@ -1,20 +1,23 @@
 import random
 from math import radians, degrees
-from src.render.RenderGroup import RenderGroup
+
 import arcade
 from pymunk import Vec2d, Space
+import numpy as np
+
 from src.physics.models.CarPhysicsModel import CarPhysicsModel
+from src.render.RenderGroup import RenderGroup
 from src.render.sprites.BasicSprite import BasicSprite
 
 
 class Car:
     def __init__(
-        self,
-        render_group: RenderGroup,
-        space: Space,
-        position: Vec2d | tuple[float, float] = (300, 300),
-        angle: float = 0,
-        skin_id: int = -1,
+            self,
+            render_group: RenderGroup,
+            space: Space,
+            position: Vec2d | tuple[float, float] = (300, 300),
+            angle: float = 0,
+            skin_id: int = -1,
     ) -> None:
         skins: list[str] = [
             "assets/pic/cars/car_2.png",
@@ -143,9 +146,9 @@ class Car:
 
         if self.hooks["parked_hook"] or self.hooks["unparked_hook"]:
             parked_state = (
-                self.car_model.body.velocity.get_length_sqrd() <= 0.2
-                and self.inside_parking_place
-                and self.dead_zones_intersect == 0
+                    self.car_model.body.velocity.get_length_sqrd() <= 0.2
+                    and self.inside_parking_place
+                    and self.dead_zones_intersect == 0
             )
             if parked_state != self.is_car_parked:
                 self.is_car_parked = parked_state
@@ -155,14 +158,14 @@ class Car:
                     self.hooks["unparked_hook"](self)
 
         if self.tyre_state != 0 and (
-            not self.is_hand_braking
-            or self.car_model.body.velocity.get_length_sqrd() < 10
+                not self.is_hand_braking
+                or self.car_model.body.velocity.get_length_sqrd() < 10
         ):
             self._stop_tyring()
         if (
-            self.tyre_state != 1
-            and self.is_hand_braking
-            and self.car_model.body.velocity.get_length_sqrd() > 10
+                self.tyre_state != 1
+                and self.is_hand_braking
+                and self.car_model.body.velocity.get_length_sqrd() > 10
         ):
             self._start_tyring()
 
@@ -171,14 +174,14 @@ class Car:
         if self.tyre_state == 0:
             return
 
-        fwd: Vect2d = Vec2d(1, 0).rotated(self.car_model.body.angle)
+        fwd: Vec2d = Vec2d(1, 0).rotated(self.car_model.body.angle)
         lft: Vec2d = Vec2d(0, 1).rotated(self.car_model.body.angle)
 
         for i in range(4):
             offset = (
-                fwd * CarPhysicsModel.wheels_offset[i][0]
-                + lft * CarPhysicsModel.wheels_offset[i][1]
-                - self.car_model.body.position
+                    fwd * CarPhysicsModel.wheels_offset[i][0]
+                    + lft * CarPhysicsModel.wheels_offset[i][1]
+                    - self.car_model.body.position
             )
 
             self.tyre_emitters[i].center_x = -offset.x

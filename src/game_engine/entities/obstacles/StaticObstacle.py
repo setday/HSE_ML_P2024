@@ -1,6 +1,8 @@
 from math import degrees
-from pymunk import Space
+
 from pyglet.math import Vec2 as Vector2D
+from pymunk import Space
+
 from src.physics.models.StaticObstaclePhysicsModel import StaticObstaclePhysicsModel
 from src.render.RenderGroup import RenderGroup
 from src.render.sprites.BasicSprite import BasicSprite
@@ -8,13 +10,13 @@ from src.render.sprites.BasicSprite import BasicSprite
 
 class StaticObstacle:
     def __init__(
-        self,
-        render_group: RenderGroup,
-        space: Space,
-        position: Vector2D = (0, 0),
-        angle: float = 0,
-        image_path: str | None = "assets/pic/obstacles/Tree_1.png",
-        shape_type: str = None,
+            self,
+            render_group: RenderGroup,
+            space: Space,
+            position: Vector2D = (0, 0),
+            angle: float = 0,
+            image_path: str | None = "assets/pic/obstacles/Tree_1.png",
+            shape_type: str = None,
     ) -> None:
         self.obstacle_view: BasicSprite | None = None
         if image_path is not None:

@@ -4,7 +4,7 @@ from pymunk import Vec2d
 
 class MovableObstaclePhysicsModel:
     def __init__(
-        self, position: Vec2d | tuple[float, float], collision_points_set=None
+            self, position: Vec2d | tuple[float, float], collision_points_set=None
     ) -> None:
         self.body: pymunk.Body = pymunk.Body(5, pymunk.moment_for_box(5, (16, 16)))
         self.body.position = position

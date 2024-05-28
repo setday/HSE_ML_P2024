@@ -1,10 +1,12 @@
-import src.game_engine.controllers.Controller as Controller
+import random
+
 from pyglet.math import Vec2 as Vector2D
-from src.game_engine.entities.ObjectFactory import ObjectFactory
+
+import src.game_engine.controllers.Controller as Controller
 from assets.maps.EnvGeneration import ReadPositions
+from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.entities.ParkingPlace import ParkingPlace
 from src.render.sprites.BasicSprite import BasicSprite
-import random
 
 
 def SceneSetup(scene, path):

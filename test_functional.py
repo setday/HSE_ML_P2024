@@ -1,6 +1,6 @@
 from src.game_engine.Core import Core
-from src.game_engine.entities.Car import Car
 from src.game_engine.controllers.Controller import KeyboardController
+from src.game_engine.entities.Car import Car
 from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
@@ -20,7 +20,7 @@ def test_main_car():
     assert isinstance(core.scene.car_m, Car), "Main character must be a car"
     assert hasattr(core.scene.car_m, "health"), "Main car must have a health"
     assert (
-        core.scene.car_m.health == 100
+            core.scene.car_m.health == 100
     ), "Main character's health must be equal 100 in the begin"
     assert hasattr(core.scene.car_m, "controller"), "Main car must have a controller"
     assert isinstance(
@@ -42,7 +42,7 @@ def test_object_factory():
     assert car.health >= 0, "Health must be non-negative"
     assert hasattr(car, "car_model"), "Car must have physics model"
     assert (
-        car.car_model.body in core.scene.space.bodies
+            car.car_model.body in core.scene.space.bodies
     ), "Car must be added to the physics scene"
     assert hasattr(car, "car_view"), "Car must have view"
     # assert car.car_view in core.scene.render_group, 'Car must be added to the game scene'
@@ -60,7 +60,7 @@ def test_object_factory():
     assert cone.health >= 0, "Health must be non-negative"
     assert hasattr(cone, "obstacle_model"), "Cone must have physics model"
     assert (
-        cone.obstacle_model.body in core.scene.space.bodies
+            cone.obstacle_model.body in core.scene.space.bodies
     ), "Cone must be added to the physics scene"
     assert hasattr(cone, "obstacle_view"), "Cone must have view"
     # assert cone.obstacle_view in core.scene.render_group, 'Cone must be added to the game scene'
@@ -78,7 +78,7 @@ def test_object_factory():
         assert not hasattr(obj, "health"), f"{model} must not have health"
         assert hasattr(obj, "obstacle_model"), f"{model} must have physics model"
         assert (
-            obj.obstacle_model.body in core.scene.space.bodies
+                obj.obstacle_model.body in core.scene.space.bodies
         ), f"{model} must be added to the physics scene"
         assert hasattr(obj, "obstacle_view"), f"{model} must have view"
         if model == "x_barrier" or model == "y_barrier":
