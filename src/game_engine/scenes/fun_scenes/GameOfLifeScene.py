@@ -1,5 +1,5 @@
-import numpy as np
 import arcade
+import numpy as np
 
 from src.render.RenderGroup import RenderGroup
 
@@ -53,7 +53,7 @@ class GameOfLifeScene:
                 if np.random.random() < 0.5:
                     self.field.grid[i, j] = 1
 
-    def update(self, io_controller, delta_time):
+    def update(self, io_controller, _):
         self.field.update()
 
         if not io_controller.mouse.get(1, False):

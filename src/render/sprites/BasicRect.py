@@ -1,6 +1,8 @@
 from typing import Tuple
-from pyglet.math import Vec2 as Vector2D
+
 from arcade import Texture
+from pyglet.math import Vec2 as Vector2D
+
 from src.render.sprites.BasicDrawable import BasicDrawable
 
 

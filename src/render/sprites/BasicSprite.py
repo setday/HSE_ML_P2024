@@ -1,7 +1,7 @@
-import arcade
 from pyglet.math import Vec2 as Vector2D
 
 from src.render.sprites.BasicDrawable import BasicDrawable
+from src.utils.Loaders import load_texture
 
 
 class BasicSprite(BasicDrawable):
@@ -13,7 +13,7 @@ class BasicSprite(BasicDrawable):
     ) -> None:
         super().__init__(position)
 
-        self.texture = arcade.load_texture(image)
+        self.texture = load_texture(image)
 
         self.update_position(position)
         self.update_angle(0)

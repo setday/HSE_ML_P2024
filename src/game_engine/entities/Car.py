@@ -1,9 +1,13 @@
 import random
 from math import radians, degrees
-from src.render.RenderGroup import RenderGroup
+
 import arcade
+import numpy as np
 from pymunk import Vec2d, Space
+
+import src.render.particle.ParticleShow as ParticleShow
 from src.physics.models.CarPhysicsModel import CarPhysicsModel
+from src.render.RenderGroup import RenderGroup
 from src.render.sprites.BasicSprite import BasicSprite
 import numpy as np
 
@@ -131,7 +135,7 @@ class Car:
         self.tyre_state = 0
 
     def _start_tyring(self) -> None:
-        if self.tyre_state == 1:
+        if self.tyre_state == 1 or self.health <= 0 or not ParticleShow.particles_on:
             return
 
         for emitter in self.tyre_emitters:
@@ -174,7 +178,7 @@ class Car:
         if self.tyre_state == 0:
             return
 
-        fwd: Vect2d = Vec2d(1, 0).rotated(self.car_model.body.angle)
+        fwd: Vec2d = Vec2d(1, 0).rotated(self.car_model.body.angle)
         lft: Vec2d = Vec2d(0, 1).rotated(self.car_model.body.angle)
 
         for i in range(4):

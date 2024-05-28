@@ -2,8 +2,8 @@ import random
 
 import pymunk
 
-from src.game_engine.entities.ParkingPlace import ParkingPlace
 from src.game_engine.entities.Car import Car
+from src.game_engine.entities.ParkingPlace import ParkingPlace
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
 
 
