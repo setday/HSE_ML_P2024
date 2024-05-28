@@ -113,6 +113,8 @@ class AIController(Controller):
         self.model = model
 
     def handle_input(self, keys: dict = None, observation: list[float] | np.ndarray = None) -> None:
+        action: int = -1
+
         if self.type == "neat":
             # order: accelerate, turn_left, turn_right, brake, hand_brake
             probs = self.model.activate(observation)

@@ -55,7 +55,6 @@ class SettingLayout(UIFullScreenLayout):
             width=300,
             height=100,
             font_size=30,
-            # font_name="Karmatic Arcade",
         )
         self.particles_button.on_click = self.switch_particles
 

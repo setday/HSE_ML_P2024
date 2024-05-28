@@ -151,7 +151,6 @@ class StartScene:
             width=300,
             height=100,
             font_size=30,
-            # font_name="Karmatic Arcade",
             style={
                 "font_color": arcade.color.WHITE,
                 "bg_color": arcade.color.BLUE,
@@ -168,7 +167,6 @@ class StartScene:
             width=300,
             height=100,
             font_size=30,
-            # font_name="Karmatic Arcade",
             style={
                 "font_color": arcade.color.WHITE,
                 "bg_color": arcade.color.BLUE,
@@ -185,7 +183,6 @@ class StartScene:
             width=300,
             height=100,
             font_size=30,
-            # font_name="Karmatic Arcade",
             style={
                 "font_color": arcade.color.WHITE,
                 "bg_color": arcade.color.BLUE,

@@ -8,13 +8,15 @@ from src.utils.Loaders import load_font
 
 
 class Core:
-    def __init__(self, train=False):
+    def __init__(self):
         self.window = Window(1920, 1080, "Park me")
 
         load_font("assets/fnt/Title.ttf")
         load_font("assets/fnt/ka1.ttf")
 
         self.scene = None
+
+        self.is_active: bool = False
 
         self.set_scene(StartScene)
 
@@ -27,9 +29,13 @@ class Core:
         self.scene = scene(self)
 
     def run(self) -> None:
+        self.is_active = True
+
         arcade.run()
 
     def stop(self) -> None:
+        self.is_active = False
+
         arcade.exit()
 
     def on_update(self, io_controller: IOController, delta_time: float) -> None:

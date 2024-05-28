@@ -10,9 +10,9 @@ class UISuperAnchorWidget(UIAnchorWidget):
     :param relative_x: If True, align_x are relative to the parent widget
     :param relative_y: If True, align_y are relative to the parent widget
 
-    :param anchor_x: Which anchor to use for x axis (left, center, right)
+    :param anchor_x: Which anchor to use for x-axis (left, center, right)
     :param align_x: offset for x value (- = left, + = right)
-    :param anchor_y: Which anchor to use for y axis (top, center, bottom)
+    :param anchor_y: Which anchor to use for y-axis (top, center, bottom)
     :param align_y: offset for y value (- = down, + = up)
     :param size_hint: Tuple of floats (0.0-1.0), how much space of the parent should be requested
     :param size_hint_min: min width and height in pixel

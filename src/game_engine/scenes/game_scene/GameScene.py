@@ -10,7 +10,7 @@ from pymunk import CollisionHandler
 import src.game_engine.controllers.Controller as Controller
 import src.game_engine.scenes.game_scene.CollisionHandlers as CollisionHandlers
 from src.game_engine.entities.ParkingPlace import ParkingPlace
-from src.game_engine.scenes.game_scene.SceneSetup import SceneSetup
+from src.game_engine.scenes.game_scene.SceneSetup import setup_scene
 from src.game_engine.scenes.layouts.EscapeLayout import EscapeMenuLayout
 from src.render.RenderGroup import RenderGroup
 from src.render.Window import IOController
@@ -23,7 +23,7 @@ from src.render.screen_elements.effect_animator.effects.TextPrinter import TextP
 
 
 class GameScene:
-    def __init__(self, core_instance: "Core", train: bool = False) -> None:
+    def __init__(self, core_instance, train: bool = False) -> None:
         self.core_instance = core_instance
 
         self.down_render_group: RenderGroup = RenderGroup()
@@ -78,7 +78,11 @@ class GameScene:
         # Setup game objects
         ######################
 
-        SceneSetup(self, "assets/maps/ParkWithEnemies.json")
+        self.car_m = None
+        self.cars = []
+        self.traffic_cones = []
+
+        setup_scene(self, "assets/maps/ParkWithEnemies.json")
         self.parking_place = ParkingPlace(
             self.down_render_group, self.space,
             position=(

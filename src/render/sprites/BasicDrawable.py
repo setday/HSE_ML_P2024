@@ -1,6 +1,7 @@
 import arcade
 
 from pyglet.math import Vec2 as Vector2D
+from pymunk import Vec2d as Vector2DP
 
 
 class BasicDrawable(arcade.Sprite):
@@ -15,7 +16,7 @@ class BasicDrawable(arcade.Sprite):
 
         self.update_position(position)
 
-    def update_position(self, position: Vector2D | tuple[float, float]) -> None:
+    def update_position(self, position: Vector2D | Vector2DP | tuple[float, float]) -> None:
         def inverse_y(pos: Vector2D | tuple[float, float]) -> Vector2D:
             x, y = pos
             return Vector2D(x, -y)

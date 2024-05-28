@@ -21,8 +21,8 @@ class GameOfLifeField:
                 neighbours = (
                         np.sum(
                             self.grid[
-                            max(0, i - 1): min(self.height, i + 2),
-                            max(0, j - 1): min(self.width, j + 2),
+                                max(0, i - 1): min(self.height, i + 2),
+                                max(0, j - 1): min(self.width, j + 2),
                             ]
                         )
                         - state
@@ -53,7 +53,7 @@ class GameOfLifeScene:
                 if np.random.random() < 0.5:
                     self.field.grid[i, j] = 1
 
-    def update(self, io_controller, delta_time):
+    def update(self, io_controller, _):
         self.field.update()
 
         if not io_controller.mouse.get(1, False):
