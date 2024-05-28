@@ -1,6 +1,8 @@
 from arcade.color import RED, GREEN, WHITE
 from arcade.gui import UIFlatButton, UITextureButton, UIAnchorWidget, UIBoxLayout
 
+from src.render.screen_elements.ui_components.UICheckButton import UICheckButton
+from src.render.screen_elements.ui_components.UISlider import UISlider
 from src.utils.Loaders import load_texture
 
 from src.render.screen_elements.ui_components.UIFullScreenLayout import UIFullScreenLayout
@@ -8,7 +10,7 @@ from src.render.screen_elements.ui_components.UIFullScreenLayout import UIFullSc
 import src.render.particle.ParticleShow as ParticleShow
 
 
-_is_sound_on = True
+_sound_level = 4
 _is_particles_on = True
 
 
@@ -18,14 +20,38 @@ class SettingLayout(UIFullScreenLayout):
         # Settings
         ###
 
-        self.sound_button = UIFlatButton(
-            text="",
-            width=300,
-            height=100,
-            font_size=30,
-            # font_name="Karmatic Arcade",
+        self.sound_button = UICheckButton(
+            textures_checked=(
+                load_texture("assets/pic/buttons/Sound/normal_on.png"),
+                load_texture("assets/pic/buttons/Sound/hovered_on.png"),
+                load_texture("assets/pic/buttons/Sound/pressed_on.png"),
+            ),
+            textures_unchecked=(
+                load_texture("assets/pic/buttons/Sound/normal_off.png"),
+                load_texture("assets/pic/buttons/Sound/hovered_off.png"),
+                load_texture("assets/pic/buttons/Sound/pressed_off.png"),
+            ),
+            scale=6,
+            checked=_sound_level != 0,
+            on_change=lambda _: self.set_sound_level()
         )
-        self.sound_button.on_click = self.switch_sound
+
+        self.sound_slider = UISlider(
+            textures=(
+                load_texture("assets/pic/slider/Slider_1_10.png"),
+                load_texture("assets/pic/slider/Slider_2_10.png"),
+                load_texture("assets/pic/slider/Slider_3_10.png"),
+                load_texture("assets/pic/slider/Slider_4_10.png"),
+                load_texture("assets/pic/slider/Slider_5_10.png"),
+                load_texture("assets/pic/slider/Slider_6_10.png"),
+                load_texture("assets/pic/slider/Slider_7_10.png"),
+                load_texture("assets/pic/slider/Slider_8_10.png"),
+                load_texture("assets/pic/slider/Slider_9_10.png"),
+                load_texture("assets/pic/slider/Slider_10_10.png"),
+            ),
+            scale=5,
+            change_callback=self.set_sound_level,
+        )
 
         self.particles_button = UIFlatButton(
             text="",
@@ -51,7 +77,13 @@ class SettingLayout(UIFullScreenLayout):
                 UIAnchorWidget(
                     child=UIBoxLayout(
                         children=[
-                            self.sound_button,
+                            UIBoxLayout(
+                                children=[
+                                    self.sound_button,
+                                    self.sound_slider,
+                                ],
+                                space_between=-24,
+                            ),
                             self.particles_button,
                         ],
                         space_between=20,
@@ -69,9 +101,12 @@ class SettingLayout(UIFullScreenLayout):
         global _is_particles_on
         _is_particles_on = ParticleShow.particles_on
 
-    def switch_sound(self, _):
-        global _is_sound_on
-        _is_sound_on = not _is_sound_on
+    def set_sound_level(self, level: float | None = None):
+        global _sound_level
+        if not level:
+            _sound_level = 0 if _sound_level else 4
+        else:
+            _sound_level = level
 
         self.redraw_buttons()
 
@@ -83,17 +118,10 @@ class SettingLayout(UIFullScreenLayout):
         self.redraw_buttons()
 
     def redraw_buttons(self):
-        global _is_sound_on, _is_particles_on
+        global _sound_level, _is_particles_on
 
-        self.sound_button.text = "Sound On" if _is_sound_on else "Sound Off"
-        self.sound_button._style = {
-            "font_color": WHITE,
-            "bg_color": GREEN if _is_sound_on else RED,
-            "hover_font_color": WHITE,
-            "hover_bg_color": GREEN if _is_sound_on else RED,
-            "clicked_font_color": WHITE,
-            "clicked_bg_color": GREEN if _is_sound_on else RED,
-        }
+        self.sound_button.switch_state(_sound_level != 0)
+        self.sound_slider.value = _sound_level
 
         self.particles_button.text = "Particles On" if _is_particles_on else "Particles Off"
         self.particles_button._style = {
