@@ -1,9 +1,7 @@
 load("@rules_python//python:defs.bzl", "py_binary")
 load("@python_deps//:requirements.bzl", "requirement")
-py_binary(
-    name = "main",
-    srcs = [
-    "main.py",
+
+src = [
     "src/game_engine/Core.py",
     "src/game_engine/scenes/game_scene/GameScene.py",
     "src/game_engine/scenes/game_scene/CollisionHandlers.py",
@@ -26,5 +24,17 @@ py_binary(
     "src/render/sprites/BasicSprite.py",
     "src/render/screen_elements/Indicator.py",
     "src/render/screen_elements/ScoreDisplay.py"
-    ]
+]
+
+py_binary(
+    name = "main",
+    srcs = ["main.py"] + src
 )
+
+load("//tools/pytest:defs.bzl", "pytest_test")
+
+pytest_test(
+    name = "test",
+    srcs = ["test_functional.py"] + src
+)
+

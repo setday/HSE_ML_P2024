@@ -12,12 +12,12 @@ from src.render.RenderGroup import RenderGroup
 class ObjectFactory:
     @staticmethod
     def create_object(
-        render_group: RenderGroup,
-        space: Space,
-        object_type: str = "car",
-        position: Vector2D | tuple[float, float] = (0, 0),
-        angle: float = 0,
-        **kwargs,
+            render_group: RenderGroup,
+            space: Space,
+            object_type: str = "car",
+            position: Vector2D | tuple[float, float] = (0, 0),
+            angle: float = 0,
+            **kwargs: dict,
     ) -> Car | MovableObstacle | StaticObstacle:
         if object_type == "car":
             return ObjectFactory.create_car(
@@ -48,11 +48,11 @@ class ObjectFactory:
 
     @staticmethod
     def create_car(
-        render_group: RenderGroup,
-        space: Space,
-        position: Vector2D | tuple[float, float] = (0, 0),
-        angle: float = 0,
-        car_model: str = "blue_car",
+            render_group: RenderGroup,
+            space: Space,
+            position: Vector2D | tuple[float, float] = (0, 0),
+            angle: float = 0,
+            car_model: str = "blue_car",
     ) -> Car:
         car_model_dict = {
             "random_car": -1,
@@ -66,11 +66,11 @@ class ObjectFactory:
 
     @staticmethod
     def create_movable_obstacle(
-        render_group: RenderGroup,
-        space: Space,
-        position: Vector2D | tuple[float, float] = (0, 0),
-        angle: float = 0,
-        movable_obstacle_model: str = "cone",
+            render_group: RenderGroup,
+            space: Space,
+            position: Vector2D | tuple[float, float] = (0, 0),
+            angle: float = 0,
+            movable_obstacle_model: str = "cone",
     ) -> MovableObstacle:
         movable_obstacle_model_dict = {
             "cone": "assets/pic/obstacles/Traffic_Cone.png",
@@ -85,11 +85,11 @@ class ObjectFactory:
 
     @staticmethod
     def create_static_obstacle(
-        render_group: RenderGroup,
-        space: Space,
-        position: Vector2D | tuple[float, float] = (0, 0),
-        angle: float = 0,
-        static_obstacle_model: str = "bush",
+            render_group: RenderGroup,
+            space: Space,
+            position: Vector2D | tuple[float, float] = (0, 0),
+            angle: float = 0,
+            static_obstacle_model: str = "bush",
     ) -> StaticObstacle:
         static_obstacle_model_dict = {
             "bush": "assets/pic/obstacles/Bush.png",

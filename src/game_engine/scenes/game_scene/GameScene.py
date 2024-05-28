@@ -1,9 +1,17 @@
 import random
+import time
 
 import arcade.key
+import numpy as np
 import pymunk
 from arcade.experimental import Shadertoy
 from pyglet.math import Vec2 as Vector2D
+
+from pymunk import CollisionHandler
+
+import src.game_engine.controllers.Controller as Controller
+from src.game_engine.entities.ParkingPlace import ParkingPlace
+from src.game_engine.scenes.game_scene.SceneSetup import SceneSetup
 
 import src.game_engine.scenes.game_scene.CollisionHandlers as CollisionHandlers
 from src.game_engine.controllers.Controller import (
@@ -13,9 +21,9 @@ from src.game_engine.controllers.Controller import (
     AIController,
 )
 from src.game_engine.entities.ObjectFactory import ObjectFactory
-from src.game_engine.entities.ParkingPlace import ParkingPlace
 from src.game_engine.scenes.layouts.EscapeLayout import EscapeMenuLayout
 from src.render.RenderGroup import RenderGroup
+from src.render.Window import IOController
 from src.render.particle.ParticleShow import ParticleShow
 from src.render.screen_elements.Indicator import Indicator
 from src.render.screen_elements.ScoreDisplay import ScoreDisplay
@@ -27,26 +35,27 @@ from src.render.screen_elements.effect_animator.effects.FadeEffect import FadeEf
 
 
 class GameScene:
-    def __init__(self, core_instance):
+    def __init__(self, core_instance: "Core", train: bool = False) -> None:
         self.core_instance = core_instance
 
-        self.down_render_group = RenderGroup()
-        self.render_group = RenderGroup()
-        self.top_render_group = RenderGroup()
-        self.particle_show = ParticleShow()
-        self.score: list[int] = [10000]
+        self.down_render_group: RenderGroup = RenderGroup()
+        self.render_group: RenderGroup = RenderGroup()
+        self.top_render_group: RenderGroup = RenderGroup()
+        self.particle_show: ParticleShow = ParticleShow()
 
+        self.score: list[int] = [10000]
+        self.train: bool = train
         ######################
         # Setup physics
         ######################
 
-        self.space = pymunk.Space()
+        self.space: pymunk.Space = pymunk.Space()
 
-        h_10_10 = self.space.add_collision_handler(10, 10)
+        h_10_10: CollisionHandler = self.space.add_collision_handler(10, 10)
         h_10_10.begin = CollisionHandlers.collision_car_with_car
-        h_10_20 = self.space.add_collision_handler(10, 20)
+        h_10_20: CollisionHandler = self.space.add_collision_handler(10, 20)
         h_10_20.begin = CollisionHandlers.collision_car_with_obstacle
-        h_10_30 = self.space.add_collision_handler(10, 30)
+        h_10_30: CollisionHandler = self.space.add_collision_handler(10, 30)
         h_10_30.begin = CollisionHandlers.collision_car_with_obstacle
 
         h_10_10.data["score"] = h_10_20.data["score"] = h_10_30.data["score"] = (
@@ -56,12 +65,12 @@ class GameScene:
             "debris_emitter"
         ] = self.particle_show
 
-        base_handler = self.space.add_collision_handler(10, 40)
+        base_handler: CollisionHandler = self.space.add_collision_handler(10, 40)
         base_handler.begin = CollisionHandlers.collision_car_with_base_parking_place
         base_handler.separate = (
             CollisionHandlers.end_collision_car_with_base_parking_place
         )
-        dead_handler = self.space.add_collision_handler(10, 41)
+        dead_handler: CollisionHandler = self.space.add_collision_handler(10, 41)
         dead_handler.begin = CollisionHandlers.collision_car_with_dead_parking_place
         dead_handler.separate = (
             CollisionHandlers.end_collision_car_with_dead_parking_place
@@ -81,191 +90,63 @@ class GameScene:
         # Setup game objects
         ######################
 
-        self.background = BasicSprite("assets/pic/map/Map.jpg", (0, 0))
-        self.background.update_scale(10)
-
-        self.down_render_group.add(self.background)
-
-        self.car_m = ObjectFactory.create_object(
-            render_group=self.render_group,
-            space=self.space,
-            object_type="car",
-            position=(0, -100),
-            car_model="blue_car",
+        SceneSetup(self, "assets/maps/ParkWithEnemies.json")
+        self.parking_place = ParkingPlace(
+            self.down_render_group, self.space,
+            position=(
+                (random.randint(-500, 500), random.randint(-500, 500))
+            ),
+            angle=random.randint(0, 360)
         )
-
-        self.car_m.switch_controller(KeyboardController())
-        # self.car_m.set_hook("dead_hook", lambda _: print("You dead"))
-        # self.car_m.set_hook("parked_hook", lambda _: print("You win"))
-        # self.car_m.set_hook("unparked_hook", lambda _: print("You out"))
-
-        self.render_group.camera.snap_to_sprite(self.car_m.car_view)
-
-        self.cars = [self.car_m]
-        for i in range(-5, 5):
-            if i == 0:
-                continue
-            car = ObjectFactory.create_object(
-                render_group=self.render_group,
-                space=self.space,
-                object_type="car",
-                position=(70 * i, -100),
-                car_model="red_car",
-            )
+        controllers = [
+            {
+                "type": "sklearn",
+                "path": "models_bin/CEM.pkl"
+            },
+            {
+                "type": "pytorch",
+                "path": "models_bin/torch.pt"
+            },
+            {
+                "type": "stable_baselines",
+                "policy": "DQN",
+                "path": "models_bin/DQN"
+            },
+            {
+                "type": "stable_baselines",
+                "policy": "A2C",
+                "path": "models_bin/A2C"
+            },
+            {
+                "type": "stable_baselines",
+                "policy": "PPO",
+                "path": "models_bin/PPO"
+            }
+        ]
+        for car in self.cars[1:]:
             car.switch_controller(
-                random.choice([RandomController(), AIController(), BrakeController()])
-            )
-            self.cars.append(car)
-
-        self.traffic_cones = []
-        for i in range(-5, 5):
-            self.traffic_cones.append(
-                ObjectFactory.create_object(
-                    render_group=self.render_group,
-                    space=self.space,
-                    object_type="movable_obstacle",
-                    position=(70 * i, -170),
-                    movable_obstacle_model="cone",
+                random.choice(
+                    [
+                        Controller.RandomController(),
+                        # Controller.AIController(random.choice(controllers)),
+                        Controller.BrakeController(),
+                    ]
                 )
             )
-
-        self.traffic_cones.append(
-            ObjectFactory.create_object(
-                self.render_group,
-                self.space,
-                "movable_obstacle",
-                (70 * -5 - 35, -70),
-                movable_obstacle_model="cone",
-            )
-        )
-        self.traffic_cones.append(
-            ObjectFactory.create_object(
-                self.render_group,
-                self.space,
-                "movable_obstacle",
-                (70 * -5 - 40, -100),
-                movable_obstacle_model="cone",
-            )
-        )
-        self.traffic_cones.append(
-            ObjectFactory.create_object(
-                self.render_group,
-                self.space,
-                "movable_obstacle",
-                (70 * -5 - 35, -130),
-                movable_obstacle_model="cone",
-            )
-        )
-
-        self.traffic_cones.append(
-            ObjectFactory.create_object(
-                self.render_group,
-                self.space,
-                "movable_obstacle",
-                (70 * 4 + 35, -70),
-                movable_obstacle_model="cone",
-            )
-        )
-        self.traffic_cones.append(
-            ObjectFactory.create_object(
-                self.render_group,
-                self.space,
-                "movable_obstacle",
-                (70 * 4 + 40, -100),
-                movable_obstacle_model="cone",
-            )
-        )
-        self.traffic_cones.append(
-            ObjectFactory.create_object(
-                self.render_group,
-                self.space,
-                "movable_obstacle",
-                (70 * 4 + 35, -130),
-                movable_obstacle_model="cone",
-            )
-        )
-
-        for i in range(-5, 5):
-            ObjectFactory.create_object(
-                self.top_render_group,
-                self.space,
-                "static_obstacle",
-                (70 * i, -10),
-                static_obstacle_model="tree",
-            )
-
-        ###
-        # Parking lots
-        ###
-
-        for i in range(-5, 5):
-            ParkingPlace(self.down_render_group, self.space, (70 * i, -100))
-        for i in range(-5, 4):
-            ObjectFactory.create_object(
-                self.render_group,
-                self.space,
-                "static_obstacle",
-                (70 * i + 35, -100),
-                90,
-                static_obstacle_model="metal_pipe",
-            )
-        for i in range(-5, 5):
-            ObjectFactory.create_object(
-                self.render_group,
-                self.space,
-                "static_obstacle",
-                (70 * i, -45),
-                static_obstacle_model="rubbish_line",
-            )
-
-        ###
-        # Barriers
-        ###
-
-        ObjectFactory.create_object(
-            self.render_group,
-            self.space,
-            "static_obstacle",
-            (0, 1000),
-            static_obstacle_model="x_barrier",
-        )
-        ObjectFactory.create_object(
-            self.render_group,
-            self.space,
-            "static_obstacle",
-            (0, -2000),
-            static_obstacle_model="x_barrier",
-        )
-        ObjectFactory.create_object(
-            self.render_group,
-            self.space,
-            "static_obstacle",
-            (3500, 0),
-            static_obstacle_model="y_barrier",
-        )
-        ObjectFactory.create_object(
-            self.render_group,
-            self.space,
-            "static_obstacle",
-            (-3500, 0),
-            static_obstacle_model="y_barrier",
-        )
-
-        ParkingPlace(self.down_render_group, self.space, (0, -300), angle=0.4)
 
         ######################
         # Screen Elements
         ######################
 
-        self.screen_group = RenderGroup()
-        camera_offset = self.screen_group.camera.get_position(1, 1)
+        self.screen_group: RenderGroup = RenderGroup()
+        camera_offset: Vector2D = self.screen_group.camera.get_position(1, 1)
 
-        self.indicator = Indicator(
+        self.indicator: Indicator = Indicator(
             owner=self.car_m, position=camera_offset - Vector2D(200, 100)
         )
         self.screen_group.add(self.indicator.sprite_list)
 
-        self.score_board = ScoreDisplay(
+        self.score_board: ScoreDisplay = ScoreDisplay(
             score=self.score[0],
             position=camera_offset - Vector2D(200, 170),
             color=(255, 220, 40),
@@ -307,9 +188,7 @@ class GameScene:
 
         self.is_end_state = False
 
-    def update(self, io_controller, delta_time):
-        self.effect_animator.update(delta_time)
-
+    def update(self, io_controller: IOController, delta_time: float) -> None:
         if self.is_escape_layout_renders:
             self.escape_layout.update(io_controller, delta_time)
 
@@ -322,17 +201,54 @@ class GameScene:
         if self.is_escape_layout_open:
             return
 
-        keys = io_controller.keyboard
+        keys: dict = io_controller.keyboard
 
         if keys.get(arcade.key.F7, False):
             self.car_m.change_health(1000)
 
-        self.car_m.controlling(keys)
+        if isinstance(self.car_m.controller, Controller.AIController):
+            self.car_m.controlling(
+                keys,
+                np.array(
+                    [
+                        self.car_m.car_model.body.position[0]
+                        - self.parking_place.parking_model.inner_body.position[0],
+                        self.car_m.car_model.body.position[1]
+                        - self.parking_place.parking_model.inner_body.position[1],
+                        abs(
+                            self.car_m.car_model.body.angle
+                            - self.parking_place.parking_model.inner_body.angle
+                        ) % 180,
+                        self.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5,
+                    ]
+                )
+            )
+        else:
+            self.car_m.controlling(keys)
 
         for car in self.cars:
             if car == self.car_m:
                 continue
-            car.controlling(keys)
+            if isinstance(car.controller, Controller.AIController):
+                car.controlling(
+                    keys,
+                    np.array(
+                        [
+                            self.car_m.car_model.body.position[0]
+                            - self.parking_place.parking_model.inner_body.position[0],
+                            self.car_m.car_model.body.position[1]
+                            - self.parking_place.parking_model.inner_body.position[1],
+                            abs(
+                                self.car_m.car_model.body.angle
+                                - self.parking_place.parking_model.inner_body.angle
+                            ) % 180,
+                            self.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5,
+                            # self.parking_place.parking_model.inner_body.angle,
+                        ]
+                    )
+                )
+            else:
+                car.controlling(keys)
 
         self.space.step(delta_time * 16)
 
@@ -346,7 +262,9 @@ class GameScene:
             cone.apply_friction()
             cone.sync()
 
-        zoom_factor = 1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
+        zoom_factor: float = (
+                1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
+        )
 
         self.render_group.camera.set_zoom(zoom_factor)
 
@@ -396,7 +314,7 @@ class GameScene:
                 )
             )
 
-    def draw(self):
+    def draw(self) -> None:
         self.render_group.camera.use()
         self.down_render_group.draw()
         for car in self.cars:

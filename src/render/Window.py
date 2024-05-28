@@ -4,14 +4,13 @@ from src.utils.Loaders import load_image
 
 
 class IOController:
-    def __init__(self):
-        self.keyboard = {}
-        self.mouse = {}
+    def __init__(self) -> None:
+        self.keyboard: dict = {}
+        self.keyboard_clicked: dict = {}
+        self.mouse: dict = {}
 
-        self.keyboard_clicked = {}
-
-        self.mouse_position = (0, 0)
-        self.mouse_delta = (0, 0)
+        self.mouse_position: tuple[float, float] = (0, 0)
+        self.mouse_delta: tuple[float, float] = (0, 0)
 
         self.clicked = False
 
@@ -48,9 +47,9 @@ class Window(arcade.Window):
         self._update_hook = None
         self._draw_hook = None
 
-        self.background_color = (90, 150, 225)
+        self.background_color: arcade.color = (90, 150, 225)
 
-        self._controller = IOController()
+        self._controller: IOController = IOController()
         self._controller.keyboard = {}
 
     def set_update_hook(self, hook: callable) -> None:

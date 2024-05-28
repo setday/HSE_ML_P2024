@@ -7,21 +7,23 @@ particles_on = True
 
 
 class ParticleShow:
-    def __init__(self):
-        self.emitters = []
+    def __init__(self) -> None:
+        self.emitters: list = []
 
-    def update(self):
+    def update(self) -> None:
         if not particles_on:
             for emitter in self.emitters:
                 emitter.kill()
+              
         for emitter in self.emitters:
             emitter.update()
         while len(self.emitters) > 0 and self.emitters[0].get_count() == 0:
             self.emitters.pop(0)
 
-    def draw(self):
+    def draw(self) -> None:
         if not particles_on:
             return
+          
         for emitter in self.emitters:
             emitter.draw()
 

@@ -8,8 +8,9 @@ from src.utils.Loaders import load_font
 
 
 class Core:
-    def __init__(self):
+    def __init__(self, train=False):
         self.window = Window(1920, 1080, "Park me")
+        
         load_font("assets/fnt/Title.ttf")
         load_font("assets/fnt/ka1.ttf")
 

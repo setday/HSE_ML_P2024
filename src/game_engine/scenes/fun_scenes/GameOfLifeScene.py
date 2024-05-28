@@ -1,31 +1,31 @@
-import numpy as np
 import arcade
+import numpy as np
 
 from src.render.RenderGroup import RenderGroup
 
 
 class GameOfLifeField:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
+    def __init__(self, width: int, height: int):
+        self.width: int = width
+        self.height: int = height
 
         # Initialize the game grid
-        self.grid = np.zeros((height, width))
+        self.grid: np.ndarray = np.zeros((height, width))
 
     def update(self):
-        new_grid = self.grid.copy()
+        new_grid: np.ndarray = self.grid.copy()
 
         for i in range(self.height):
             for j in range(self.width):
                 state = self.grid[i, j]
                 neighbours = (
-                    np.sum(
-                        self.grid[
-                            max(0, i - 1) : min(self.height, i + 2),
-                            max(0, j - 1) : min(self.width, j + 2),
-                        ]
-                    )
-                    - state
+                        np.sum(
+                            self.grid[
+                            max(0, i - 1): min(self.height, i + 2),
+                            max(0, j - 1): min(self.width, j + 2),
+                            ]
+                        )
+                        - state
                 )
 
                 if state and not 2 <= neighbours <= 3:
@@ -41,12 +41,12 @@ class GameOfLifeField:
 
 class GameOfLifeScene:
     def __init__(self):
-        self.render_group = RenderGroup()
+        self.render_group: RenderGroup = RenderGroup()
 
-        self.RESOLUTION = 10
+        self.RESOLUTION: int = 10
         self.ROWS, self.COLS = 500 // self.RESOLUTION, 500 // self.RESOLUTION
 
-        self.field = GameOfLifeField(self.COLS, self.ROWS)
+        self.field: GameOfLifeField = GameOfLifeField(self.COLS, self.ROWS)
 
         for i in range(self.ROWS):
             for j in range(self.COLS):
