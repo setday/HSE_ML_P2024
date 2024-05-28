@@ -2,8 +2,8 @@ import random
 from math import radians, degrees
 
 import arcade
-from pymunk import Vec2d, Space
 import numpy as np
+from pymunk import Vec2d, Space
 
 from src.physics.models.CarPhysicsModel import CarPhysicsModel
 from src.render.RenderGroup import RenderGroup
