@@ -101,7 +101,7 @@ class GameScene:
                 random.choice(
                     [
                         Controller.RandomController(),
-                        # Controller.AIController(random.choice(controllers)),
+                        Controller.AIController(random.choice(controllers)),
                         Controller.BrakeController(),
                     ]
                 )
