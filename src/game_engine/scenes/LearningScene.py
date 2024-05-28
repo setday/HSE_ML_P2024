@@ -1,7 +1,7 @@
+import math
 import random
 
 import pymunk
-import math
 
 from src.game_engine.controllers.Controller import AIController
 from src.game_engine.entities.ObjectFactory import ObjectFactory
@@ -89,6 +89,10 @@ class LearningScene:
 
         self.file = open("plot.txt", "w")
 
+        self.iters = 0
+        self.prev_pos = []
+        self.fitnesses = []
+
         self.reset()
 
     def reset(self):
@@ -107,9 +111,9 @@ class LearningScene:
         self.ticks_elapsed = 0
         self.iters = 0
 
-        self.prev_pos = [self.radius**2 for i in range(self.population_size)]
+        self.prev_pos = [self.radius**2 for _ in range(self.population_size)]
 
-        self.fitnesses = [0 for i in range(self.population_size)]
+        self.fitnesses = [0 for _ in range(self.population_size)]
 
     def link_models(self, models):
         for i in range(self.population_size):

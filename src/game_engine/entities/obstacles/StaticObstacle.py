@@ -1,6 +1,8 @@
 from math import degrees
-from pymunk import Space
+
 from pyglet.math import Vec2 as Vector2D
+from pymunk import Space
+
 from src.physics.models.StaticObstaclePhysicsModel import StaticObstaclePhysicsModel
 from src.render.RenderGroup import RenderGroup
 from src.render.sprites.BasicSprite import BasicSprite

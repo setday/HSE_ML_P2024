@@ -1,5 +1,6 @@
 import arcade
 from pyglet.math import Vec2 as Vector2D
+
 from src.game_engine.entities.Car import Car
 from src.render.sprites.BasicSprite import BasicSprite
 

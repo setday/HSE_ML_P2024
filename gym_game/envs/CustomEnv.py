@@ -1,8 +1,9 @@
 import gym
-from gym import spaces
 import numpy as np
-from src.game_engine.scenes.game_scene.GameScene import GameScene
+from gym import spaces
+
 from gym_game.envs.Game import Game
+from src.game_engine.scenes.game_scene.GameScene import GameScene
 
 
 class CustomEnv(gym.Env):

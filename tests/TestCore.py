@@ -1,14 +1,16 @@
 import random
+
 import arcade
+
 from src.game_engine.Core import Core
-from src.render.Window import IOController
-from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.controllers.Controller import (
     BrakeController,
     RandomController,
     AIController,
 )
+from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.entities.ParkingPlace import ParkingPlace
+from src.render.Window import IOController
 
 
 class TestCore(Core):

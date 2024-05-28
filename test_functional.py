@@ -1,6 +1,6 @@
 from src.game_engine.Core import Core
-from src.game_engine.entities.Car import Car
 from src.game_engine.controllers.Controller import KeyboardController
+from src.game_engine.entities.Car import Car
 from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle

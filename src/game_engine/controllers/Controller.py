@@ -1,11 +1,13 @@
 import pickle
+import random
+
+import arcade
+import numpy as np
 import torch
 from stable_baselines3 import DQN, A2C, PPO
+
 from models.DQNPolicy import DQNPolicy
 from src.game_engine.entities.Car import Car
-import arcade
-import random
-import numpy as np
 
 
 class Controller:
@@ -23,7 +25,9 @@ class KeyboardController(Controller):
     def __init__(self) -> None:
         super().__init__()
 
-    def handle_input(self, keys: dict = None, observation: list[float] | np.ndarray = None) -> None:
+    def handle_input(
+        self, keys: dict = None, observation: list[float] | np.ndarray = None
+    ) -> None:
         if keys.get(arcade.key.LEFT, False) or keys.get(arcade.key.A, False):
             self.car.turn_left(keys.get(arcade.key.SPACE, False))
         if keys.get(arcade.key.RIGHT, False) or keys.get(arcade.key.D, False):
@@ -58,7 +62,9 @@ class RandomController(Controller):
             sum(self.probabilities[:i]) for i in range(len(self.probabilities) + 1)
         ]
 
-    def handle_input(self, keys: dict = None, observation: list[float] | np.ndarray = None) -> None:
+    def handle_input(
+        self, keys: dict = None, observation: list[float] | np.ndarray = None
+    ) -> None:
         if self.timer == 0:
             self.action_kind = random.random()
             self.timer = 30
@@ -78,8 +84,10 @@ class RandomController(Controller):
 class BrakeController(Controller):
     def __init__(self) -> None:
         super().__init__()
-    
-    def handle_input(self, keys: dict = None, observation: list[float] | np.ndarray = None) -> None:
+
+    def handle_input(
+        self, keys: dict = None, observation: list[float] | np.ndarray = None
+    ) -> None:
         self.car.hand_brake()
 
 
@@ -110,7 +118,11 @@ class AIController(Controller):
         # for the begining input: car pos & ang and park_plc pos & ang
         self.model = model
 
-    def handle_input(self, keys: dict = None, observation: list[float] | np.ndarray = None) -> None:
+    def handle_input(
+        self, keys: dict = None, observation: list[float] | np.ndarray = None
+    ) -> None:
+        action: int = -1
+
         if self.type == "neat":
             # order: accelerate, turn_left, turn_right, brake, hand_brake
             probs = self.model.activate(observation)
@@ -136,6 +148,10 @@ class AIController(Controller):
                 action = self.model.make_action(observation)
         elif self.type == "stable_baselines":
             action, _ = self.model.predict(observation)
+
+        self.perform_action(action)
+
+    def perform_action(self, action):
         if action == 0:
             self.car.turn_left()
         if action == 1:
