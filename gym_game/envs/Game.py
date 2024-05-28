@@ -2,14 +2,14 @@ import arcade.key
 import numpy as np
 
 from src.game_engine.Core import Core
-from src.game_engine.scenes.game_scene.GameScene import GameScene
+from src.game_engine.scenes.game_scene.GameSceneCore import GameSceneCore
 from src.render.Window import IOController
 
 
 class Game:
     def __init__(self):
         self.core = Core()
-        self.core.set_scene(GameScene(True))
+        self.core.set_scene(GameSceneCore(True))
         self.state = self.observe()
 
     def observe(self):

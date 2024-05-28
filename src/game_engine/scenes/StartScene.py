@@ -1,7 +1,9 @@
 import arcade
 import arcade.gui
 
-from src.game_engine.scenes.game_scene.GameScene import GameScene
+from src.game_engine.scenes.game_scene.modes.ParkMeSecene import ParkMeScene
+from src.game_engine.scenes.game_scene.modes.SurvivalScene import SurvivalScene
+from src.game_engine.scenes.game_scene.modes.A2BScane import A2BScene
 from src.game_engine.scenes.layouts.CreditsLayout import CreditsLayout
 from src.game_engine.scenes.layouts.SettingLayout import SettingLayout
 from src.render.animator.FloatingAnimator import FloatingAnimator
@@ -24,7 +26,7 @@ def no_game(_):
 
 
 class StartScene:
-    def __init__(self, core_instance, _):
+    def __init__(self, core_instance):
         self.core_instance = core_instance
 
         self.manager = arcade.gui.UIManager()
@@ -199,7 +201,7 @@ class StartScene:
                 "clicked_bg_color": arcade.color.BLUE,
             },
         )
-        game_three_button.on_click = no_game
+        game_three_button.on_click = lambda _: self.start_game(self, "a2b")
 
         game_selector_layout = UIFullScreenLayout(
             children=[
@@ -296,12 +298,19 @@ class StartScene:
         self._effect_animator.draw()
 
     def start_game(self, _, mode: str):
-        # self.core_instance.set_scene(GameScene)
+        scene = None
+        if mode == "park":
+            scene = ParkMeScene
+        elif mode == "survive":
+            scene = SurvivalScene
+        elif mode == "a2b":
+            scene = A2BScene
+
         self._effect_animator.add_effect(
             FadeEffect(
                 duration=1,
                 fade_color=(255, 255, 255),
-                finish_callback=lambda: self.core_instance.set_scene(GameScene, mode),
+                finish_callback=lambda: self.core_instance.set_scene(scene),
             )
         )
 

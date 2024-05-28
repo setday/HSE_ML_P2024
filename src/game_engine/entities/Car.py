@@ -155,6 +155,7 @@ class Car:
                 and self.inside_parking_place
                 and self.dead_zones_intersect == 0
             )
+            # print(self.dead_zones_intersect)
             if parked_state != self.is_car_parked:
                 self.is_car_parked = parked_state
                 if self.hooks["parked_hook"] and self.is_car_parked:

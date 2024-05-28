@@ -23,7 +23,7 @@ class ParkingPlacePhysicsModel:
             pymunk.Body(body_type=pymunk.Body.STATIC),
         ]
 
-        dead_zone_width: int = 1
+        dead_zone_width: int = 2
 
         self.dead_zones[0].position = (
             position[0] - size[0] / 2 + dead_zone_width / 2,
@@ -45,16 +45,18 @@ class ParkingPlacePhysicsModel:
         self.inner_shape: pymunk.Poly = pymunk.Poly.create_box(self.inner_body, size)
         self.inner_shape.collision_type = 40
 
+        print(angle)
+
         self.dead_zones[0].angle = angle
         self.dead_zones[1].angle = angle
         self.dead_zones[2].angle = angle
         self.dead_zones[3].angle = angle
 
         self.dead_zone_shapes: list[pymunk.Poly] = [
-            pymunk.Poly.create_box(self.dead_zones[0], (dead_zone_width, size[0])),
-            pymunk.Poly.create_box(self.dead_zones[1], (dead_zone_width, size[0])),
-            pymunk.Poly.create_box(self.dead_zones[2], (size[1], dead_zone_width)),
-            pymunk.Poly.create_box(self.dead_zones[3], (size[1], dead_zone_width)),
+            pymunk.Poly.create_box(self.dead_zones[0], (dead_zone_width, size[1])),
+            pymunk.Poly.create_box(self.dead_zones[1], (dead_zone_width, size[1])),
+            pymunk.Poly.create_box(self.dead_zones[2], (size[0], dead_zone_width)),
+            pymunk.Poly.create_box(self.dead_zones[3], (size[0], dead_zone_width)),
         ]
 
         for zone in self.dead_zone_shapes:

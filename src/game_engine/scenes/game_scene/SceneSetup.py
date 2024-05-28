@@ -9,7 +9,7 @@ from src.game_engine.entities.ParkingPlace import ParkingPlace
 from src.render.sprites.BasicSprite import BasicSprite
 
 
-def setup_scene(scene, path):
+def setup_scene(scene, path, is_survive=False):
     config = read_positions(path)
     scene.background = BasicSprite(config["background"], Vector2D(0, 0))
     scene.background.update_scale(config["scale"])
@@ -72,7 +72,7 @@ def setup_scene(scene, path):
     for car in scene.cars[1:]:
         car.switch_controller(
             Controller.AIController(controllers[-1])
-            if scene.mode == "survive"
+            if is_survive
             else random.choice(
                 [
                     Controller.RandomController(),
@@ -81,7 +81,7 @@ def setup_scene(scene, path):
                 ]
             )
         )
-        if scene.mode == "survive":
+        if is_survive:
             car.health = 1000
     for x, y, angle in config.get("barriers_positions", []):
         ObjectFactory.create_object(

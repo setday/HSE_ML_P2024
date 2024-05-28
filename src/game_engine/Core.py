@@ -18,15 +18,15 @@ class Core:
 
         self.is_active: bool = False
 
-        self.set_scene(StartScene, None)
+        self.set_scene(StartScene)
 
         self.window.set_update_hook(self.on_update)
         self.window.set_draw_hook(self.on_draw)
 
-    def set_scene(self, scene, mode: str | None) -> None:
+    def set_scene(self, scene) -> None:
         if scene is None:
             scene = StartScene
-        self.scene = scene(self, mode)
+        self.scene = scene(self)
 
     def run(self) -> None:
         self.is_active = True

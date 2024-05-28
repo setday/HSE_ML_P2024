@@ -1,39 +1,30 @@
-import random
-
 import arcade.key
 import numpy as np
 import pymunk
 from arcade.experimental import Shadertoy
-from pyglet.math import Vec2 as Vector2D
 from pymunk import CollisionHandler
-from src.game_engine.entities.Car import Car
+
 import src.game_engine.controllers.Controller as Controller
 import src.game_engine.scenes.game_scene.CollisionHandlers as CollisionHandlers
+from src.game_engine.entities.Car import Car
 from src.game_engine.entities.ParkingPlace import ParkingPlace
-from src.game_engine.scenes.game_scene.SceneSetup import setup_scene
+from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
 from src.game_engine.scenes.layouts.EscapeLayout import EscapeMenuLayout
 from src.render.RenderGroup import RenderGroup
 from src.render.Window import IOController
-from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
 from src.render.particle.ParticleShow import ParticleShow
-from src.render.screen_elements.Indicator import Indicator
-from src.render.screen_elements.ScoreDisplay import ScoreDisplay
 from src.render.screen_elements.effect_animator.EffectAnimator import EffectAnimator
 from src.render.screen_elements.effect_animator.effects.FadeEffect import FadeEffect
 from src.render.screen_elements.effect_animator.effects.TextPrinter import TextPrinter
 
 
-class GameScene:
-    def __init__(self, core_instance, mode: str = "park", train: bool = False) -> None:
+class GameSceneCore:
+    def __init__(self, core_instance, train: bool = False) -> None:
         self.core_instance = core_instance
-        self.down_render_group: RenderGroup = RenderGroup()
-        self.render_group: RenderGroup = RenderGroup()
-        self.top_render_group: RenderGroup = RenderGroup()
         self.particle_show: ParticleShow = ParticleShow()
 
         self.score: list[int] = [0]
         self.train: bool = train
-        self.mode: str = mode
         ######################
         # Setup physics
         ######################
@@ -60,10 +51,10 @@ class GameScene:
             CollisionHandlers.end_collision_car_with_base_parking_place
         )
         dead_handler: CollisionHandler = self.space.add_collision_handler(10, 41)
-        dead_handler.begin = CollisionHandlers.collision_car_with_dead_parking_place
-        dead_handler.separate = (
-            CollisionHandlers.end_collision_car_with_dead_parking_place
-        )
+        # dead_handler.begin = CollisionHandlers.collision_car_with_dead_parking_place
+        # dead_handler.separate = (
+        #     CollisionHandlers.end_collision_car_with_dead_parking_place
+        # )
 
         for i in range(0, 40):
             if i == 10:
@@ -76,41 +67,22 @@ class GameScene:
             )
 
         ######################
-        # Setup game objects
+        # Setup scene if needed
         ######################
+        self.down_render_group: RenderGroup = RenderGroup()
+        self.render_group: RenderGroup = RenderGroup()
+        self.top_render_group: RenderGroup = RenderGroup()
 
         self.car_m: Car | None = None
         self.cars: list[Car] = []
         self.traffic_cones: list[MovableObstacle] = []
         self.parking_place: ParkingPlace | None = None
 
-        if self.mode == "survive":
-            setup_scene(self, "assets/maps/Survive.json")
-        elif self.mode == "park":
-            setup_scene(self, "assets/maps/ParkWithEnemies.json")
-        elif self.mode == "a=>b":
-            pass
-
         ######################
         # Screen Elements
         ######################
 
         self.screen_group: RenderGroup = RenderGroup()
-        camera_offset: Vector2D = self.screen_group.camera.get_position(1, 1)
-
-        self.indicator: Indicator = Indicator(
-            owner=self.car_m, position=camera_offset - Vector2D(200, 100)
-        )
-        self.screen_group.add(self.indicator.sprite_list)
-
-        self.score_board: ScoreDisplay = ScoreDisplay(
-            score=self.score[0],
-            position=camera_offset - Vector2D(200, 170),
-            color=(255, 220, 40),
-            font_path="assets/fnt/ka1.ttf",
-            font_name="Karmatic Arcade",
-        )
-        self.screen_group.add(self.score_board.sprite_list)
 
         ######################
         # Escape Layout
@@ -162,8 +134,8 @@ class GameScene:
         if self.is_escape_layout_open:
             return
 
-        if io_controller.is_key_clicked(arcade.key.F7):
-            self.car_m.change_health(1000)
+        # if io_controller.is_key_clicked(arcade.key.F7):
+        #     self.car_m.change_health(1000)
 
         self.update_env(io_controller, delta_time)
         self.update_screen()
@@ -185,7 +157,7 @@ class GameScene:
                             - self.parking_place.parking_model.inner_body.angle
                         )
                         % 180,
-                        self.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5,
+                        self.car_m.car_model.body.velocity.length,
                     ]
                 ),
             )
@@ -195,51 +167,9 @@ class GameScene:
         for car in self.cars:
             if car == self.car_m:
                 continue
-            if isinstance(car.controller, Controller.AIController):
-                if self.mode == "park":
-                    car.controlling(
-                        keys,
-                        np.array(
-                            [
-                                car.car_model.body.position[0]
-                                - self.parking_place.parking_model.inner_body.position[
-                                    0
-                                ],
-                                car.car_model.body.position[1]
-                                - self.parking_place.parking_model.inner_body.position[
-                                    1
-                                ],
-                                abs(
-                                    car.car_model.body.angle
-                                    - self.parking_place.parking_model.inner_body.angle
-                                    + 90
-                                )
-                                % 180,
-                                car.car_model.body.velocity.get_length_sqrd() ** 0.5,
-                            ]
-                        ),
-                    )
-                else:
-                    car.controlling(
-                        keys,
-                        np.array(
-                            [
-                                car.car_model.body.position[0]
-                                - self.car_m.car_model.body.position[0],
-                                car.car_model.body.position[1]
-                                - self.car_m.car_model.body.position[1],
-                                abs(
-                                    car.car_model.body.angle
-                                    - self.car_m.car_model.body.angle
-                                )
-                                % 180,
-                                car.car_model.body.velocity.get_length_sqrd() ** 0.5,
-                            ]
-                        ),
-                    )
-
-            else:
+            if not isinstance(car.controller, Controller.AIController):
                 car.controlling(keys)
+                continue
 
         self.space.step(delta_time * 16)
 
@@ -254,7 +184,7 @@ class GameScene:
             cone.sync()
 
         zoom_factor: float = (
-            1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
+                1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
         )
 
         self.render_group.camera.set_zoom(zoom_factor)
@@ -267,45 +197,18 @@ class GameScene:
         # Screen Elements Update
         ######################
 
-        self.indicator.update_bar()
-        self.score_board.update_score(self.score[0])
-        print(self.car_m.is_car_parked)
-        if (
-            self.car_m.health <= 0
-            and not self.is_end_state
-            or self.mode == "park"
-            and self.car_m.is_car_parked
-            or self.mode == "survive"
-            and all([car.health <= 0 for car in self.cars[1:]])
-        ):
-            self.is_end_state = True
-
-            self.effect_animator.add_effect(
-                FadeEffect(1, 0, None, (0, 0, 0, 200), True, True)
-            )
-            self.effect_animator.add_effect(
-                TextPrinter(
-                    2.3,
-                    0,
-                    None,
-                    "You   LOSE" if self.car_m.health <= 0 else "You WIN",
-                    True,
-                    None,
-                    True,
-                )
-            )
-            self.effect_animator.add_effect(
-                FadeEffect(
-                    2,
-                    2,
-                    lambda: self.core_instance.set_scene(None, None),
-                    (255, 255, 255, 255),
-                    True,
-                    True,
-                )
-            )
+        pass
 
     def draw(self) -> None:
+        self.draw_env()
+        self.draw_screen_elements()
+        self.draw_effects()
+
+    def draw_env(self):
+        ######################
+        # Environment Draw
+        ######################
+
         self.render_group.camera.use()
         self.down_render_group.draw()
         for car in self.cars:
@@ -315,14 +218,15 @@ class GameScene:
         self.particle_show.draw()
         self.top_render_group.draw()
 
+    def draw_screen_elements(self):
         ######################
         # Screen Elements Draw
         ######################
 
         self.screen_group.camera.use()
         self.screen_group.draw()
-        self.score_board.draw()
 
+    def draw_effects(self):
         ######################
         # Shaders Draw
         ######################
@@ -337,6 +241,37 @@ class GameScene:
             self.escape_layout.draw()
 
             self.upper_effect_animator.draw()
+
+    def do_lose(self):
+        self.is_end_state = True
+
+        self.effect_animator.add_effect(
+            FadeEffect(1, 0, None, (0, 0, 0, 200), True, True)
+        )
+        self.effect_animator.add_effect(
+            TextPrinter(
+                2.3,
+                0,
+                None,
+                "You   LOSE" if self.car_m.health <= 0 else "You WIN",
+                True,
+                None,
+                True,
+            )
+        )
+        self.effect_animator.add_effect(
+            FadeEffect(
+                2,
+                2,
+                lambda: self.core_instance.set_scene(None, None),
+                (255, 255, 255, 255),
+                True,
+                True,
+            )
+        )
+
+    def do_victory(self):
+        print("U win. There is no victory screen =(\n\nBut you can try again!")
 
     def switch_escape_layout(self):
         if self.is_end_state:
