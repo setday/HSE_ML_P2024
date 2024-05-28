@@ -3,7 +3,9 @@ from arcade.gui import UIFlatButton, UITextureButton, UIAnchorWidget, UIBoxLayou
 
 import src.render.particle.ParticleShow as ParticleShow
 from src.render.screen_elements.ui_components.UICheckButton import UICheckButton
-from src.render.screen_elements.ui_components.UIFullScreenLayout import UIFullScreenLayout
+from src.render.screen_elements.ui_components.UIFullScreenLayout import (
+    UIFullScreenLayout,
+)
 from src.render.screen_elements.ui_components.UISlider import UISlider
 from src.utils.Loaders import load_texture
 
@@ -30,7 +32,7 @@ class SettingLayout(UIFullScreenLayout):
             ),
             scale=6,
             checked=_sound_level != 0,
-            on_change=lambda _: self.set_sound_level()
+            on_change=lambda _: self.set_sound_level(),
         )
 
         self.sound_slider = UISlider(
@@ -64,7 +66,7 @@ class SettingLayout(UIFullScreenLayout):
             texture=load_texture("assets/pic/buttons/Arrows/Up/normal.png"),
             texture_hovered=load_texture("assets/pic/buttons/Arrows/Up/hovered.png"),
             texture_pressed=load_texture("assets/pic/buttons/Arrows/Up/pressed.png"),
-            scale=7
+            scale=7,
         )
         back_button.on_click = back_callback
 
@@ -90,7 +92,7 @@ class SettingLayout(UIFullScreenLayout):
                     anchor_x="center",
                     anchor_y="top",
                     align_y=-75,
-                )
+                ),
             ]
         )
 
@@ -119,7 +121,9 @@ class SettingLayout(UIFullScreenLayout):
         self.sound_button.switch_state(_sound_level != 0)
         self.sound_slider.value = _sound_level
 
-        self.particles_button.text = "Particles On" if _is_particles_on else "Particles Off"
+        self.particles_button.text = (
+            "Particles On" if _is_particles_on else "Particles Off"
+        )
         self.particles_button._style = {
             "font_color": WHITE,
             "bg_color": GREEN if _is_particles_on else RED,

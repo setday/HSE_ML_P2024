@@ -4,7 +4,7 @@ from arcade.gui import UILabel
 
 
 class UISuperText(UILabel):
-    """ A simple text label. Also supports multiline text.
+    """A simple text label. Also supports multiline text.
     In case you want to scroll text use a :class:`UITextArea`
     By default a :class:`UILabel` will fit its initial content,
     if the text changed use :meth:`UILabel.fit_content` to adjust the size.
@@ -37,44 +37,68 @@ class UISuperText(UILabel):
     :param style: Not used.
     """
 
-    def __init__(self,
-                 x: float = 0,
-                 y: float = 0,
-                 width: float | None = None,
-                 height: float | None = None,
-                 text: str = "",
-                 font_name=('Arial',),
-                 font_size: float = 12,
-                 text_color: arcade.Color = (255, 255, 255, 255),
-                 bold=False,
-                 italic=False,
-                 stretch=False,
-                 anchor_x='left',
-                 anchor_y='bottom',
-                 align='left',
-                 dpi=None,
-                 multiline: bool = False,
-                 size_hint=None,
-                 size_hint_min=None,
-                 size_hint_max=None,
-                 style=None,
-                 **kwargs):
-        super().__init__(x, y, width, height, text, font_name, font_size, text_color, bold, italic, stretch, anchor_x,
-                         anchor_y, align, dpi, False, size_hint, size_hint_min, size_hint_max, style, **kwargs)
-        self.label = pyglet.text.Label(text=text,
-                                       font_name=font_name,
-                                       font_size=font_size,
-                                       color=arcade.get_four_byte_color(text_color),
-                                       width=width,
-                                       height=height,
-                                       bold=bold,
-                                       italic=italic,
-                                       stretch=stretch,
-                                       anchor_x=anchor_x,
-                                       anchor_y=anchor_y,
-                                       align=align,
-                                       dpi=dpi,
-                                       multiline=multiline,
-                                       )
+    def __init__(
+        self,
+        x: float = 0,
+        y: float = 0,
+        width: float | None = None,
+        height: float | None = None,
+        text: str = "",
+        font_name=("Arial",),
+        font_size: float = 12,
+        text_color: arcade.Color = (255, 255, 255, 255),
+        bold=False,
+        italic=False,
+        stretch=False,
+        anchor_x="left",
+        anchor_y="bottom",
+        align="left",
+        dpi=None,
+        multiline: bool = False,
+        size_hint=None,
+        size_hint_min=None,
+        size_hint_max=None,
+        style=None,
+        **kwargs
+    ):
+        super().__init__(
+            x,
+            y,
+            width,
+            height,
+            text,
+            font_name,
+            font_size,
+            text_color,
+            bold,
+            italic,
+            stretch,
+            anchor_x,
+            anchor_y,
+            align,
+            dpi,
+            False,
+            size_hint,
+            size_hint_min,
+            size_hint_max,
+            style,
+            **kwargs
+        )
+        self.label = pyglet.text.Label(
+            text=text,
+            font_name=font_name,
+            font_size=font_size,
+            color=arcade.get_four_byte_color(text_color),
+            width=width,
+            height=height,
+            bold=bold,
+            italic=italic,
+            stretch=stretch,
+            anchor_x=anchor_x,
+            anchor_y=anchor_y,
+            align=align,
+            dpi=dpi,
+            multiline=multiline,
+        )
 
         self._rect = self._rect.resize(height=self.label.content_height)

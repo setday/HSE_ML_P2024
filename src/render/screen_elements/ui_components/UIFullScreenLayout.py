@@ -14,7 +14,14 @@ class UIFullScreenLayout(UILayout):
 
     def __init__(self, children: List[UIWidget], style: dict = None):
         window = arcade.get_window()
-        super().__init__(x=0, y=0, width=window.width, height=window.height, children=children, style=style)
+        super().__init__(
+            x=0,
+            y=0,
+            width=window.width,
+            height=window.height,
+            children=children,
+            style=style,
+        )
 
     def do_layout(self):
         window = arcade.get_window()

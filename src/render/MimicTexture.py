@@ -10,23 +10,28 @@ class MimicTexture(Texture):
     Pixelation is supported by this class.
     """
 
-    def __init__(self,
-                 name: str,
-                 image: PIL.Image.Image = None,
-                 hit_box_algorithm: Optional[str] = "Simple",
-                 hit_box_detail: float = 4.5,
-                 pixelated: bool = True):
+    def __init__(
+        self,
+        name: str,
+        image: PIL.Image.Image = None,
+        hit_box_algorithm: Optional[str] = "Simple",
+        hit_box_detail: float = 4.5,
+        pixelated: bool = True,
+    ):
         super().__init__(name, image, hit_box_algorithm, hit_box_detail)
 
         self.pixelated = pixelated
 
-    def draw_sized(self,
-                   center_x: float, center_y: float,
-                   width: float,
-                   height: float,
-                   angle: float = 0,
-                   alpha: int = 255):
-        """ Draw a texture with a specific width and height. """
+    def draw_sized(
+        self,
+        center_x: float,
+        center_y: float,
+        width: float,
+        height: float,
+        angle: float = 0,
+        alpha: int = 255,
+    ):
+        """Draw a texture with a specific width and height."""
 
         self._create_cached_sprite()
         if self._sprite and self._sprite_list:
@@ -38,11 +43,14 @@ class MimicTexture(Texture):
             self._sprite.alpha = alpha
             self._sprite_list.draw(pixelated=self.pixelated)
 
-    def draw_scaled(self, center_x: float, center_y: float,
-                    scale: float = 1.0,
-                    angle: float = 0,
-                    alpha: int = 255):
-
+    def draw_scaled(
+        self,
+        center_x: float,
+        center_y: float,
+        scale: float = 1.0,
+        angle: float = 0,
+        alpha: int = 255,
+    ):
         """
         Draw the texture.
 

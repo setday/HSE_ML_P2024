@@ -10,12 +10,12 @@ from src.render.sprites.BasicRect import BasicRect
 
 class ParkingPlace:
     def __init__(
-            self,
-            render_group: RenderGroup,
-            space: Space,
-            position: Vector2D | tuple[float, float],
-            size: tuple[float, float] = (65, 110),
-            angle: float = 0,
+        self,
+        render_group: RenderGroup,
+        space: Space,
+        position: Vector2D | tuple[float, float],
+        size: tuple[float, float] = (65, 110),
+        angle: float = 0,
     ):
         # self.base_view = BasicSprite("assets/parking_place_background.png", position)
         # self.dead_view = BasicSprite("assets/parking_place_face.png", position)

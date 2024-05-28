@@ -9,8 +9,12 @@ from src.render.animator.WanderAnimator import WanderAnimator
 from src.render.screen_elements.effect_animator.EffectAnimator import EffectAnimator
 from src.render.screen_elements.effect_animator.effects.FadeEffect import FadeEffect
 from src.render.screen_elements.ui_components.UIAnimatorWidget import UIAnimatableWidget
-from src.render.screen_elements.ui_components.UIFullScreenLayout import UIFullScreenLayout
-from src.render.screen_elements.ui_components.UISuperAnchorWidget import UISuperAnchorWidget
+from src.render.screen_elements.ui_components.UIFullScreenLayout import (
+    UIFullScreenLayout,
+)
+from src.render.screen_elements.ui_components.UISuperAnchorWidget import (
+    UISuperAnchorWidget,
+)
 from src.render.screen_elements.ui_components.UITexture import UITexture
 from src.utils.Loaders import load_texture
 
@@ -34,11 +38,14 @@ class StartScene:
             anchor_x="center",
             anchor_y="bottom",
             child=UITexture(
-                texture=load_texture("assets/pic/extra/Clouds.png"),
-                scale=15
+                texture=load_texture("assets/pic/extra/Clouds.png"), scale=15
             ),
             animator_type=WanderAnimator,
-            animator_params={"limits_x": (-3000, 3000), "limits_y": (0, 0), "speed": 0.02},
+            animator_params={
+                "limits_x": (-3000, 3000),
+                "limits_y": (0, 0),
+                "speed": 0.02,
+            },
         )
 
         self.manager.add(self.background_animator)
@@ -63,7 +70,7 @@ class StartScene:
             texture=load_texture("assets/pic/buttons/Play/normal.png"),
             texture_hovered=load_texture("assets/pic/buttons/Play/hovered.png"),
             texture_pressed=load_texture("assets/pic/buttons/Play/pressed.png"),
-            scale=8
+            scale=8,
         )
         play_button.on_click = self.go_game_selector
 
@@ -71,7 +78,7 @@ class StartScene:
             texture=load_texture("assets/pic/buttons/Credits/normal.png"),
             texture_hovered=load_texture("assets/pic/buttons/Credits/hovered.png"),
             texture_pressed=load_texture("assets/pic/buttons/Credits/pressed.png"),
-            scale=8
+            scale=8,
         )
         credits_button.on_click = self.go_credits
 
@@ -79,7 +86,7 @@ class StartScene:
             texture=load_texture("assets/pic/buttons/Exit/normal.png"),
             texture_hovered=load_texture("assets/pic/buttons/Exit/hovered.png"),
             texture_pressed=load_texture("assets/pic/buttons/Exit/pressed.png"),
-            scale=8
+            scale=8,
         )
         exit_button.on_click = lambda event: self.core_instance.stop()
 
@@ -87,7 +94,7 @@ class StartScene:
             texture=load_texture("assets/pic/buttons/Settings/normal.png"),
             texture_hovered=load_texture("assets/pic/buttons/Settings/hovered.png"),
             texture_pressed=load_texture("assets/pic/buttons/Settings/pressed.png"),
-            scale=7
+            scale=7,
         )
         setting_button.on_click = self.go_settings
 
@@ -142,7 +149,7 @@ class StartScene:
             texture=load_texture("assets/pic/buttons/Arrows/Left/normal.png"),
             texture_hovered=load_texture("assets/pic/buttons/Arrows/Left/hovered.png"),
             texture_pressed=load_texture("assets/pic/buttons/Arrows/Left/pressed.png"),
-            scale=7
+            scale=7,
         )
         back_button.on_click = self.go_main
 
@@ -158,7 +165,7 @@ class StartScene:
                 "hover_bg_color": arcade.color.BLUE,
                 "clicked_font_color": arcade.color.WHITE,
                 "clicked_bg_color": arcade.color.BLUE,
-            }
+            },
         )
         game_one_button.on_click = self.start_game
 
@@ -174,7 +181,7 @@ class StartScene:
                 "hover_bg_color": arcade.color.BLUE,
                 "clicked_font_color": arcade.color.WHITE,
                 "clicked_bg_color": arcade.color.BLUE,
-            }
+            },
         )
         game_two_button.on_click = no_game
 
@@ -190,7 +197,7 @@ class StartScene:
                 "hover_bg_color": arcade.color.BLUE,
                 "clicked_font_color": arcade.color.WHITE,
                 "clicked_bg_color": arcade.color.BLUE,
-            }
+            },
         )
         game_three_button.on_click = no_game
 
@@ -198,13 +205,9 @@ class StartScene:
             children=[
                 arcade.gui.UIAnchorWidget(
                     child=arcade.gui.UIBoxLayout(
-                        children=[
-                            game_one_button,
-                            game_two_button,
-                            game_three_button
-                        ],
+                        children=[game_one_button, game_two_button, game_three_button],
                         space_between=20,
-                        vertical=False
+                        vertical=False,
                     )
                 ),
                 arcade.gui.UIAnchorWidget(
@@ -237,8 +240,12 @@ class StartScene:
             child=arcade.gui.UIBoxLayout(
                 children=[
                     arcade.gui.UIBoxLayout(
-                        children=[credits_layout, main_screen_layout, game_selector_layout],
-                        vertical=False
+                        children=[
+                            credits_layout,
+                            main_screen_layout,
+                            game_selector_layout,
+                        ],
+                        vertical=False,
                     ),
                     settings_layout,
                 ]
@@ -256,7 +263,7 @@ class StartScene:
                 delay=0.5,
                 fade_color=(255, 255, 255),
                 fade_in=False,
-                finish_callback=lambda: self.go_main(None)
+                finish_callback=lambda: self.go_main(None),
             )
         )
 
@@ -266,14 +273,20 @@ class StartScene:
         self.button_animator.update_animation(delta_time)
         self.title_animator.update_animation(delta_time)
 
-        if io_controller.is_key_clicked(arcade.key.ESCAPE) or io_controller.is_key_clicked(arcade.key.BACKSPACE):
+        if io_controller.is_key_clicked(
+            arcade.key.ESCAPE
+        ) or io_controller.is_key_clicked(arcade.key.BACKSPACE):
             self.go_main(None)
 
         delta_translation = delta_time / 16 * 50
         delta_translation = min(delta_translation, 0.5)
 
-        self.screen_layout.align_x += (self._target_offset_x - self.screen_layout.align_x) * delta_translation
-        self.screen_layout.align_y += (self._target_offset_y - self.screen_layout.align_y) * delta_translation
+        self.screen_layout.align_x += (
+            self._target_offset_x - self.screen_layout.align_x
+        ) * delta_translation
+        self.screen_layout.align_y += (
+            self._target_offset_y - self.screen_layout.align_y
+        ) * delta_translation
 
         self._effect_animator.update(delta_time)
 
@@ -288,7 +301,7 @@ class StartScene:
             FadeEffect(
                 duration=1,
                 fade_color=(255, 255, 255),
-                finish_callback=lambda: self.core_instance.set_scene(GameScene)
+                finish_callback=lambda: self.core_instance.set_scene(GameScene),
             )
         )
 

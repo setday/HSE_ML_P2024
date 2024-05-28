@@ -84,36 +84,17 @@ class GameScene:
 
         setup_scene(self, "assets/maps/ParkWithEnemies.json")
         self.parking_place = ParkingPlace(
-            self.down_render_group, self.space,
-            position=(
-                (random.randint(-500, 500), random.randint(-500, 500))
-            ),
-            angle=random.randint(0, 360)
+            self.down_render_group,
+            self.space,
+            position=((random.randint(-500, 500), random.randint(-500, 500))),
+            angle=random.randint(0, 360),
         )
         controllers = [  # noqa: F841
-            {
-                "type": "sklearn",
-                "path": "models_bin/CEM.pkl"
-            },
-            {
-                "type": "pytorch",
-                "path": "models_bin/torch.pt"
-            },
-            {
-                "type": "stable_baselines",
-                "policy": "DQN",
-                "path": "models_bin/DQN"
-            },
-            {
-                "type": "stable_baselines",
-                "policy": "A2C",
-                "path": "models_bin/A2C"
-            },
-            {
-                "type": "stable_baselines",
-                "policy": "PPO",
-                "path": "models_bin/PPO"
-            }
+            {"type": "sklearn", "path": "models_bin/CEM.pkl"},
+            {"type": "pytorch", "path": "models_bin/torch.pt"},
+            {"type": "stable_baselines", "policy": "DQN", "path": "models_bin/DQN"},
+            {"type": "stable_baselines", "policy": "A2C", "path": "models_bin/A2C"},
+            {"type": "stable_baselines", "policy": "PPO", "path": "models_bin/PPO"},
         ]
         for car in self.cars[1:]:
             car.switch_controller(
@@ -174,7 +155,9 @@ class GameScene:
         ######################
 
         self.effect_animator = EffectAnimator()
-        self.effect_animator.add_effect(FadeEffect(1, 0, None, (255, 255, 255, 255), False))
+        self.effect_animator.add_effect(
+            FadeEffect(1, 0, None, (255, 255, 255, 255), False)
+        )
 
         self.upper_effect_animator = EffectAnimator()
 
@@ -216,10 +199,11 @@ class GameScene:
                         abs(
                             self.car_m.car_model.body.angle
                             - self.parking_place.parking_model.inner_body.angle
-                        ) % 180,
+                        )
+                        % 180,
                         self.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5,
                     ]
-                )
+                ),
             )
         else:
             self.car_m.controlling(keys)
@@ -239,11 +223,12 @@ class GameScene:
                             abs(
                                 self.car_m.car_model.body.angle
                                 - self.parking_place.parking_model.inner_body.angle
-                            ) % 180,
+                            )
+                            % 180,
                             self.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5,
                             # self.parking_place.parking_model.inner_body.angle,
                         ]
-                    )
+                    ),
                 )
             else:
                 car.controlling(keys)
@@ -261,7 +246,7 @@ class GameScene:
             cone.sync()
 
         zoom_factor: float = (
-                1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
+            1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
         )
 
         self.render_group.camera.set_zoom(zoom_factor)
@@ -281,25 +266,10 @@ class GameScene:
             self.is_end_state = True
 
             self.effect_animator.add_effect(
-                FadeEffect(
-                    1,
-                    0,
-                    None,
-                    (0, 0, 0, 200),
-                    True,
-                    True
-                )
+                FadeEffect(1, 0, None, (0, 0, 0, 200), True, True)
             )
             self.effect_animator.add_effect(
-                TextPrinter(
-                    2.3,
-                    0,
-                    None,
-                    "You   LOSE",
-                    True,
-                    None,
-                    True
-                )
+                TextPrinter(2.3, 0, None, "You   LOSE", True, None, True)
             )
             self.effect_animator.add_effect(
                 FadeEffect(
@@ -308,7 +278,7 @@ class GameScene:
                     lambda: self.core_instance.set_scene(None),
                     (255, 255, 255, 255),
                     True,
-                    True
+                    True,
                 )
             )
 
@@ -336,9 +306,7 @@ class GameScene:
 
         self.tick += 1
 
-        self.shader_vin.render(
-            time=self.tick / 125, time_delta=self.car_m.health
-        )
+        self.shader_vin.render(time=self.tick / 125, time_delta=self.car_m.health)
 
         self.effect_animator.draw()
 
@@ -355,14 +323,7 @@ class GameScene:
 
         if self.is_escape_layout_open:
             self.effect_animator.add_effect(
-                FadeEffect(
-                    0.5,
-                    0,
-                    None,
-                    (0, 0, 0, 100),
-                    True,
-                    True
-                )
+                FadeEffect(0.5, 0, None, (0, 0, 0, 100), True, True)
             )
             self.is_escape_layout_renders = True
             self.escape_layout.show()
@@ -375,7 +336,7 @@ class GameScene:
                     0,
                     lambda: self.show_escape_layout(False),
                     (0, 0, 0, 100),
-                    False
+                    False,
                 )
             )
             self.escape_layout.hide()
@@ -389,7 +350,7 @@ class GameScene:
                 lambda: self.core_instance.set_scene(None),
                 (255, 255, 255, 255),
                 True,
-                True
+                True,
             )
         )
 

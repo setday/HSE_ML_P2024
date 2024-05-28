@@ -19,13 +19,13 @@ class GameOfLifeField:
             for j in range(self.width):
                 state = self.grid[i, j]
                 neighbours = (
-                        np.sum(
-                            self.grid[
-                                max(0, i - 1): min(self.height, i + 2),
-                                max(0, j - 1): min(self.width, j + 2),
-                            ]
-                        )
-                        - state
+                    np.sum(
+                        self.grid[
+                            max(0, i - 1) : min(self.height, i + 2),
+                            max(0, j - 1) : min(self.width, j + 2),
+                        ]
+                    )
+                    - state
                 )
 
                 if state and not 2 <= neighbours <= 3:

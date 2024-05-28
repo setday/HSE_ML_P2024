@@ -5,15 +5,13 @@ from src.render.screen_elements.effect_animator.BasicEffect import BasicEffect
 
 class FadeEffect(BasicEffect):
     def __init__(
-            self,
-            duration: float = 1,
-            delay: float = 0,
-            finish_callback=None,
-
-            fade_color: tuple[int, int, int] | tuple[int, int, int, int] = (0, 0, 0),
-            fade_in: bool = True,
-
-            stay_after_finish: bool = False,
+        self,
+        duration: float = 1,
+        delay: float = 0,
+        finish_callback=None,
+        fade_color: tuple[int, int, int] | tuple[int, int, int, int] = (0, 0, 0),
+        fade_in: bool = True,
+        stay_after_finish: bool = False,
     ):
         """
         Fade effect

@@ -7,15 +7,15 @@ from src.utils.Loaders import load_font
 
 class ScoreDisplay:
     def __init__(
-            self,
-            score: int = 0,
-            position: Vector2D = Vector2D(300, 300),
-            font_path: str = "assets/fnt/ka1.ttf",
-            font_name: str = "Karmatic Arcade",
-            color: arcade.color = arcade.color.WHITE,
-            size: int = 25,
-            width: int = 200,
-            icon: str = "assets/pic/icon/coin_2.png",
+        self,
+        score: int = 0,
+        position: Vector2D = Vector2D(300, 300),
+        font_path: str = "assets/fnt/ka1.ttf",
+        font_name: str = "Karmatic Arcade",
+        color: arcade.color = arcade.color.WHITE,
+        size: int = 25,
+        width: int = 200,
+        icon: str = "assets/pic/icon/coin_2.png",
     ) -> None:
         if font_path is not None:
             load_font(font_path)
@@ -74,6 +74,6 @@ class ScoreDisplay:
     def update_score(self, new_score: float) -> None:
         self.target_score = new_score
         self.current_score -= (
-                                      self.current_score - self.target_score
-                              ) * self.change_speed
+            self.current_score - self.target_score
+        ) * self.change_speed
         self.text.text = int(self.current_score)

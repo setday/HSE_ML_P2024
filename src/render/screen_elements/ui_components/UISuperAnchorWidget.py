@@ -20,7 +20,14 @@ class UISuperAnchorWidget(UIAnchorWidget):
     :param style: not used
     """
 
-    def __init__(self, *, child: UIWidget, relative_x: bool = False, relative_y: bool = False, **kwargs):
+    def __init__(
+        self,
+        *,
+        child: UIWidget,
+        relative_x: bool = False,
+        relative_y: bool = False,
+        **kwargs
+    ):
         self.relative_x = relative_x
         self.relative_y = relative_y
 
@@ -33,7 +40,11 @@ class UISuperAnchorWidget(UIAnchorWidget):
 
         rect = self.rect
         rect_copy = self.rect.resize(0, 0).align_center(0, 0)
-        parent_rect = self.parent.rect if self.parent else rect_copy.resize(*arcade.get_window().get_size())
+        parent_rect = (
+            self.parent.rect
+            if self.parent
+            else rect_copy.resize(*arcade.get_window().get_size())
+        )
 
         anchor_x = "center_x" if self.anchor_x == "center" else self.anchor_x
         own_anchor_x_value = getattr(rect, anchor_x)

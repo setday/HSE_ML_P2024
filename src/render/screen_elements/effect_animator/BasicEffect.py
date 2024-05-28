@@ -1,11 +1,10 @@
 class BasicEffect:
     def __init__(
-            self,
-            duration: float = 1,
-            delay: float = 0,
-            finish_callback=None,
-
-            stay_after_finish: bool = False,
+        self,
+        duration: float = 1,
+        delay: float = 0,
+        finish_callback=None,
+        stay_after_finish: bool = False,
     ):
         """
         Basic effect

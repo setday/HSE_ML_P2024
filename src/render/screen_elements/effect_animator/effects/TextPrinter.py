@@ -5,17 +5,14 @@ from src.render.screen_elements.effect_animator.BasicEffect import BasicEffect
 
 class TextPrinter(BasicEffect):
     def __init__(
-            self,
-            duration: float = 1,
-            delay: float = 0,
-            finish_callback=None,
-
-            text_to_print: str = "",
-            appear: bool = True,
-
-            text_object: arcade.Text = None,
-
-            stay_after_finish: bool = False,
+        self,
+        duration: float = 1,
+        delay: float = 0,
+        finish_callback=None,
+        text_to_print: str = "",
+        appear: bool = True,
+        text_object: arcade.Text = None,
+        stay_after_finish: bool = False,
     ):
         """
         Fade effect

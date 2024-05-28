@@ -2,8 +2,12 @@ from arcade.gui import UITextureButton, UIBoxLayout, UIAnchorWidget, UIManager
 from arcade.key import ESCAPE, BACKSPACE
 
 from src.game_engine.scenes.layouts.SettingLayout import SettingLayout
-from src.render.screen_elements.ui_components.UIFullScreenLayout import UIFullScreenLayout
-from src.render.screen_elements.ui_components.UISuperAnchorWidget import UISuperAnchorWidget
+from src.render.screen_elements.ui_components.UIFullScreenLayout import (
+    UIFullScreenLayout,
+)
+from src.render.screen_elements.ui_components.UISuperAnchorWidget import (
+    UISuperAnchorWidget,
+)
 from src.render.screen_elements.ui_components.UITexture import UITexture
 from src.utils.Loaders import load_texture
 
@@ -31,7 +35,7 @@ class EscapeMenuLayout:
             texture=load_texture("assets/pic/buttons/Close/normal.png"),
             texture_hovered=load_texture("assets/pic/buttons/Close/hovered.png"),
             texture_pressed=load_texture("assets/pic/buttons/Close/pressed.png"),
-            scale=7
+            scale=7,
         )
         back_button.on_click = close_callback
 
@@ -39,7 +43,7 @@ class EscapeMenuLayout:
             texture=load_texture("assets/pic/buttons/Settings/normal.png"),
             texture_hovered=load_texture("assets/pic/buttons/Settings/hovered.png"),
             texture_pressed=load_texture("assets/pic/buttons/Settings/pressed.png"),
-            scale=7
+            scale=7,
         )
         setting_button.on_click = self.go_settings
 
@@ -47,7 +51,7 @@ class EscapeMenuLayout:
             texture=load_texture("assets/pic/buttons/Home/normal.png"),
             texture_hovered=load_texture("assets/pic/buttons/Home/hovered.png"),
             texture_pressed=load_texture("assets/pic/buttons/Home/pressed.png"),
-            scale=7
+            scale=7,
         )
         home_button.on_click = home_callback
 
@@ -57,14 +61,11 @@ class EscapeMenuLayout:
                 back_button,
                 setting_button,
                 home_button,
-            ]
+            ],
         )
 
         buttons_wrapper = UIAnchorWidget(
-            anchor_x="left",
-            anchor_y="center",
-            align_x=10,
-            child=buttons_layout
+            anchor_x="left", anchor_y="center", align_x=10, child=buttons_layout
         )
 
         self.screen_layout = UISuperAnchorWidget(
@@ -75,12 +76,10 @@ class EscapeMenuLayout:
             align_x=-0.1,
             child=UIBoxLayout(
                 children=[
-                    UIFullScreenLayout(
-                        children=[buttons_wrapper]
-                    ),
+                    UIFullScreenLayout(children=[buttons_wrapper]),
                     SettingLayout(self.go_selector),
                 ]
-            )
+            ),
         )
         self.manager.add(self.screen_layout)
 
@@ -90,14 +89,20 @@ class EscapeMenuLayout:
         self._target_offset_y = 0
 
     def update(self, io_controller, delta_time):
-        if io_controller.is_key_clicked(ESCAPE) or io_controller.is_key_clicked(BACKSPACE):
+        if io_controller.is_key_clicked(ESCAPE) or io_controller.is_key_clicked(
+            BACKSPACE
+        ):
             self.close_callback(None)
 
         delta_translation = delta_time / 16 * 50
         delta_translation = min(delta_translation, 0.5)
 
-        self.screen_layout.align_x += (self._target_offset_x - self.screen_layout.align_x) * delta_translation
-        self.screen_layout.align_y += (self._target_offset_y - self.screen_layout.align_y) * delta_translation
+        self.screen_layout.align_x += (
+            self._target_offset_x - self.screen_layout.align_x
+        ) * delta_translation
+        self.screen_layout.align_y += (
+            self._target_offset_y - self.screen_layout.align_y
+        ) * delta_translation
 
     def draw(self):
         self.manager.draw()

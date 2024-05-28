@@ -19,18 +19,18 @@ class UICheckButton(UITextureButton):
     """
 
     def __init__(
-            self,
-            x: float = 0,
-            y: float = 0,
-            width: float = None,
-            height: float = None,
-            textures_checked: tuple[Texture, Texture, Texture] | None = None,
-            textures_unchecked: tuple[Texture, Texture, Texture] | None = None,
-            scale: float = None,
-            style=None,
-            on_change: callable = None,
-            checked: bool = False,
-            **kwargs
+        self,
+        x: float = 0,
+        y: float = 0,
+        width: float = None,
+        height: float = None,
+        textures_checked: tuple[Texture, Texture, Texture] | None = None,
+        textures_unchecked: tuple[Texture, Texture, Texture] | None = None,
+        scale: float = None,
+        style=None,
+        on_change: callable = None,
+        checked: bool = False,
+        **kwargs
     ):
         self.textures_checked = textures_checked
         self.textures_unchecked = textures_unchecked
@@ -54,9 +54,15 @@ class UICheckButton(UITextureButton):
     def switch_state(self, state: bool):
         self.checked = state
 
-        self._tex = self.textures_checked[0] if self.checked else self.textures_unchecked[0]
-        self._tex_hovered = self.textures_checked[1] if self.checked else self.textures_unchecked[1]
-        self._tex_pressed = self.textures_checked[2] if self.checked else self.textures_unchecked[2]
+        self._tex = (
+            self.textures_checked[0] if self.checked else self.textures_unchecked[0]
+        )
+        self._tex_hovered = (
+            self.textures_checked[1] if self.checked else self.textures_unchecked[1]
+        )
+        self._tex_pressed = (
+            self.textures_checked[2] if self.checked else self.textures_unchecked[2]
+        )
 
     def on_click(self, event: UIOnClickEvent):
         self.switch_state(not self.checked)

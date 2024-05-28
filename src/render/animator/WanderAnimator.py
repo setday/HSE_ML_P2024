@@ -30,11 +30,11 @@ class WanderParameterAnimator(BasicAnimator):
 
 class WanderAnimator(BasicAnimator):
     def __init__(
-            self,
-            instance: Any,
-            limits_x: tuple[float, float],
-            limits_y: tuple[float, float],
-            speed: float = 1,
+        self,
+        instance: Any,
+        limits_x: tuple[float, float],
+        limits_y: tuple[float, float],
+        speed: float = 1,
     ):
         if not hasattr(instance, "x") or not hasattr(instance, "y"):
             raise ValueError("Instance must have x and y attributes")

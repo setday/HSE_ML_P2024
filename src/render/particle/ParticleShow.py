@@ -27,7 +27,7 @@ class ParticleShow:
             emitter.draw()
 
     def add_burst(
-            self, center_xy: Tuple[int, int], textures: List[str]
+        self, center_xy: Tuple[int, int], textures: List[str]
     ) -> arcade.Emitter | None:
         if not particles_on:
             return None

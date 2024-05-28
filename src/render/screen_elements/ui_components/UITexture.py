@@ -22,15 +22,17 @@ class UITexture(UIWidget):
     :param size_hint_max: max width and height in pixel
     """
 
-    def __init__(self,
-                 child: UIWidget = None,
-                 x: float = 0,
-                 y: float = 0,
-                 width: float = None,
-                 height: float = None,
-                 texture: Texture = None,
-                 scale: float = None,
-                 **kwargs):
+    def __init__(
+        self,
+        child: UIWidget = None,
+        x: float = 0,
+        y: float = 0,
+        width: float = None,
+        height: float = None,
+        texture: Texture = None,
+        scale: float = None,
+        **kwargs
+    ):
 
         if width is None and texture is not None:
             width = texture.width

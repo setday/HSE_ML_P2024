@@ -1,6 +1,8 @@
 from arcade.gui import UIWidget
 
-from src.render.screen_elements.ui_components.UISuperAnchorWidget import UISuperAnchorWidget
+from src.render.screen_elements.ui_components.UISuperAnchorWidget import (
+    UISuperAnchorWidget,
+)
 
 
 class UIAnimatableWidget(UISuperAnchorWidget):
@@ -19,7 +21,7 @@ class UIAnimatableWidget(UISuperAnchorWidget):
     """
 
     def __init__(
-            self, *, child: UIWidget, animator_type=None, animator_params=None, **kwargs
+        self, *, child: UIWidget, animator_type=None, animator_params=None, **kwargs
     ):
         self.delta_align_x = 0
         self.delta_align_y = 0

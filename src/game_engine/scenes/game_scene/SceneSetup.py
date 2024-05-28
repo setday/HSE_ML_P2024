@@ -19,7 +19,11 @@ def setup_scene(scene, path):
         render_group=scene.render_group,
         space=scene.space,
         object_type="car",
-        position=(random.randint(-500, 500), random.randint(-500, 500)) if scene.train else (0, -100),
+        position=(
+            (random.randint(-500, 500), random.randint(-500, 500))
+            if scene.train
+            else (0, -100)
+        ),
         car_model="blue_car",
     )
 

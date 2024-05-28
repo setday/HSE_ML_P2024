@@ -16,8 +16,8 @@ def collision_car_with_car(arbiter: pymunk.Arbiter, _, data: dict) -> bool:
     car2: Car = arbiter.shapes[1].super
 
     delta_score: float = (
-                                 car1.car_model.body.velocity - car2.car_model.body.velocity
-                         ).get_length_sqrd() / 30
+        car1.car_model.body.velocity - car2.car_model.body.velocity
+    ).get_length_sqrd() / 30
     data["score"][0] -= delta_score
 
     if car1.car_model.body.velocity.get_length_sqrd() > 10:
@@ -89,7 +89,7 @@ def collision_car_with_obstacle(arbiter: pymunk.Arbiter, _, data: dict) -> None:
 
     if isinstance(cone, StaticObstacle):
         delta_score = health_decreation = (
-                car.car_model.body.velocity.get_length_sqrd() / 50
+            car.car_model.body.velocity.get_length_sqrd() / 50
         )
 
         data["score"][0] -= delta_score

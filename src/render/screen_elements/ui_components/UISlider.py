@@ -1,5 +1,11 @@
 from arcade import Texture
-from arcade.gui import UIInteractiveWidget, Surface, UIEvent, UIMouseDragEvent, UIOnClickEvent
+from arcade.gui import (
+    UIInteractiveWidget,
+    Surface,
+    UIEvent,
+    UIMouseDragEvent,
+    UIOnClickEvent,
+)
 
 
 class UISlider(UIInteractiveWidget):
@@ -21,21 +27,29 @@ class UISlider(UIInteractiveWidget):
     :param size_hint_max: max width and height in pixel
     """
 
-    def __init__(self,
-                 textures: tuple[
-                     Texture, Texture, Texture,
-                     Texture, Texture, Texture,
-                     Texture, Texture, Texture,
-                     Texture
-                 ],
-                 x: float = 0,
-                 y: float = 0,
-                 width: float | None = None,
-                 height: float | None = None,
-                 scale: float | None = None,
-                 value: int = 0,
-                 change_callback: callable or None = None,
-                 **kwargs):
+    def __init__(
+        self,
+        textures: tuple[
+            Texture,
+            Texture,
+            Texture,
+            Texture,
+            Texture,
+            Texture,
+            Texture,
+            Texture,
+            Texture,
+            Texture,
+        ],
+        x: float = 0,
+        y: float = 0,
+        width: float | None = None,
+        height: float | None = None,
+        scale: float | None = None,
+        value: int = 0,
+        change_callback: callable or None = None,
+        **kwargs
+    ):
 
         texture = textures[value]
 
@@ -82,7 +96,7 @@ class UISlider(UIInteractiveWidget):
 
     def calc_new_value(self, x: float) -> int:
         x -= self.x + 8 * self.scale
-        x /= (self.width - 16 * self.scale)
+        x /= self.width - 16 * self.scale
         x *= 9
 
         new_value = round(x)
