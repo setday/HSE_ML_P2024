@@ -1,11 +1,10 @@
 from arcade.color import WHITE
 from arcade.gui import UITextureButton, UIAnchorWidget, UIBoxLayout
 
-from src.utils.Loaders import load_texture
-
+from src.render.screen_elements.ui_components.UIFullScreenLayout import UIFullScreenLayout
 from src.render.screen_elements.ui_components.UISuperText import UISuperText
 from src.render.screen_elements.ui_components.UITexture import UITexture
-from src.render.screen_elements.ui_components.UIFullScreenLayout import UIFullScreenLayout
+from src.utils.Loaders import load_texture
 
 
 class CreditsLayout(UIFullScreenLayout):

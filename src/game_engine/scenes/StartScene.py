@@ -1,21 +1,18 @@
 import arcade
 import arcade.gui
-from pyglet.math import Vec2 as Vector2D
 
 from src.game_engine.scenes.game_scene.GameScene import GameScene
 from src.game_engine.scenes.layouts.CreditsLayout import CreditsLayout
 from src.game_engine.scenes.layouts.SettingLayout import SettingLayout
 from src.render.animator.FloatingAnimator import FloatingAnimator
 from src.render.animator.WanderAnimator import WanderAnimator
+from src.render.screen_elements.effect_animator.EffectAnimator import EffectAnimator
+from src.render.screen_elements.effect_animator.effects.FadeEffect import FadeEffect
 from src.render.screen_elements.ui_components.UIAnimatorWidget import UIAnimatableWidget
 from src.render.screen_elements.ui_components.UIFullScreenLayout import UIFullScreenLayout
 from src.render.screen_elements.ui_components.UISuperAnchorWidget import UISuperAnchorWidget
 from src.render.screen_elements.ui_components.UITexture import UITexture
-from src.render.sprites.BasicSprite import BasicSprite
 from src.utils.Loaders import load_texture
-
-from src.render.screen_elements.effect_animator.EffectAnimator import EffectAnimator
-from src.render.screen_elements.effect_animator.effects.FadeEffect import FadeEffect
 
 
 def no_game(_):

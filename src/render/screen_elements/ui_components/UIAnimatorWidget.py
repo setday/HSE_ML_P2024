@@ -19,7 +19,7 @@ class UIAnimatableWidget(UISuperAnchorWidget):
     """
 
     def __init__(
-        self, *, child: UIWidget, animator_type=None, animator_params=None, **kwargs
+            self, *, child: UIWidget, animator_type=None, animator_params=None, **kwargs
     ):
         self.delta_align_x = 0
         self.delta_align_y = 0

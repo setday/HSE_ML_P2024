@@ -1,14 +1,11 @@
 from arcade.color import RED, GREEN, WHITE
 from arcade.gui import UIFlatButton, UITextureButton, UIAnchorWidget, UIBoxLayout
 
+import src.render.particle.ParticleShow as ParticleShow
 from src.render.screen_elements.ui_components.UICheckButton import UICheckButton
+from src.render.screen_elements.ui_components.UIFullScreenLayout import UIFullScreenLayout
 from src.render.screen_elements.ui_components.UISlider import UISlider
 from src.utils.Loaders import load_texture
-
-from src.render.screen_elements.ui_components.UIFullScreenLayout import UIFullScreenLayout
-
-import src.render.particle.ParticleShow as ParticleShow
-
 
 _sound_level = 4
 _is_particles_on = True
@@ -79,14 +76,14 @@ class SettingLayout(UIFullScreenLayout):
                         children=[
                             UIBoxLayout(
                                 children=[
-                                    self.sound_button,
                                     self.sound_slider,
+                                    self.sound_button,
                                 ],
-                                space_between=-24,
+                                space_between=-202,
                             ),
                             self.particles_button,
                         ],
-                        space_between=20,
+                        space_between=150,
                     )
                 ),
                 UIAnchorWidget(

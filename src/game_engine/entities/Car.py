@@ -5,11 +5,10 @@ import arcade
 import numpy as np
 from pymunk import Vec2d, Space
 
+import src.render.particle.ParticleShow as ParticleShow
 from src.physics.models.CarPhysicsModel import CarPhysicsModel
 from src.render.RenderGroup import RenderGroup
 from src.render.sprites.BasicSprite import BasicSprite
-
-import src.render.particle.ParticleShow as ParticleShow
 
 
 class Car:

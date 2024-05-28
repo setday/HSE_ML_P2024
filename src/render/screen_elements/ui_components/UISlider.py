@@ -1,5 +1,5 @@
 from arcade import Texture
-from arcade.gui import UIInteractiveWidget, Surface, UIEvent, UIMouseDragEvent, UIMousePressEvent
+from arcade.gui import UIInteractiveWidget, Surface, UIEvent, UIMouseDragEvent, UIOnClickEvent
 
 
 class UISlider(UIInteractiveWidget):
@@ -59,12 +59,13 @@ class UISlider(UIInteractiveWidget):
         self._change_callback = change_callback
 
     def on_event(self, event: UIEvent) -> bool:
-        if not self.pressed and isinstance(event, UIMousePressEvent):
-            self.try_update_value(event.x)
         if self.pressed and isinstance(event, UIMouseDragEvent):
             self.try_update_value(event.x)
 
         return super().on_event(event)
+
+    def on_click(self, event: UIOnClickEvent) -> bool:
+        return self.try_update_value(event.x)
 
     def try_update_value(self, x: float) -> bool:
         new_value = self.calc_new_value(x)

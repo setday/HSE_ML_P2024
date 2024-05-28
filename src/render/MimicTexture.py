@@ -1,7 +1,6 @@
 from typing import Optional
 
 import PIL.Image
-
 from arcade.texture import Texture
 
 

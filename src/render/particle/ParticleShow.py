@@ -2,7 +2,6 @@ from typing import Tuple, List
 
 import arcade
 
-
 particles_on = True
 
 
@@ -14,7 +13,7 @@ class ParticleShow:
         if not particles_on:
             for emitter in self.emitters:
                 emitter.kill()
-              
+
         for emitter in self.emitters:
             emitter.update()
         while len(self.emitters) > 0 and self.emitters[0].get_count() == 0:
@@ -23,12 +22,12 @@ class ParticleShow:
     def draw(self) -> None:
         if not particles_on:
             return
-          
+
         for emitter in self.emitters:
             emitter.draw()
 
     def add_burst(
-        self, center_xy: Tuple[int, int], textures: List[str]
+            self, center_xy: Tuple[int, int], textures: List[str]
     ) -> arcade.Emitter | None:
         if not particles_on:
             return None

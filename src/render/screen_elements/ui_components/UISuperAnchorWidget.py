@@ -19,6 +19,7 @@ class UISuperAnchorWidget(UIAnchorWidget):
     :param size_hint_max: max width and height in pixel
     :param style: not used
     """
+
     def __init__(self, *, child: UIWidget, relative_x: bool = False, relative_y: bool = False, **kwargs):
         self.relative_x = relative_x
         self.relative_y = relative_y

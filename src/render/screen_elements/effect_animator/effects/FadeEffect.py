@@ -46,7 +46,7 @@ class FadeEffect(BasicEffect):
             alpha = 1 - alpha
         alpha *= self.alpha_multiplier
 
-        color = self.fade_color + (alpha, )
+        color = self.fade_color + (alpha,)
 
         arcade.draw_xywh_rectangle_filled(
             0,

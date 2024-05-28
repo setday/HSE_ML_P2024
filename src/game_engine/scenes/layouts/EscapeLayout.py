@@ -2,11 +2,10 @@ from arcade.gui import UITextureButton, UIBoxLayout, UIAnchorWidget, UIManager
 from arcade.key import ESCAPE, BACKSPACE
 
 from src.game_engine.scenes.layouts.SettingLayout import SettingLayout
-from src.render.screen_elements.ui_components.UITexture import UITexture
-from src.utils.Loaders import load_texture
-
 from src.render.screen_elements.ui_components.UIFullScreenLayout import UIFullScreenLayout
 from src.render.screen_elements.ui_components.UISuperAnchorWidget import UISuperAnchorWidget
+from src.render.screen_elements.ui_components.UITexture import UITexture
+from src.utils.Loaders import load_texture
 
 
 class EscapeMenuLayout:
@@ -115,6 +114,4 @@ class EscapeMenuLayout:
         self._target_offset_y = 0
 
     def show(self):
-        self.screen_layout.align_x = -0.1
-        self.screen_layout.align_y = 0
         self.go_selector(None)

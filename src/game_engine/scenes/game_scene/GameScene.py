@@ -1,37 +1,25 @@
 import random
-import time
 
 import arcade.key
 import numpy as np
 import pymunk
 from arcade.experimental import Shadertoy
 from pyglet.math import Vec2 as Vector2D
-
 from pymunk import CollisionHandler
 
 import src.game_engine.controllers.Controller as Controller
+import src.game_engine.scenes.game_scene.CollisionHandlers as CollisionHandlers
 from src.game_engine.entities.ParkingPlace import ParkingPlace
 from src.game_engine.scenes.game_scene.SceneSetup import SceneSetup
-
-import src.game_engine.scenes.game_scene.CollisionHandlers as CollisionHandlers
-from src.game_engine.controllers.Controller import (
-    KeyboardController,
-    BrakeController,
-    RandomController,
-    AIController,
-)
-from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.scenes.layouts.EscapeLayout import EscapeMenuLayout
 from src.render.RenderGroup import RenderGroup
 from src.render.Window import IOController
 from src.render.particle.ParticleShow import ParticleShow
 from src.render.screen_elements.Indicator import Indicator
 from src.render.screen_elements.ScoreDisplay import ScoreDisplay
-from src.render.screen_elements.effect_animator.effects.TextPrinter import TextPrinter
-from src.render.sprites.BasicSprite import BasicSprite
-
 from src.render.screen_elements.effect_animator.EffectAnimator import EffectAnimator
 from src.render.screen_elements.effect_animator.effects.FadeEffect import FadeEffect
+from src.render.screen_elements.effect_animator.effects.TextPrinter import TextPrinter
 
 
 class GameScene:
@@ -189,6 +177,8 @@ class GameScene:
         self.is_end_state = False
 
     def update(self, io_controller: IOController, delta_time: float) -> None:
+        self.effect_animator.update(delta_time)
+
         if self.is_escape_layout_renders:
             self.escape_layout.update(io_controller, delta_time)
 
