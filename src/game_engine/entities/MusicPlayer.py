@@ -18,7 +18,6 @@ class MusicPlayer:
 
         self.window = window
         self.player = None
-        self.is_paused = True
         self.volume = volume
         self.track_list = [
             "assets/sounds/Paul Mauriat - Minuetto.mp3",
@@ -176,7 +175,8 @@ class MusicPlayer:
 
     def set_volume(self, volume: float) -> None:
         self.volume = volume
-        self.player.volume = self.volume
+        if self.player:
+            self.player.volume = self.volume
 
     def previous(self, *args) -> None:
         if self.player:
@@ -239,7 +239,6 @@ class MusicPlayer:
         )
 
     def play_pause_button_clicked(self, *args) -> None:
-        self.is_paused = False
         if not self.player:
             self.player = self.track.play()
             self.player.volume = self.volume
@@ -252,6 +251,10 @@ class MusicPlayer:
         elif self.player.playing:
             self.player.pause()
             self.pause_button()
+
+    def resume(self) -> None:
+        if self.player and not self.player.playing:
+            self.player.play()
 
     def pause(self) -> None:
         if self.player and self.player.playing:
@@ -288,13 +291,14 @@ class SoundPlayer:
         PLAYERS.remove(self)
 
     def pause(self):
-        if self.player.playing:
+        if self.player and self.player.playing:
             self.player.pause()
 
     def resume(self):
-        if not self.player.playing:
+        if self.player and not self.player.playing:
             self.player.play()
 
     def set_volume(self, volume) -> None:
         self.volume = volume
-        self.player.volume = self.volume
+        if self.player:
+            self.player.volume = self.volume
