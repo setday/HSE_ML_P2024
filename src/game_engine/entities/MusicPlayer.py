@@ -2,16 +2,18 @@ import arcade
 import arcade.gui
 
 
-PLAYERS : set = set()
+PLAYERS: set = set()
 
-def update_all_players(volume : float) -> None:
+
+def update_all_players(volume: float) -> None:
     global PLAYERS
 
     for player in PLAYERS:
         player.set_volume(volume)
 
+
 class MusicPlayer:
-    def __init__(self, window: arcade.Window, volume : float) -> None:
+    def __init__(self, window: arcade.Window, volume: float) -> None:
         global PLAYERS
 
         self.window = window
@@ -35,9 +37,15 @@ class MusicPlayer:
         # Previous button
         ######################
 
-        press_texture = arcade.load_texture("assets/pic/buttons/Sound/prev_button_press.png")
-        normal_texture = arcade.load_texture("assets/pic/buttons/Sound/prev_button_normal.png")
-        hover_texture = arcade.load_texture("assets/pic/buttons/Sound/prev_button_hover.png")
+        press_texture = arcade.load_texture(
+            "assets/pic/buttons/Sound/prev_button_press.png"
+        )
+        normal_texture = arcade.load_texture(
+            "assets/pic/buttons/Sound/prev_button_normal.png"
+        )
+        hover_texture = arcade.load_texture(
+            "assets/pic/buttons/Sound/prev_button_hover.png"
+        )
 
         self.right_button = arcade.gui.UITextureButton(
             texture=normal_texture,
@@ -54,9 +62,15 @@ class MusicPlayer:
         # Backward button
         ######################
 
-        press_texture = arcade.load_texture("assets/pic/buttons/Sound/prev_button_press.png")
-        normal_texture = arcade.load_texture("assets/pic/buttons/Sound/prev_button_normal.png")
-        hover_texture = arcade.load_texture("assets/pic/buttons/Sound/prev_button_hover.png")
+        press_texture = arcade.load_texture(
+            "assets/pic/buttons/Sound/prev_button_press.png"
+        )
+        normal_texture = arcade.load_texture(
+            "assets/pic/buttons/Sound/prev_button_normal.png"
+        )
+        hover_texture = arcade.load_texture(
+            "assets/pic/buttons/Sound/prev_button_hover.png"
+        )
 
         self.right_button = arcade.gui.UITextureButton(
             texture=normal_texture,
@@ -73,9 +87,15 @@ class MusicPlayer:
         # Forward button
         ######################
 
-        normal_texture = arcade.load_texture("assets/pic/buttons/Sound/play_button_normal.png")
-        hover_texture = arcade.load_texture("assets/pic/buttons/Sound/play_button_hover.png")
-        press_texture = arcade.load_texture("assets/pic/buttons/Sound/play_button_press.png")
+        normal_texture = arcade.load_texture(
+            "assets/pic/buttons/Sound/play_button_normal.png"
+        )
+        hover_texture = arcade.load_texture(
+            "assets/pic/buttons/Sound/play_button_hover.png"
+        )
+        press_texture = arcade.load_texture(
+            "assets/pic/buttons/Sound/play_button_press.png"
+        )
 
         self.play_pause_button = arcade.gui.UITextureButton(
             texture=normal_texture,
@@ -92,9 +112,15 @@ class MusicPlayer:
         # Next button
         ######################
 
-        press_texture = arcade.load_texture("assets/pic/buttons/Sound/next_button_press.png")
-        normal_texture = arcade.load_texture("assets/pic/buttons/Sound/next_button_normal.png")
-        hover_texture = arcade.load_texture("assets/pic/buttons/Sound/next_button_hover.png")
+        press_texture = arcade.load_texture(
+            "assets/pic/buttons/Sound/next_button_press.png"
+        )
+        normal_texture = arcade.load_texture(
+            "assets/pic/buttons/Sound/next_button_normal.png"
+        )
+        hover_texture = arcade.load_texture(
+            "assets/pic/buttons/Sound/next_button_hover.png"
+        )
 
         self.right_button = arcade.gui.UITextureButton(
             texture=normal_texture,
@@ -111,9 +137,15 @@ class MusicPlayer:
         # Next button
         ######################
 
-        press_texture = arcade.load_texture("assets/pic/buttons/Sound/next_button_press.png")
-        normal_texture = arcade.load_texture("assets/pic/buttons/Sound/next_button_normal.png")
-        hover_texture = arcade.load_texture("assets/pic/buttons/Sound/next_button_hover.png")
+        press_texture = arcade.load_texture(
+            "assets/pic/buttons/Sound/next_button_press.png"
+        )
+        normal_texture = arcade.load_texture(
+            "assets/pic/buttons/Sound/next_button_normal.png"
+        )
+        hover_texture = arcade.load_texture(
+            "assets/pic/buttons/Sound/next_button_hover.png"
+        )
 
         self.right_button = arcade.gui.UITextureButton(
             texture=normal_texture,
@@ -142,7 +174,7 @@ class MusicPlayer:
 
         PLAYERS.remove(self)
 
-    def set_volume(self, volume : float) -> None:
+    def set_volume(self, volume: float) -> None:
         self.volume = volume
         self.player.volume = self.volume
 
@@ -151,7 +183,9 @@ class MusicPlayer:
             self.track.stop(self.player)
             self.player.pop_handlers()
             self.player = None
-        self.track_index = (len(self.track_list) + self.track_index - 1) % len(self.track_list)
+        self.track_index = (len(self.track_list) + self.track_index - 1) % len(
+            self.track_list
+        )
         self.track = arcade.Sound(self.track_list[self.track_index], streaming=True)
         self.player = self.track.play()
         self.player.volume = self.volume
@@ -235,6 +269,7 @@ class MusicPlayer:
                 font_size=24,
             )
 
+
 class SoundPlayer:
     def __init__(self, path, volume, loop=False) -> None:
         global PLAYERS
@@ -261,5 +296,5 @@ class SoundPlayer:
             self.player.play()
 
     def set_volume(self, volume) -> None:
-        self.volume = volume;
+        self.volume = volume
         self.player.volume = self.volume

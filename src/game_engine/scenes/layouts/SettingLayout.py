@@ -13,10 +13,12 @@ from src.utils.Loaders import load_texture
 _sound_level = 9
 _is_particles_on = True
 
+
 def get_sound_level() -> float:
     global _sound_level
 
     return _sound_level / 9
+
 
 class SettingLayout(UIFullScreenLayout):
     def __init__(self, back_callback: callable):

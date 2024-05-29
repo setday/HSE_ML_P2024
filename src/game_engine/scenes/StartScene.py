@@ -1,7 +1,7 @@
 import arcade
 import arcade.gui
 
-from src.game_engine.entities.MusicPlayer import SoundPlayer 
+from src.game_engine.entities.MusicPlayer import SoundPlayer
 from src.game_engine.scenes.game_scene.GameScene import GameScene
 from src.game_engine.scenes.layouts.CreditsLayout import CreditsLayout
 from src.game_engine.scenes.layouts.SettingLayout import SettingLayout, get_sound_level
@@ -269,7 +269,9 @@ class StartScene:
         )
 
     def init_music_player(self, window):
-        self.player = SoundPlayer("assets/sounds/main_menu.mp3", 1.0 * get_sound_level(), loop=True)
+        self.player = SoundPlayer(
+            "assets/sounds/main_menu.mp3", 1.0 * get_sound_level(), loop=True
+        )
 
     def update(self, io_controller, delta_time):
         self.background_animator.update_animation(delta_time)
@@ -305,7 +307,10 @@ class StartScene:
             FadeEffect(
                 duration=1,
                 fade_color=(255, 255, 255),
-                finish_callback=lambda: [self.player.pause(), self.core_instance.set_scene(GameScene)],
+                finish_callback=lambda: [
+                    self.player.pause(),
+                    self.core_instance.set_scene(GameScene),
+                ],
             )
         )
 

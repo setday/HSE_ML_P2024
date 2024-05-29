@@ -26,7 +26,6 @@ class Core:
         if not arcade.timings_enabled():
             arcade.enable_timings()
 
-
     def set_scene(self, scene) -> None:
         if scene is None:
             scene = StartScene
