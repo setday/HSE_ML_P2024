@@ -274,12 +274,13 @@ class MusicPlayer:
 
 
 class SoundPlayer:
-    def __init__(self, path, volume, loop=False) -> None:
+    def __init__(self, path, volume, loop=False, ignore_update=False) -> None:
         global PLAYERS
 
         self.track = arcade.Sound(path, streaming=True)
         self.player = self.track.play(loop=loop)
         self.volume = volume
+        self.ignore_update = ignore_update
         self.player.volume = self.volume
         self.player.play()
 
@@ -298,7 +299,9 @@ class SoundPlayer:
         if self.player and not self.player.playing:
             self.player.play()
 
-    def set_volume(self, volume) -> None:
+    def set_volume(self, volume, update=True) -> None:
         self.volume = volume
         if self.player:
-            self.player.volume = self.volume
+            if not update or not self.ignore_update:
+                    self.player.volume = self.volume
+

@@ -82,9 +82,9 @@ class Car:
         }
 
         self.accelerate_sound = SoundPlayer(
-            "assets/sounds/accelerate.wav", 0.0, loop=True
+            "assets/sounds/accelerate.wav", 0.0, loop=True, ignore_update=True
         )
-        self.drift_sound = SoundPlayer("assets/sounds/drift.wav", 0.0, loop=True)
+        self.drift_sound = SoundPlayer("assets/sounds/drift.wav", 0.0, loop=True, ignore_update=True)
 
         SoundPlayer("assets/sounds/engine-start.wav", 1.0 * get_sound_level())
 
@@ -170,7 +170,7 @@ class Car:
                     self.hooks["unparked_hook"](self)
 
         self.accelerate_sound.set_volume(
-            self.car_model.body.velocity.get_length_sqrd() / 10000 * get_sound_level()
+            self.car_model.body.velocity.get_length_sqrd() / 10000 * get_sound_level(), update=False
         )
 
         if self.tyre_state != 0 and (
@@ -189,10 +189,10 @@ class Car:
             self.drift_sound.set_volume(
                 self.car_model.body.velocity.get_length_sqrd()
                 / 10000
-                * get_sound_level()
+                * get_sound_level(), update=False
             )
         else:
-            self.drift_sound.set_volume(0.0)
+            self.drift_sound.set_volume(0.0, update=False)
 
         self.is_hand_braking = False
 
