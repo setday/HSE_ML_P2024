@@ -27,21 +27,23 @@ class ParkingPlace:
         self.border_box.update_angle(math.degrees(angle))
         self.border_box.set_border_width(4)
 
-        self.border_box_dead_zones = []
-        for i in range(4):
-            dz = self.parking_model.dead_zones[i]
-            dz_shape = self.parking_model.dead_zone_shapes[i]
-            points = dz_shape.get_vertices()
-            width = points[1][0] - points[3][0]
-            height = points[1][1] - points[3][1]
-            width = max(width, 4)
-            height = max(height, 4)
-            self.border_box_dead_zones.append(
-                BasicRect(math.ceil(width), math.ceil(height), dz.position)
-            )
-            self.border_box_dead_zones[i].update_color((255, 0, 0))
-            self.border_box_dead_zones[i].update_angle(math.degrees(angle))
-            self.border_box_dead_zones[i].set_border_width(1)
+        # self.border_box_dead_zones = []
+        # for i in range(4):
+        #     dz = self.parking_model.dead_zones[i]
+        #     dz_shape = self.parking_model.dead_zone_shapes[i]
+        #     points = dz_shape.get_vertices()
+        #     width = points[1][0] - points[3][0]
+        #     height = points[1][1] - points[3][1]
+        #     print(points)
+        #     width = max(width, 4)
+        #     height = max(height, 4)
+        #     offset = (points[1][0] + points[3][0]) / 2, (points[1][1] + points[3][1]) / 2
+        #     self.border_box_dead_zones.append(
+        #         BasicRect(math.ceil(width), math.ceil(height), dz.position + offset)
+        #     )
+        #     self.border_box_dead_zones[i].update_color((255, 0, 0))
+        #     self.border_box_dead_zones[i].update_angle(math.degrees(angle))
+        #     self.border_box_dead_zones[i].set_border_width(1)
 
         # self.base_view.update_angle(degrees(angle))
         # self.dead_view.update_angle(degrees(angle))
@@ -50,8 +52,8 @@ class ParkingPlace:
         # render_group.add(self.dead_view)
 
         render_group.add(self.border_box)
-        for dz in self.border_box_dead_zones:
-            render_group.add(dz)
+        # for dz in self.border_box_dead_zones:
+        #     render_group.add(dz)
 
         self.space: Space = space
         self.render_group: RenderGroup = render_group

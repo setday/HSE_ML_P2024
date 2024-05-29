@@ -51,10 +51,10 @@ class GameSceneCore:
             CollisionHandlers.end_collision_car_with_base_parking_place
         )
         dead_handler: CollisionHandler = self.space.add_collision_handler(10, 41)
-        # dead_handler.begin = CollisionHandlers.collision_car_with_dead_parking_place
-        # dead_handler.separate = (
-        #     CollisionHandlers.end_collision_car_with_dead_parking_place
-        # )
+        dead_handler.begin = CollisionHandlers.collision_car_with_dead_parking_place
+        dead_handler.separate = (
+            CollisionHandlers.end_collision_car_with_dead_parking_place
+        )
 
         for i in range(0, 40):
             if i == 10:
@@ -120,6 +120,8 @@ class GameSceneCore:
         self.is_end_state = False
 
     def update(self, io_controller: IOController, delta_time: float) -> None:
+        delta_time = min(delta_time, 0.1)
+
         self.effect_animator.update(delta_time)
 
         if self.is_escape_layout_renders:
@@ -253,7 +255,8 @@ class GameSceneCore:
                 2.3,
                 0,
                 None,
-                "You   LOSE" if self.car_m.health <= 0 else "You WIN",
+                "You   LOSE",
+                arcade.color.LIGHT_PINK,
                 True,
                 None,
                 True,
@@ -263,7 +266,7 @@ class GameSceneCore:
             FadeEffect(
                 2,
                 2,
-                lambda: self.core_instance.set_scene(None, None),
+                lambda: self.core_instance.set_scene(None),
                 (255, 255, 255, 255),
                 True,
                 True,
@@ -271,7 +274,49 @@ class GameSceneCore:
         )
 
     def do_victory(self):
-        print("U win. There is no victory screen =(\n\nBut you can try again!")
+        self.is_end_state = True
+
+        self.effect_animator.add_effect(
+            FadeEffect(1, 0, None, (0, 0, 0, 200), True, True)
+        )
+        self.effect_animator.add_effect(
+            TextPrinter(
+                1.6,
+                0,
+                None,
+                f"Victory!",
+                arcade.color.GOLD,
+                100,
+                True,
+                None,
+                (0, 50),
+                True,
+            )
+        )
+        self.effect_animator.add_effect(
+            TextPrinter(
+                3,
+                2,
+                None,
+                f"with score: {int(self.score[0])}!",
+                arcade.color.GOLD,
+                32,
+                True,
+                None,
+                (0, -50),
+                True,
+            )
+        )
+        self.effect_animator.add_effect(
+            FadeEffect(
+                2,
+                2,
+                lambda: self.core_instance.set_scene(None),
+                (255, 255, 255, 255),
+                True,
+                True,
+            )
+        )
 
     def switch_escape_layout(self):
         if self.is_end_state:
