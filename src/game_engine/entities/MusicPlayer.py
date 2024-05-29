@@ -303,5 +303,4 @@ class SoundPlayer:
         self.volume = volume
         if self.player:
             if not update or not self.ignore_update:
-                    self.player.volume = self.volume
-
+                self.player.volume = self.volume
