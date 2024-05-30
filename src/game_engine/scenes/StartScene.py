@@ -1,9 +1,9 @@
 import arcade
 import arcade.gui
 
-from src.game_engine.scenes.game_scene.modes.ParkMeSecene import ParkMeScene
+from src.game_engine.scenes.game_scene.modes.ParkMeScene import ParkMeScene
 from src.game_engine.scenes.game_scene.modes.SurvivalScene import SurvivalScene
-from src.game_engine.scenes.game_scene.modes.A2BScane import A2BScene
+from src.game_engine.scenes.game_scene.modes.A2BScene import A2BScene
 from src.game_engine.scenes.layouts.CreditsLayout import CreditsLayout
 from src.game_engine.scenes.layouts.SettingLayout import SettingLayout
 from src.render.animator.FloatingAnimator import FloatingAnimator

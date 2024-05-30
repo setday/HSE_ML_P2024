@@ -2,20 +2,19 @@ import numpy as np
 from pyglet.math import Vec2 as Vector2D
 
 from src.game_engine.scenes.game_scene.GameSceneCore import GameSceneCore
-from src.game_engine.scenes.game_scene.SceneSetup import setup_scene
 from src.render.Window import IOController
 from src.render.screen_elements.Indicator import Indicator
 from src.render.screen_elements.ScoreDisplay import ScoreDisplay
+from src.game_engine.scenes.game_scene.SceneSetup import setup_scene
 
 
-class ParkMeScene(GameSceneCore):
+class A2BScene(GameSceneCore):
     def __init__(self, core_instance):
         super().__init__(core_instance, False)
 
-        setup_scene(self, "assets/maps/ParkWithEnemies.json")
+        setup_scene(self, "assets/maps/A2B.json")
 
-        self.car_m.set_hook('parked_hook', lambda _: self.do_victory())
-
+        self.car_m.car_model.body.position = (-600, 300)
         ######################
         # Screen Elements
         ######################
@@ -41,6 +40,8 @@ class ParkMeScene(GameSceneCore):
 
         if self.car_m.health <= 0 and not self.is_end_state:
             self.do_lose()
+        if self.car_m.is_car_parked and not self.is_end_state:
+            self.do_victory()
 
     def update_env(self, io_controller: IOController, delta_time: float) -> None:
         keys: dict = io_controller.keyboard
@@ -53,18 +54,10 @@ class ParkMeScene(GameSceneCore):
                 np.array(
                     [
                         car.car_model.body.position[0]
-                        - self.parking_place.parking_model.inner_body.position[
-                            0
-                        ],
+                        - self.car_m.car_model.body.position[0],
                         car.car_model.body.position[1]
-                        - self.parking_place.parking_model.inner_body.position[
-                            1
-                        ],
-                        abs(
-                            car.car_model.body.angle
-                            - self.parking_place.parking_model.inner_body.angle
-                            + 90
-                        )
+                        - self.car_m.car_model.body.position[1],
+                        abs(car.car_model.body.angle - self.car_m.car_model.body.angle)
                         % 180,
                         car.car_model.body.velocity.get_length_sqrd() ** 0.5,
                     ]

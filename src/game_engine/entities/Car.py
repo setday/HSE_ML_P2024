@@ -9,7 +9,6 @@ import src.render.particle.ParticleShow as ParticleShow
 from src.physics.models.CarPhysicsModel import CarPhysicsModel
 from src.render.RenderGroup import RenderGroup
 from src.render.sprites.BasicSprite import BasicSprite
-import numpy as np
 
 
 class Car:

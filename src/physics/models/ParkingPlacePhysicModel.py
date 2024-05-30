@@ -1,7 +1,9 @@
 import pymunk
 
 
-def create_box_with_offset(body: pymunk.Body, size: tuple[float, float], offset: tuple[float, float]) -> pymunk.Poly:
+def create_box_with_offset(
+    body: pymunk.Body, size: tuple[float, float], offset: tuple[float, float]
+) -> pymunk.Poly:
     vert: list[tuple[float, float]] = [
         (size[0] / 2 + offset[0], -size[1] / 2 + offset[1]),
         (size[0] / 2 + offset[0], size[1] / 2 + offset[1]),
@@ -50,10 +52,18 @@ class ParkingPlacePhysicsModel:
         self.dead_zones[3].angle = angle
 
         self.dead_zone_shapes: list[pymunk.Poly] = [
-            create_box_with_offset(self.dead_zones[0], (dead_zone_width, size[1]), (-size[0] / 2, 0)),
-            create_box_with_offset(self.dead_zones[1], (dead_zone_width, size[1]), (size[0] / 2, 0)),
-            create_box_with_offset(self.dead_zones[2], (size[0], dead_zone_width), (0, size[1] / 2)),
-            create_box_with_offset(self.dead_zones[3], (size[0], dead_zone_width), (0, -size[1] / 2)),
+            create_box_with_offset(
+                self.dead_zones[0], (dead_zone_width, size[1]), (-size[0] / 2, 0)
+            ),
+            create_box_with_offset(
+                self.dead_zones[1], (dead_zone_width, size[1]), (size[0] / 2, 0)
+            ),
+            create_box_with_offset(
+                self.dead_zones[2], (size[0], dead_zone_width), (0, size[1] / 2)
+            ),
+            create_box_with_offset(
+                self.dead_zones[3], (size[0], dead_zone_width), (0, -size[1] / 2)
+            ),
         ]
 
         for zone in self.dead_zone_shapes:

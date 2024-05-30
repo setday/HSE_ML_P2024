@@ -106,6 +106,7 @@ class ObjectFactory:
             "tree": "assets/pic/obstacles/Tree_1.png",
             "x_barrier": None,
             "y_barrier": None,
+            "big_bush": "assets/pic/obstacles/parking_barrier_3.png",
         }
         shape_type = "self"
         if static_obstacle_model in ["x_barrier", "y_barrier"]:

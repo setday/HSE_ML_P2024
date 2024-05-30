@@ -37,9 +37,9 @@ class SurvivalScene(GameSceneCore):
     def update(self, io_controller: IOController, delta_time: float) -> None:
         super().update(io_controller, delta_time)
 
-        if (
-                all([car.health <= 0 for car in self.cars[1:]])
-        ):
+        if all([car.health <= 0 for car in self.cars[1:]]):
+            self.do_victory()
+        if self.car_m.health <= 0 and not self.is_end_state:
             self.do_lose()
 
     def update_env(self, io_controller: IOController, delta_time: float) -> None:
@@ -56,10 +56,7 @@ class SurvivalScene(GameSceneCore):
                         - self.car_m.car_model.body.position[0],
                         car.car_model.body.position[1]
                         - self.car_m.car_model.body.position[1],
-                        abs(
-                            car.car_model.body.angle
-                            - self.car_m.car_model.body.angle
-                        )
+                        abs(car.car_model.body.angle - self.car_m.car_model.body.angle)
                         % 180,
                         car.car_model.body.velocity.get_length_sqrd() ** 0.5,
                     ]

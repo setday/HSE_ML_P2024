@@ -186,7 +186,7 @@ class GameSceneCore:
             cone.sync()
 
         zoom_factor: float = (
-                1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
+            1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
         )
 
         self.render_group.camera.set_zoom(zoom_factor)
@@ -257,8 +257,10 @@ class GameSceneCore:
                 None,
                 "You   LOSE",
                 arcade.color.LIGHT_PINK,
+                100,
                 True,
                 None,
+                (0, 50),
                 True,
             )
         )
@@ -284,7 +286,7 @@ class GameSceneCore:
                 1.6,
                 0,
                 None,
-                f"Victory!",
+                "Victory!",
                 arcade.color.GOLD,
                 100,
                 True,

@@ -63,10 +63,10 @@ def setup_scene(scene, path, is_survive=False):
             )
         )
     controllers = [
-        # {"type": "sklearn", "path": "models_bin/CEM.pkl"},
-        # {"type": "pytorch", "path": "models_bin/torch.pt"},
-        # {"type": "stable_baselines", "policy": "DQN", "path": "models_bin/DQN"},
-        # {"type": "stable_baselines", "policy": "A2C", "path": "models_bin/A2C"},
+        {"type": "sklearn", "path": "models_bin/CEM.pkl"},
+        {"type": "pytorch", "path": "models_bin/torch.pt"},
+        {"type": "stable_baselines", "policy": "DQN", "path": "models_bin/DQN"},
+        {"type": "stable_baselines", "policy": "A2C", "path": "models_bin/A2C"},
         {"type": "stable_baselines", "policy": "PPO", "path": "models_bin/PPO"},
     ]
     for car in scene.cars[1:]:
@@ -83,6 +83,9 @@ def setup_scene(scene, path, is_survive=False):
         )
         if is_survive:
             car.health = 1000
+    # Чтобы была хотя бы одна умная модель
+    if len(scene.cars) > 1:
+        scene.cars[-1].switch_controller(Controller.AIController(controllers[-1]))
     for x, y, angle in config.get("barriers_positions", []):
         ObjectFactory.create_object(
             render_group=scene.render_group,
@@ -91,6 +94,15 @@ def setup_scene(scene, path, is_survive=False):
             position=(x, y),
             angle=angle,
             static_obstacle_model="metal_pipe",
+        )
+    for x, y, angle in config.get("big_barriers_positions", []):
+        ObjectFactory.create_object(
+            render_group=scene.render_group,
+            space=scene.space,
+            object_type="static_obstacle",
+            position=(x, y),
+            angle=angle,
+            static_obstacle_model="big_bush",
         )
     for x, y, angle in config.get("parking_positions", []):
         scene.parking_place = ParkingPlace(
@@ -101,6 +113,7 @@ def setup_scene(scene, path, is_survive=False):
             render_group=scene.render_group,
             space=scene.space,
             object_type="movable_obstacle",
-            position=(random.randint(-1000, 1000), random.randint(-1000, 1000)),
+            position=scene.car_m.car_model.body.position
+            + (random.randint(-200, 200), random.randint(-800, 800)),
             movable_obstacle_model="coin",
         )
