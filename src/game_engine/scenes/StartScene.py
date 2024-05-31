@@ -2,22 +2,17 @@ import arcade
 import arcade.gui
 
 from src.game_engine.entities.MusicPlayer import SoundPlayer
-from src.game_engine.scenes.game_scene.GameScene import GameScene
-from src.game_engine.scenes.layouts.CreditsLayout import CreditsLayout
-from src.game_engine.scenes.layouts.SettingLayout import SettingLayout, get_sound_level
-from src.render.animator.FloatingAnimator import FloatingAnimator
-from src.render.animator.WanderAnimator import WanderAnimator
-from src.render.screen_elements.effect_animator.EffectAnimator import EffectAnimator
-from src.render.screen_elements.effect_animator.effects.FadeEffect import FadeEffect
-from src.render.screen_elements.ui_components.UIAnimatorWidget import UIAnimatableWidget
-from src.render.screen_elements.ui_components.UIFullScreenLayout import (
+from .game_scene.GameScene import GameScene
+from .layouts import CreditsLayout, SettingLayout, get_sound_level
+from src.render.animator import FloatingAnimator, WanderAnimator
+from src.render.screen_elements.effect_animator import EffectAnimator, FadeEffect
+from src.render.screen_elements.ui_components import (
     UIFullScreenLayout,
-)
-from src.render.screen_elements.ui_components.UISuperAnchorWidget import (
+    UIAnimatableWidget,
     UISuperAnchorWidget,
+    UITexture
 )
-from src.render.screen_elements.ui_components.UITexture import UITexture
-from src.utils.Loaders import load_texture
+from src.utils import load_texture
 
 
 def no_game(_):
@@ -280,7 +275,7 @@ class StartScene:
         self.title_animator.update_animation(delta_time)
 
         if io_controller.is_key_clicked(
-            arcade.key.ESCAPE
+                arcade.key.ESCAPE
         ) or io_controller.is_key_clicked(arcade.key.BACKSPACE):
             self.go_main(None)
 
@@ -288,11 +283,11 @@ class StartScene:
         delta_translation = min(delta_translation, 0.5)
 
         self.screen_layout.align_x += (
-            self._target_offset_x - self.screen_layout.align_x
-        ) * delta_translation
+                                              self._target_offset_x - self.screen_layout.align_x
+                                      ) * delta_translation
         self.screen_layout.align_y += (
-            self._target_offset_y - self.screen_layout.align_y
-        ) * delta_translation
+                                              self._target_offset_y - self.screen_layout.align_y
+                                      ) * delta_translation
 
         self._effect_animator.update(delta_time)
 

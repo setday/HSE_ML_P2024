@@ -5,6 +5,15 @@ import arcade
 particles_on = True
 
 
+def change_particles_state(state: bool) -> None:
+    global particles_on
+    particles_on = state
+
+
+def get_particles_state() -> bool:
+    return particles_on
+
+
 class ParticleShow:
     def __init__(self) -> None:
         self.emitters: list = []
@@ -27,7 +36,7 @@ class ParticleShow:
             emitter.draw()
 
     def add_burst(
-        self, center_xy: Tuple[int, int], textures: List[str]
+            self, center_xy: Tuple[int, int], textures: List[str]
     ) -> arcade.Emitter | None:
         if not particles_on:
             return None

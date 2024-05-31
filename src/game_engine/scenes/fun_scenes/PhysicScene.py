@@ -3,7 +3,7 @@ import random
 import arcade
 import pymunk
 
-from src.render.RenderGroup import RenderGroup
+from src.render.scene_elements import RenderGroup
 
 
 class PhysicScene:

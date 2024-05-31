@@ -2,7 +2,7 @@ from typing import Optional, List
 
 import arcade
 
-from src.render.Camera import Camera
+from .Camera import Camera
 
 
 class RenderGroup(arcade.Scene):

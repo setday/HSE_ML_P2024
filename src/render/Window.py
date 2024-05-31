@@ -1,6 +1,8 @@
+import time
+
 import arcade
 
-from src.utils.Loaders import load_image
+from src.utils import load_image
 
 
 class IOController:
@@ -52,6 +54,8 @@ class Window(arcade.Window):
         self._controller: IOController = IOController()
         self._controller.keyboard = {}
 
+        self._previous_time = time.time()
+
     def set_update_hook(self, hook: callable) -> None:
         self._update_hook = hook
 
@@ -63,16 +67,20 @@ class Window(arcade.Window):
 
         self.clear()
 
-        if self._draw_hook is not None:
-            self._draw_hook()
-
-    def on_update(self, delta_time: float) -> None:
-        super().on_update(delta_time)
+        new_time = time.time()
+        delta_time = new_time - self._previous_time
+        self._previous_time = new_time
 
         if self._update_hook is not None:
             self._update_hook(self._controller, delta_time)
 
         self._controller.reset_click()
+
+        if self._draw_hook is not None:
+            self._draw_hook()
+
+    def on_update(self, delta_time: float) -> None:
+        super().on_update(delta_time)
 
     def on_key_press(self, symbol: int, modifiers: int) -> None:
         self._controller.update_key_state(symbol, True)

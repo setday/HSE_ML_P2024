@@ -1,6 +1,6 @@
 import arcade
 
-from src.render.screen_elements.effect_animator.BasicEffect import BasicEffect
+from ..BasicEffect import BasicEffect
 
 
 class TextPrinter(BasicEffect):

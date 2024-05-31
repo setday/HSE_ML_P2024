@@ -161,9 +161,9 @@ class MusicPlayer:
         # UI manager
         ######################
 
-        self.ui_manager.add(
-            arcade.gui.UIAnchorWidget(child=box, anchor_x="left", anchor_y="bottom")
-        )
+        # self.ui_manager.add(
+        #     arcade.gui.UIAnchorWidget(child=box, anchor_x="left", anchor_y="bottom")
+        # )
         self.ui_manager.enable()
 
         PLAYERS.add(self)

@@ -6,7 +6,7 @@ from pymunk import Space
 from src.game_engine.entities.Car import Car
 from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
-from src.render.RenderGroup import RenderGroup
+from src.render.scene_elements import RenderGroup
 
 
 class ObjectFactory:

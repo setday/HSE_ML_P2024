@@ -2,9 +2,9 @@ import time
 
 import arcade
 
-from src.game_engine.scenes.StartScene import StartScene
+from src.game_engine.scenes import StartScene
 from src.render.Window import Window, IOController
-from src.utils.Loaders import load_font
+from src.utils import load_font
 
 
 class Core:

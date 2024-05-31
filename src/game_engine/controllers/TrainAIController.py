@@ -4,11 +4,11 @@ import arcade
 import neat
 from neat.six_util import iteritems
 
-from src.game_engine.scenes.LearningScene import LearningScene
+from src.game_engine.scenes import LearningScene
 from src.render.Window import Window, IOController
 
 
-class Train:
+class TrainAIController:
     def __init__(self, view_mode=False, spectate_mode=False):
         self.view_mode = view_mode
         if self.view_mode:

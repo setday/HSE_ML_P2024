@@ -1,11 +1,13 @@
 from src.game_engine.Core import Core
-from src.game_engine.controllers.Controller import KeyboardController
+from src.game_engine.controllers import KeyboardController
 from src.game_engine.entities.Car import Car
 from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
-from src.render.screen_elements.Indicator import Indicator
-from src.render.screen_elements.ScoreDisplay import ScoreDisplay
+from src.render.screen_elements.ui_components import (
+    Indicator,
+    ScoreDisplay
+)
 
 
 def test_core():
@@ -86,7 +88,6 @@ def test_object_factory():
 
 
 def test_scene_setup():
-    core = Core()
     assert hasattr(core.scene, "cars"), "Game must have at least one car"
     for car in core.scene.cars:
         assert isinstance(car, Car), "Only cars should be in list with cars"
@@ -99,14 +100,17 @@ def test_scene_setup():
     assert isinstance(core.scene.indicator, Indicator)
     assert core.scene.indicator.owner is core.scene.car_m
     assert core.scene.indicator.target_health == 2 * core.scene.car_m.health
-    # это нормально с точки зрения логики?
     assert hasattr(core.scene, "score_board")
     assert isinstance(core.scene.score_board, ScoreDisplay)
     assert core.scene.score_board.target_score == core.scene.score[0]
 
 
-if __name__ == "__main__":
+def run_functional_tests():
     test_core()
     test_main_car()
     test_scene_setup()
     test_object_factory()
+
+
+if __name__ == "__main__":
+    run_functional_tests()

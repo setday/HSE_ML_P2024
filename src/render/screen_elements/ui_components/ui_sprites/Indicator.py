@@ -1,14 +1,15 @@
+from typing import Any
+
 import arcade
 from pyglet.math import Vec2 as Vector2D
 
-from src.game_engine.entities.Car import Car
-from src.render.sprites.BasicSprite import BasicSprite
+from src.render.sprites import BasicSprite
 
 
 class Indicator:
     def __init__(
         self,
-        owner: Car,
+        owner: Any,
         position: Vector2D | tuple[float, float] = (300, 300),
         width: int = 200,
         height: int = 21,

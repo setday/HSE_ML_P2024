@@ -1,8 +1,8 @@
 import arcade
 from pyglet.math import Vec2 as Vector2D
 
-from src.render.sprites.BasicSprite import BasicSprite
-from src.utils.Loaders import load_font
+from src.render.sprites import BasicSprite
+from src.utils import load_font
 
 
 class ScoreDisplay:

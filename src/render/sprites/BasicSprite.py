@@ -1,7 +1,7 @@
 from pyglet.math import Vec2 as Vector2D
 
-from src.render.sprites.BasicDrawable import BasicDrawable
-from src.utils.Loaders import load_texture
+from .BasicDrawable import BasicDrawable
+from src.utils import load_texture
 
 
 class BasicSprite(BasicDrawable):

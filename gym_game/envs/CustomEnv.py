@@ -3,7 +3,7 @@ import numpy as np
 from gym import spaces
 
 from gym_game.envs.Game import Game
-from src.game_engine.scenes.game_scene.GameScene import GameScene
+from src.game_engine.scenes import GameScene
 
 
 class CustomEnv(gym.Env):

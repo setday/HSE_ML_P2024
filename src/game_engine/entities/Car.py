@@ -5,10 +5,10 @@ import arcade
 import numpy as np
 from pymunk import Vec2d, Space
 
-import src.render.particle.ParticleShow as ParticleShow
+from src.render.particle import get_particles_state
 from src.physics.models.CarPhysicsModel import CarPhysicsModel
-from src.render.RenderGroup import RenderGroup
-from src.render.sprites.BasicSprite import BasicSprite
+from src.render.scene_elements import RenderGroup
+from src.render.sprites import BasicSprite
 from src.game_engine.scenes.layouts.SettingLayout import get_sound_level
 from src.game_engine.entities.MusicPlayer import SoundPlayer
 
@@ -145,7 +145,7 @@ class Car:
         self.tyre_state = 0
 
     def _start_tyring(self) -> None:
-        if self.tyre_state == 1 or self.health <= 0 or not ParticleShow.particles_on:
+        if self.tyre_state == 1 or self.health <= 0 or not get_particles_state():
             return
 
         for emitter in self.tyre_emitters:

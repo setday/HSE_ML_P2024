@@ -2,11 +2,11 @@ import random
 
 from pyglet.math import Vec2 as Vector2D
 
-import src.game_engine.controllers.Controller as Controller
+from src.game_engine.controllers import KeyboardController
 from assets.maps.EnvGeneration import read_positions
 from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.entities.ParkingPlace import ParkingPlace
-from src.render.sprites.BasicSprite import BasicSprite
+from src.render.sprites import BasicSprite
 
 
 def setup_scene(scene, path):
@@ -27,7 +27,7 @@ def setup_scene(scene, path):
         car_model="blue_car",
     )
 
-    scene.car_m.switch_controller(Controller.KeyboardController())
+    scene.car_m.switch_controller(KeyboardController())
     scene.render_group.camera.snap_to_sprite(scene.car_m.car_view)
 
     scene.cars = [scene.car_m]

@@ -7,21 +7,25 @@ from arcade.experimental import Shadertoy
 from pyglet.math import Vec2 as Vector2D
 from pymunk import CollisionHandler
 
-import src.game_engine.controllers.Controller as Controller
+from src.game_engine.controllers import RandomController, AIController, BrakeController
 import src.game_engine.scenes.game_scene.CollisionHandlers as CollisionHandlers
 from src.game_engine.entities.MusicPlayer import MusicPlayer
 from src.game_engine.entities.ParkingPlace import ParkingPlace
-from src.game_engine.scenes.game_scene.SceneSetup import setup_scene
-from src.game_engine.scenes.layouts.EscapeLayout import EscapeMenuLayout
+from .SceneSetup import setup_scene
+from ..layouts import EscapeMenuLayout
 from src.game_engine.scenes.layouts.SettingLayout import get_sound_level
-from src.render.RenderGroup import RenderGroup
+from src.render.scene_elements import RenderGroup
 from src.render.Window import IOController
-from src.render.particle.ParticleShow import ParticleShow
-from src.render.screen_elements.Indicator import Indicator
-from src.render.screen_elements.ScoreDisplay import ScoreDisplay
-from src.render.screen_elements.effect_animator.EffectAnimator import EffectAnimator
-from src.render.screen_elements.effect_animator.effects.FadeEffect import FadeEffect
-from src.render.screen_elements.effect_animator.effects.TextPrinter import TextPrinter
+from src.render.particle import ParticleShow
+from src.render.screen_elements.effect_animator import (
+    EffectAnimator,
+    FadeEffect,
+    TextPrinter
+)
+from src.render.screen_elements.ui_components import (
+    Indicator,
+    ScoreDisplay
+)
 
 
 class GameScene:
@@ -102,9 +106,9 @@ class GameScene:
             car.switch_controller(
                 random.choice(
                     [
-                        Controller.RandomController(),
+                        RandomController(),
                         # Controller.AIController(random.choice(controllers)),
-                        Controller.BrakeController(),
+                        BrakeController(),
                     ]
                 )
             )
@@ -192,7 +196,7 @@ class GameScene:
     def update_env(self, io_controller: IOController, delta_time: float) -> None:
         keys: dict = io_controller.keyboard
 
-        if isinstance(self.car_m.controller, Controller.AIController):
+        if isinstance(self.car_m.controller, AIController):
             self.car_m.controlling(
                 keys,
                 np.array(
@@ -216,7 +220,7 @@ class GameScene:
         for car in self.cars:
             if car == self.car_m:
                 continue
-            if isinstance(car.controller, Controller.AIController):
+            if isinstance(car.controller, AIController):
                 car.controlling(
                     keys,
                     np.array(
@@ -251,7 +255,7 @@ class GameScene:
             cone.sync()
 
         zoom_factor: float = (
-            1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
+                1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
         )
 
         self.render_group.camera.set_zoom(zoom_factor)
