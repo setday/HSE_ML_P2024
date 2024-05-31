@@ -120,6 +120,6 @@ def setup_scene(scene, path, is_survive=False):
             space=scene.space,
             object_type="movable_obstacle",
             position=scene.car_m.car_model.body.position
-                     + (random.randint(-200, 200), random.randint(-800, 800)),
+            + (random.randint(-200, 200), random.randint(-800, 800)),
             movable_obstacle_model="coin",
         )

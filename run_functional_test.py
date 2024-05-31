@@ -4,10 +4,7 @@ from src.game_engine.entities.Car import Car
 from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
-from src.render.screen_elements.ui_components import (
-    Indicator,
-    ScoreDisplay
-)
+from src.render.screen_elements.ui_components import Indicator, ScoreDisplay
 
 
 def test_core():

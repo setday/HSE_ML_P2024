@@ -4,7 +4,7 @@ from arcade.gui import UITextureButton, UIAnchorWidget, UIBoxLayout
 from src.render.screen_elements.ui_components import (
     UIFullScreenLayout,
     UISuperText,
-    UITexture
+    UITexture,
 )
 from src.utils import load_texture
 
@@ -41,11 +41,11 @@ class CreditsLayout(UIFullScreenLayout):
                 ),
                 UISuperText(
                     text="Alexander Serkov\n"
-                         "-----------------------------------\n"
-                         "|         Game Physics        |\n"
-                         "=> |  Game Design / Visuals  | <=\n"
-                         "| Concepts | Code design |\n"
-                         "-----------------------------------",
+                    "-----------------------------------\n"
+                    "|         Game Physics        |\n"
+                    "=> |  Game Design / Visuals  | <=\n"
+                    "| Concepts | Code design |\n"
+                    "-----------------------------------",
                     width=credits_texture.width - 100,
                     multiline=True,
                     font_size=32,
@@ -54,9 +54,9 @@ class CreditsLayout(UIFullScreenLayout):
                 ),
                 UISuperText(
                     text="Artem Batygin\n"
-                         "-----------------------------------\n"
-                         "=> | Game AI | Game Interfaces | <=\n"
-                         "-----------------------------------",
+                    "-----------------------------------\n"
+                    "=> | Game AI | Game Interfaces | <=\n"
+                    "-----------------------------------",
                     width=credits_texture.width - 100,
                     multiline=True,
                     font_size=32,
@@ -65,9 +65,9 @@ class CreditsLayout(UIFullScreenLayout):
                 ),
                 UISuperText(
                     text="Vladimir Zakharov\n"
-                         "-----------------------------------\n"
-                         "=> | Level design | Game AI | <=\n"
-                         "-----------------------------------\n",
+                    "-----------------------------------\n"
+                    "=> | Level design | Game AI | <=\n"
+                    "-----------------------------------\n",
                     width=credits_texture.width - 100,
                     multiline=True,
                     font_size=32,

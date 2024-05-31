@@ -6,7 +6,7 @@ from src.render.particle import change_particles_state, get_particles_state
 from src.render.screen_elements.ui_components import (
     UICheckButton,
     UIFullScreenLayout,
-    UISlider
+    UISlider,
 )
 from src.utils import load_texture
 

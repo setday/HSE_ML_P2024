@@ -17,12 +17,9 @@ from src.render.particle import ParticleShow
 from src.render.screen_elements.effect_animator import (
     EffectAnimator,
     FadeEffect,
-    TextPrinter
+    TextPrinter,
 )
-from src.render.screen_elements.ui_components import (
-    Indicator,
-    ScoreDisplay
-)
+from src.render.screen_elements.ui_components import Indicator, ScoreDisplay
 
 
 class GameSceneCore:
@@ -196,7 +193,7 @@ class GameSceneCore:
             cone.sync()
 
         zoom_factor: float = (
-                1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
+            1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
         )
 
         self.render_group.camera.set_zoom(zoom_factor)

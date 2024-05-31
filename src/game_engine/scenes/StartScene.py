@@ -12,7 +12,7 @@ from src.render.screen_elements.ui_components import (
     UIFullScreenLayout,
     UIAnimatableWidget,
     UISuperAnchorWidget,
-    UITexture
+    UITexture,
 )
 from src.utils import load_texture
 
@@ -153,22 +153,36 @@ class StartScene:
 
         game_one_button = arcade.gui.UITextureButton(
             texture=load_texture("assets/pic/buttons/GameSelection/PMS/normal.png"),
-            texture_hovered=load_texture("assets/pic/buttons/GameSelection/PMS/hovered.png"),
-            texture_pressed=load_texture("assets/pic/buttons/GameSelection/PMS/pressed.png"),
+            texture_hovered=load_texture(
+                "assets/pic/buttons/GameSelection/PMS/hovered.png"
+            ),
+            texture_pressed=load_texture(
+                "assets/pic/buttons/GameSelection/PMS/pressed.png"
+            ),
         )
         game_one_button.on_click = lambda _: self.start_game(self, "park")
 
         game_two_button = arcade.gui.UITextureButton(
-            texture=load_texture("assets/pic/buttons/GameSelection/Survival/normal.png"),
-            texture_hovered=load_texture("assets/pic/buttons/GameSelection/Survival/hovered.png"),
-            texture_pressed=load_texture("assets/pic/buttons/GameSelection/Survival/pressed.png"),
+            texture=load_texture(
+                "assets/pic/buttons/GameSelection/Survival/normal.png"
+            ),
+            texture_hovered=load_texture(
+                "assets/pic/buttons/GameSelection/Survival/hovered.png"
+            ),
+            texture_pressed=load_texture(
+                "assets/pic/buttons/GameSelection/Survival/pressed.png"
+            ),
         )
         game_two_button.on_click = lambda _: self.start_game(self, "survive")
 
         game_three_button = arcade.gui.UITextureButton(
             texture=load_texture("assets/pic/buttons/GameSelection/A2B/normal.png"),
-            texture_hovered=load_texture("assets/pic/buttons/GameSelection/A2B/hovered.png"),
-            texture_pressed=load_texture("assets/pic/buttons/GameSelection/A2B/pressed.png"),
+            texture_hovered=load_texture(
+                "assets/pic/buttons/GameSelection/A2B/hovered.png"
+            ),
+            texture_pressed=load_texture(
+                "assets/pic/buttons/GameSelection/A2B/pressed.png"
+            ),
         )
         game_three_button.on_click = lambda _: self.start_game(self, "a2b")
 
@@ -250,7 +264,7 @@ class StartScene:
         self.title_animator.update_animation(delta_time)
 
         if io_controller.is_key_clicked(
-                arcade.key.ESCAPE
+            arcade.key.ESCAPE
         ) or io_controller.is_key_clicked(arcade.key.BACKSPACE):
             self.go_main(None)
 
@@ -258,11 +272,11 @@ class StartScene:
         delta_translation = min(delta_translation, 0.5)
 
         self.screen_layout.align_x += (
-                                              self._target_offset_x - self.screen_layout.align_x
-                                      ) * delta_translation
+            self._target_offset_x - self.screen_layout.align_x
+        ) * delta_translation
         self.screen_layout.align_y += (
-                                              self._target_offset_y - self.screen_layout.align_y
-                                      ) * delta_translation
+            self._target_offset_y - self.screen_layout.align_y
+        ) * delta_translation
 
         self._effect_animator.update(delta_time)
 
