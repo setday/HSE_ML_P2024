@@ -14,7 +14,6 @@ class A2BScene(GameSceneCore):
 
         setup_scene(self, "assets/maps/A2B.json")
 
-        self.car_m.car_model.body.position = (-600, 300)
         ######################
         # Screen Elements
         ######################
@@ -38,10 +37,10 @@ class A2BScene(GameSceneCore):
     def update(self, io_controller: IOController, delta_time: float) -> None:
         super().update(io_controller, delta_time)
 
-        if self.car_m.health <= 0 and not self.is_end_state:
-            self.do_lose()
         if self.car_m.is_car_parked and not self.is_end_state:
             self.do_victory()
+        if self.car_m.health <= 0 and not self.is_end_state:
+            self.do_lose()
 
     def update_env(self, io_controller: IOController, delta_time: float) -> None:
         keys: dict = io_controller.keyboard

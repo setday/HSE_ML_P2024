@@ -12,7 +12,7 @@ class ParkMeScene(GameSceneCore):
     def __init__(self, core_instance):
         super().__init__(core_instance, False)
 
-        setup_scene(self, "assets/maps/ParkWithEnemies.json")
+        setup_scene(self, "assets/maps/ParkMe.json")
 
         self.car_m.set_hook("parked_hook", lambda _: self.do_victory())
 

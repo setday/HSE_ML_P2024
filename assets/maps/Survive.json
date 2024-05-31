@@ -207,6 +207,9 @@
       0
     ]
   ],
+  "main_car_pos": [
+    0, -100
+  ],
   "background": "assets/pic/map/Map.jpg",
   "scale": 10
 }

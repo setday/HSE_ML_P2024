@@ -574,5 +574,9 @@
     ]
   ],
   "background": "assets/pic/map/Map3.jpeg",
-  "scale": 2
+  "scale": 2,
+  "main_car_pos": [
+    -600,
+    300
+  ]
 }
