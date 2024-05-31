@@ -4,5 +4,7 @@ from .game_scene.modes.A2BScene import A2BScene
 from .game_scene.modes.SurvivalScene import SurvivalScene
 from .game_scene.modes.ParkMeScene import ParkMeScene
 
+from .game_scene.GameSceneCore import GameSceneCore
+
 # from .fun_scenes.PhysicScene import PhysicScene
 # from .fun_scenes.GameOfLifeScene import GameOfLifeScene

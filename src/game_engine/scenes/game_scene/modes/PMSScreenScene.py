@@ -50,8 +50,6 @@ class PMSScreenScene(GameSceneCore):
         # Screen Elements
         ######################
 
-        camera_offset: Vector2D = self.screen_group.camera.get_position(1, 1)
-
         self.pause = False
 
     def update(self, io_controller: IOController, delta_time: float) -> None:

@@ -85,6 +85,7 @@ def test_object_factory():
 
 
 def test_scene_setup():
+    core = Core()
     assert hasattr(core.scene, "cars"), "Game must have at least one car"
     for car in core.scene.cars:
         assert isinstance(car, Car), "Only cars should be in list with cars"

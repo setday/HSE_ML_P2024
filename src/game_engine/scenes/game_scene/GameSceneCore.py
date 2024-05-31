@@ -77,10 +77,10 @@ class GameSceneCore:
         self.render_group: RenderGroup = RenderGroup()
         self.top_render_group: RenderGroup = RenderGroup()
 
-        self.car_m: Car | None = None
-        self.cars: list[Car] = []
-        self.traffic_cones: list[MovableObstacle] = []
-        self.parking_place: ParkingPlace | None = None
+        self.car_m = None
+        self.cars = []
+        self.traffic_cones = []
+        self.parking_place = None
 
         ######################
         # Screen Elements
