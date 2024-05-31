@@ -2,7 +2,7 @@ import arcade.key
 import numpy as np
 
 from src.game_engine.Core import Core
-from src.game_engine.scenes.game_scene.GameSceneCore import GameSceneCore
+from src.game_engine.scenes import GameScene
 from src.render.Window import IOController
 
 

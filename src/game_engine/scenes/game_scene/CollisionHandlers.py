@@ -5,6 +5,8 @@ import pymunk
 from src.game_engine.entities.Car import Car
 from src.game_engine.entities.ParkingPlace import ParkingPlace
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
+from src.game_engine.scenes.layouts.SettingLayout import get_sound_level
+from src.game_engine.entities.MusicPlayer import SoundPlayer
 
 
 def skip_collision(___, _, __) -> bool:
@@ -12,6 +14,8 @@ def skip_collision(___, _, __) -> bool:
 
 
 def collision_car_with_car(arbiter: pymunk.Arbiter, _, data: dict) -> bool:
+    SoundPlayer("assets/sounds/hurt.mp3", 0.8 * get_sound_level())
+
     car1: Car = arbiter.shapes[0].super
     car2: Car = arbiter.shapes[1].super
 
@@ -82,6 +86,8 @@ def end_collision_car_with_dead_parking_place(arbiter: pymunk.Arbiter, _, __) ->
 
 
 def collision_car_with_obstacle(arbiter: pymunk.Arbiter, _, data: dict) -> None:
+    SoundPlayer("assets/sounds/horn.wav", 0.7 * get_sound_level())
+
     car = arbiter.shapes[0].super
     cone = arbiter.shapes[1].super
 

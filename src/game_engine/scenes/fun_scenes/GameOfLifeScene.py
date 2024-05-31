@@ -1,7 +1,7 @@
 import arcade
 import numpy as np
 
-from src.render.RenderGroup import RenderGroup
+from src.render.scene_elements import RenderGroup
 
 
 class GameOfLifeField:

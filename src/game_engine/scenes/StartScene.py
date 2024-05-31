@@ -1,24 +1,18 @@
 import arcade
 import arcade.gui
 
-from src.game_engine.scenes.game_scene.modes.ParkMeScene import ParkMeScene
-from src.game_engine.scenes.game_scene.modes.SurvivalScene import SurvivalScene
-from src.game_engine.scenes.game_scene.modes.A2BScene import A2BScene
-from src.game_engine.scenes.layouts.CreditsLayout import CreditsLayout
-from src.game_engine.scenes.layouts.SettingLayout import SettingLayout
-from src.render.animator.FloatingAnimator import FloatingAnimator
-from src.render.animator.WanderAnimator import WanderAnimator
-from src.render.screen_elements.effect_animator.EffectAnimator import EffectAnimator
-from src.render.screen_elements.effect_animator.effects.FadeEffect import FadeEffect
-from src.render.screen_elements.ui_components.UIAnimatorWidget import UIAnimatableWidget
-from src.render.screen_elements.ui_components.UIFullScreenLayout import (
+from src.game_engine.entities.MusicPlayer import SoundPlayer
+from .game_scene.GameScene import GameScene
+from .layouts import CreditsLayout, SettingLayout, get_sound_level
+from src.render.animator import FloatingAnimator, WanderAnimator
+from src.render.screen_elements.effect_animator import EffectAnimator, FadeEffect
+from src.render.screen_elements.ui_components import (
     UIFullScreenLayout,
-)
-from src.render.screen_elements.ui_components.UISuperAnchorWidget import (
+    UIAnimatableWidget,
     UISuperAnchorWidget,
+    UITexture
 )
-from src.render.screen_elements.ui_components.UITexture import UITexture
-from src.utils.Loaders import load_texture
+from src.utils import load_texture
 
 
 def no_game(_):
@@ -251,6 +245,11 @@ class StartScene:
             )
         )
 
+    def init_music_player(self, window):
+        self.player = SoundPlayer(
+            "assets/sounds/main_menu.mp3", 1.0 * get_sound_level(), loop=True
+        )
+
     def update(self, io_controller, delta_time):
         self.background_animator.update_animation(delta_time)
 
@@ -292,7 +291,10 @@ class StartScene:
             FadeEffect(
                 duration=1,
                 fade_color=(255, 255, 255),
-                finish_callback=lambda: self.core_instance.set_scene(scene),
+                finish_callback=lambda: [
+                    self.player.pause(),
+                    self.core_instance.set_scene(GameScene),
+                ],
             )
         )
 

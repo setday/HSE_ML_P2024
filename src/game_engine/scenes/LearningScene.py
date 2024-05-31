@@ -3,19 +3,19 @@ import random
 
 import pymunk
 
-from src.game_engine.controllers.Controller import AIController
+from src.game_engine.controllers import AIController
 from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.entities.ParkingPlace import ParkingPlace
-from src.game_engine.scenes.game_scene.CollisionHandlers import (
+from .game_scene.CollisionHandlers import (
     skip_collision,
     collision_car_with_base_parking_place,
     collision_car_with_dead_parking_place,
     end_collision_car_with_base_parking_place,
     end_collision_car_with_dead_parking_place,
 )
-from src.render.RenderGroup import RenderGroup
-from src.render.particle.ParticleShow import ParticleShow
-from src.render.sprites.BasicSprite import BasicSprite
+from src.render.scene_elements import RenderGroup
+from src.render.particle import ParticleShow
+from src.render.sprites import BasicSprite
 
 
 class LearningScene:

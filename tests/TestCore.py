@@ -12,6 +12,8 @@ from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.entities.ParkingPlace import ParkingPlace
 from src.render.Window import IOController
 
+from src.game_engine.scenes import GameScene
+
 
 class TestCore(Core):
     def __init__(self, test_type, test_objects):
@@ -19,6 +21,8 @@ class TestCore(Core):
         self.type = test_type
         self.test_objects = test_objects
         self.num_obj = 0
+
+        self.set_scene(GameScene)
 
     def create_object(self, obj):
         if obj == "car":
@@ -30,7 +34,7 @@ class TestCore(Core):
                 car_model="red_car",
             )
             car.switch_controller(
-                random.choice([RandomController(), AIController(), BrakeController()])
+                random.choice([RandomController(), BrakeController()])
             )
             self.scene.cars.append(car)
         elif obj == "cone":
@@ -76,13 +80,17 @@ class TestCore(Core):
             )
 
     def on_update(self, io_controller: IOController, delta_time: float) -> None:
+        if io_controller.is_key_pressed(arcade.key.ESCAPE):
+            arcade.exit()
+            return
+
         for obj in self.test_objects:
             self.create_object(obj)
             self.num_obj += 1
         if not arcade.timings_enabled():
             arcade.enable_timings()
         with open(
-            "results/" + f"{self.type}_" + "-".join(self.test_objects) + ".csv", "a"
+            "data/load/" + f"{self.type}_" + "-".join(self.test_objects) + ".csv", "a"
         ) as out:
             print(f"{self.num_obj}, {arcade.get_fps()}", file=out)
 

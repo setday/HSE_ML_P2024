@@ -1,7 +1,7 @@
 import random
 from typing import Any
 
-from src.render.animator.BasicAnimator import BasicAnimator, lerp_ease_in_out
+from .BasicAnimator import BasicAnimator, lerp_ease_in_out
 
 
 class WanderParameterAnimator(BasicAnimator):

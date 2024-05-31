@@ -4,18 +4,25 @@ import pymunk
 from arcade.experimental import Shadertoy
 from pymunk import CollisionHandler
 
-import src.game_engine.controllers.Controller as Controller
+from src.game_engine.controllers import RandomController, AIController, BrakeController
 import src.game_engine.scenes.game_scene.CollisionHandlers as CollisionHandlers
-from src.game_engine.entities.Car import Car
+from src.game_engine.entities.MusicPlayer import MusicPlayer
 from src.game_engine.entities.ParkingPlace import ParkingPlace
-from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
-from src.game_engine.scenes.layouts.EscapeLayout import EscapeMenuLayout
-from src.render.RenderGroup import RenderGroup
+from .SceneSetup import setup_scene
+from ..layouts import EscapeMenuLayout
+from src.game_engine.scenes.layouts.SettingLayout import get_sound_level
+from src.render.scene_elements import RenderGroup
 from src.render.Window import IOController
-from src.render.particle.ParticleShow import ParticleShow
-from src.render.screen_elements.effect_animator.EffectAnimator import EffectAnimator
-from src.render.screen_elements.effect_animator.effects.FadeEffect import FadeEffect
-from src.render.screen_elements.effect_animator.effects.TextPrinter import TextPrinter
+from src.render.particle import ParticleShow
+from src.render.screen_elements.effect_animator import (
+    EffectAnimator,
+    FadeEffect,
+    TextPrinter
+)
+from src.render.screen_elements.ui_components import (
+    Indicator,
+    ScoreDisplay
+)
 
 
 class GameSceneCore:
@@ -78,6 +85,31 @@ class GameSceneCore:
         self.traffic_cones: list[MovableObstacle] = []
         self.parking_place: ParkingPlace | None = None
 
+        setup_scene(self, "assets/maps/ParkWithEnemies.json")
+        self.parking_place = ParkingPlace(
+            self.down_render_group,
+            self.space,
+            position=((random.randint(-500, 500), random.randint(-500, 500))),
+            angle=random.randint(0, 360),
+        )
+        controllers = [  # noqa: F841
+            {"type": "sklearn", "path": "models_bin/CEM.pkl"},
+            {"type": "pytorch", "path": "models_bin/torch.pt"},
+            {"type": "stable_baselines", "policy": "DQN", "path": "models_bin/DQN"},
+            {"type": "stable_baselines", "policy": "A2C", "path": "models_bin/A2C"},
+            {"type": "stable_baselines", "policy": "PPO", "path": "models_bin/PPO"},
+        ]
+        for car in self.cars[1:]:
+            car.switch_controller(
+                random.choice(
+                    [
+                        RandomController(),
+                        # Controller.AIController(random.choice(controllers)),
+                        BrakeController(),
+                    ]
+                )
+            )
+
         ######################
         # Screen Elements
         ######################
@@ -119,6 +151,9 @@ class GameSceneCore:
 
         self.is_end_state = False
 
+    def init_music_player(self, window):
+        self.music_player = MusicPlayer(window, 1.0 * get_sound_level())
+
     def update(self, io_controller: IOController, delta_time: float) -> None:
         delta_time = min(delta_time, 0.1)
 
@@ -145,7 +180,7 @@ class GameSceneCore:
     def update_env(self, io_controller: IOController, delta_time: float) -> None:
         keys: dict = io_controller.keyboard
 
-        if isinstance(self.car_m.controller, Controller.AIController):
+        if isinstance(self.car_m.controller, AIController):
             self.car_m.controlling(
                 keys,
                 np.array(
@@ -169,7 +204,26 @@ class GameSceneCore:
         for car in self.cars:
             if car == self.car_m:
                 continue
-            if not isinstance(car.controller, Controller.AIController):
+            if isinstance(car.controller, AIController):
+                car.controlling(
+                    keys,
+                    np.array(
+                        [
+                            self.car_m.car_model.body.position[0]
+                            - self.parking_place.parking_model.inner_body.position[0],
+                            self.car_m.car_model.body.position[1]
+                            - self.parking_place.parking_model.inner_body.position[1],
+                            abs(
+                                self.car_m.car_model.body.angle
+                                - self.parking_place.parking_model.inner_body.angle
+                            )
+                            % 180,
+                            self.car_m.car_model.body.velocity.get_length_sqrd() ** 0.5,
+                            # self.parking_place.parking_model.inner_body.angle,
+                        ]
+                    ),
+                )
+            else:
                 car.controlling(keys)
                 continue
 
@@ -186,7 +240,7 @@ class GameSceneCore:
             cone.sync()
 
         zoom_factor: float = (
-            1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
+                1 + self.car_m.car_model.body.velocity.get_length_sqrd() / 10000
         )
 
         self.render_group.camera.set_zoom(zoom_factor)
@@ -227,6 +281,8 @@ class GameSceneCore:
 
         self.screen_group.camera.use()
         self.screen_group.draw()
+        self.score_board.draw()
+        self.music_player.draw()
 
     def draw_effects(self):
         ######################
@@ -353,7 +409,7 @@ class GameSceneCore:
             FadeEffect(
                 1,
                 0,
-                lambda: self.core_instance.set_scene(None),
+                lambda: [self.music_player.pause(), self.core_instance.set_scene(None)],
                 (255, 255, 255, 255),
                 True,
                 True,

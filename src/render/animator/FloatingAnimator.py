@@ -2,7 +2,7 @@ import random
 from math import sin
 from typing import Any
 
-from src.render.animator.BasicAnimator import BasicAnimator
+from .BasicAnimator import BasicAnimator
 
 
 class FloatingParameterAnimator(BasicAnimator):

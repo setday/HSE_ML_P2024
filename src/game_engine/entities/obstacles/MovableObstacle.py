@@ -4,8 +4,8 @@ from pyglet.math import Vec2 as Vector2D
 from pymunk import Space
 
 from src.physics.models.MovableObstaclePhysicsModel import MovableObstaclePhysicsModel
-from src.render.RenderGroup import RenderGroup
-from src.render.sprites.BasicSprite import BasicSprite
+from src.render.scene_elements import RenderGroup
+from src.render.sprites import BasicSprite
 
 
 class MovableObstacle:

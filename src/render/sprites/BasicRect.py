@@ -4,7 +4,7 @@ from arcade import Texture
 from pyglet.math import Vec2 as Vector2D
 from pymunk import Vec2d
 
-from src.render.sprites.BasicDrawable import BasicDrawable
+from .BasicDrawable import BasicDrawable
 
 
 class BasicRect(BasicDrawable):

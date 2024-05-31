@@ -4,8 +4,8 @@ from pyglet.math import Vec2 as Vector2D
 from pymunk import Space
 
 from src.physics.models.ParkingPlacePhysicModel import ParkingPlacePhysicsModel
-from src.render.RenderGroup import RenderGroup
-from src.render.sprites.BasicRect import BasicRect
+from src.render.scene_elements import RenderGroup
+from src.render.sprites import BasicRect
 
 
 class ParkingPlace:
