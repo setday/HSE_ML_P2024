@@ -171,19 +171,10 @@ class StartScene:
         )
         game_one_button.on_click = lambda _: self.start_game(self, "park")
 
-        game_two_button = arcade.gui.UIFlatButton(
-            text="Death Match",
-            width=300,
-            height=100,
-            font_size=30,
-            style={
-                "font_color": arcade.color.WHITE,
-                "bg_color": arcade.color.BLUE,
-                "hover_font_color": arcade.color.WHITE,
-                "hover_bg_color": arcade.color.BLUE,
-                "clicked_font_color": arcade.color.WHITE,
-                "clicked_bg_color": arcade.color.BLUE,
-            },
+        game_two_button = arcade.gui.UITextureButton(
+            texture=load_texture("assets/pic/buttons/GameSelection/Survival/normal.png"),
+            texture_hovered=load_texture("assets/pic/buttons/GameSelection/Survival/hovered.png"),
+            texture_pressed=load_texture("assets/pic/buttons/GameSelection/Survival/pressed.png"),
         )
         game_two_button.on_click = lambda _: self.start_game(self, "survive")
 
@@ -276,7 +267,7 @@ class StartScene:
         self.title_animator.update_animation(delta_time)
 
         if io_controller.is_key_clicked(
-            arcade.key.ESCAPE
+                arcade.key.ESCAPE
         ) or io_controller.is_key_clicked(arcade.key.BACKSPACE):
             self.go_main(None)
 
@@ -284,11 +275,11 @@ class StartScene:
         delta_translation = min(delta_translation, 0.5)
 
         self.screen_layout.align_x += (
-            self._target_offset_x - self.screen_layout.align_x
-        ) * delta_translation
+                                              self._target_offset_x - self.screen_layout.align_x
+                                      ) * delta_translation
         self.screen_layout.align_y += (
-            self._target_offset_y - self.screen_layout.align_y
-        ) * delta_translation
+                                              self._target_offset_y - self.screen_layout.align_y
+                                      ) * delta_translation
 
         self._effect_animator.update(delta_time)
 

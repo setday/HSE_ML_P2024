@@ -235,7 +235,8 @@ class GameSceneCore:
 
         self.tick += 1
 
-        self.shader_vin.render(time=self.tick / 125, time_delta=self.car_m.health)
+        if self.car_m:
+            self.shader_vin.render(time=self.tick / 125, time_delta=self.car_m.health)
 
         self.effect_animator.draw()
 

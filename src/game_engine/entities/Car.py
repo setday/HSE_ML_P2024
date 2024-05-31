@@ -97,7 +97,8 @@ class Car:
     def controlling(
         self, keys: dict, observation: list[float] | np.ndarray = None
     ) -> None:
-        self.controller.handle_input(keys, observation)
+        if self.controller:
+            self.controller.handle_input(keys, observation)
 
     def switch_controller(self, controller) -> None:
         self.controller = controller
