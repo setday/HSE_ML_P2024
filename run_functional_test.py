@@ -4,10 +4,7 @@ from src.game_engine.entities.Car import Car
 from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
-from src.render.screen_elements.ui_components import (
-    Indicator,
-    ScoreDisplay
-)
+from src.render.screen_elements.ui_components import Indicator, ScoreDisplay
 
 
 def test_core():
@@ -88,6 +85,7 @@ def test_object_factory():
 
 
 def test_scene_setup():
+    core = Core()
     assert hasattr(core.scene, "cars"), "Game must have at least one car"
     for car in core.scene.cars:
         assert isinstance(car, Car), "Only cars should be in list with cars"

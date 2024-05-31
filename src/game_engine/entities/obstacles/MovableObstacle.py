@@ -34,7 +34,12 @@ class MovableObstacle:
         self.obstacle_model.shape.super = self
         self.space.add(self.obstacle_model.body, self.obstacle_model.shape)
 
-        self.health: int = 100
+        if image_path == "assets/coin.png":
+            self.type: str = "coin"
+            self.health: int = 1
+        else:
+            self.type: str = "cone"
+            self.health: int = 100
 
         self.sync()
 

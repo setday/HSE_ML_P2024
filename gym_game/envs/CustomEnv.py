@@ -3,7 +3,7 @@ import numpy as np
 from gym import spaces
 
 from gym_game.envs.Game import Game
-from src.game_engine.scenes import GameScene
+from src.game_engine.scenes import GameSceneCore
 
 
 class CustomEnv(gym.Env):
@@ -27,7 +27,7 @@ class CustomEnv(gym.Env):
         if not hasattr(self, "game"):
             self.game = Game()
         else:
-            self.game.core.scene = GameScene(True)
+            self.game.core.scene = GameSceneCore(True)
         self.game.time = 0
         return self.game.observe(), {}
 

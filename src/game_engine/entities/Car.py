@@ -21,6 +21,7 @@ class Car:
         position: Vec2d | tuple[float, float] = (300, 300),
         angle: float = 0,
         skin_id: int = -1,
+        is_main_car: bool = False,
     ) -> None:
         skins: list[str] = [
             "assets/pic/cars/car_2.png",
@@ -32,7 +33,7 @@ class Car:
         skin = skins[skin_id % len(skins)]
 
         x, y = position
-
+        self.is_main_car: bool = is_main_car
         self.car_view: BasicSprite = BasicSprite(skin, position)
         self.car_model: CarPhysicsModel = CarPhysicsModel(
             (x, y), self.car_view.get_hit_box()
@@ -107,7 +108,8 @@ class Car:
     def controlling(
         self, keys: dict, observation: list[float] | np.ndarray = None
     ) -> None:
-        self.controller.handle_input(keys, observation)
+        if self.controller:
+            self.controller.handle_input(keys, observation)
 
     def switch_controller(self, controller) -> None:
         self.controller = controller
@@ -164,6 +166,7 @@ class Car:
                 and self.inside_parking_place
                 and self.dead_zones_intersect == 0
             )
+            # print(self.dead_zones_intersect)
             if parked_state != self.is_car_parked:
                 self.is_car_parked = parked_state
                 if self.hooks["parked_hook"] and self.is_car_parked:

@@ -2,13 +2,14 @@ from typing import Tuple
 
 from arcade import Texture
 from pyglet.math import Vec2 as Vector2D
+from pymunk import Vec2d
 
 from .BasicDrawable import BasicDrawable
 
 
 class BasicRect(BasicDrawable):
     def __init__(
-        self, width: int, height: int, position: Vector2D | tuple[float, float]
+        self, width: int, height: int, position: Vector2D | Vec2d | tuple[float, float]
     ) -> None:
         super().__init__(position)
 

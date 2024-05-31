@@ -10,8 +10,11 @@ class TextPrinter(BasicEffect):
         delay: float = 0,
         finish_callback=None,
         text_to_print: str = "",
+        color: tuple[int, int, int] = arcade.color.WHITE,
+        font_size: int = 100,
         appear: bool = True,
         text_object: arcade.Text = None,
+        offset: tuple[int, int] = (0, 0),
         stay_after_finish: bool = False,
     ):
         """
@@ -38,10 +41,10 @@ class TextPrinter(BasicEffect):
         if text_object is None:
             text_object = arcade.Text(
                 "",
-                window_size[0] // 2,
-                window_size[1] // 2,
-                arcade.color.WHITE,
-                100,
+                window_size[0] // 2 + offset[0],
+                window_size[1] // 2 + offset[1],
+                color,
+                font_size,
                 anchor_x="center",
                 anchor_y="center",
                 font_name="Karmatic Arcade",

@@ -88,7 +88,7 @@ class EscapeMenuLayout:
 
     def update(self, io_controller, delta_time):
         if io_controller.is_key_clicked(ESCAPE) or io_controller.is_key_clicked(
-                BACKSPACE
+            BACKSPACE
         ):
             self.close_callback(None)
 
@@ -96,11 +96,11 @@ class EscapeMenuLayout:
         delta_translation = min(delta_translation, 0.5)
 
         self.screen_layout.align_x += (
-                                              self._target_offset_x - self.screen_layout.align_x
-                                      ) * delta_translation
+            self._target_offset_x - self.screen_layout.align_x
+        ) * delta_translation
         self.screen_layout.align_y += (
-                                              self._target_offset_y - self.screen_layout.align_y
-                                      ) * delta_translation
+            self._target_offset_y - self.screen_layout.align_y
+        ) * delta_translation
 
     def draw(self):
         self.manager.draw()

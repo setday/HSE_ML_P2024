@@ -26,6 +26,7 @@ class ObjectFactory:
                 position,
                 angle,
                 kwargs.get("car_model", "blue_car"),
+                kwargs.get("is_main_car", False),
             )
         elif object_type == "movable_obstacle":
             return ObjectFactory.create_movable_obstacle(
@@ -53,6 +54,7 @@ class ObjectFactory:
         position: Vector2D | tuple[float, float] = (0, 0),
         angle: float = 0,
         car_model: str = "blue_car",
+        is_main_car: bool = False,
     ) -> Car:
         car_model_dict = {
             "random_car": -1,
@@ -61,7 +63,12 @@ class ObjectFactory:
             "long_car": 2,
         }
         return Car(
-            render_group, space, position, radians(angle), car_model_dict[car_model]
+            render_group,
+            space,
+            position,
+            radians(angle),
+            car_model_dict[car_model],
+            is_main_car,
         )
 
     @staticmethod
@@ -74,6 +81,7 @@ class ObjectFactory:
     ) -> MovableObstacle:
         movable_obstacle_model_dict = {
             "cone": "assets/pic/obstacles/Traffic_Cone.png",
+            "coin": "assets/coin.png",
         }
         return MovableObstacle(
             render_group,
@@ -98,6 +106,7 @@ class ObjectFactory:
             "tree": "assets/pic/obstacles/Tree_1.png",
             "x_barrier": None,
             "y_barrier": None,
+            "big_bush": "assets/pic/obstacles/parking_barrier_3.png",
         }
         shape_type = "self"
         if static_obstacle_model in ["x_barrier", "y_barrier"]:
