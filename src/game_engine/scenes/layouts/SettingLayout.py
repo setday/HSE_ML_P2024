@@ -1,6 +1,7 @@
 from arcade.color import RED, GREEN, WHITE
 from arcade.gui import UIFlatButton, UITextureButton, UIAnchorWidget, UIBoxLayout
 
+from src.game_engine.entities.MusicPlayer import update_all_players
 import src.render.particle.ParticleShow as ParticleShow
 from src.render.screen_elements.ui_components.UICheckButton import UICheckButton
 from src.render.screen_elements.ui_components.UIFullScreenLayout import (
@@ -9,8 +10,14 @@ from src.render.screen_elements.ui_components.UIFullScreenLayout import (
 from src.render.screen_elements.ui_components.UISlider import UISlider
 from src.utils.Loaders import load_texture
 
-_sound_level = 4
+_sound_level = 9
 _is_particles_on = True
+
+
+def get_sound_level() -> float:
+    global _sound_level
+
+    return _sound_level / 9
 
 
 class SettingLayout(UIFullScreenLayout):
@@ -102,11 +109,12 @@ class SettingLayout(UIFullScreenLayout):
     def set_sound_level(self, level: float | None = None):
         global _sound_level
         if not level:
-            _sound_level = 0 if _sound_level else 4
+            _sound_level = 0 if _sound_level else 9
         else:
             _sound_level = level
 
         self.redraw_buttons()
+        update_all_players(get_sound_level())
 
     def switch_particles(self, _):
         global _is_particles_on

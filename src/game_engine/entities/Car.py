@@ -9,6 +9,8 @@ import src.render.particle.ParticleShow as ParticleShow
 from src.physics.models.CarPhysicsModel import CarPhysicsModel
 from src.render.RenderGroup import RenderGroup
 from src.render.sprites.BasicSprite import BasicSprite
+from src.game_engine.scenes.layouts.SettingLayout import get_sound_level
+from src.game_engine.entities.MusicPlayer import SoundPlayer
 
 
 class Car:
@@ -78,6 +80,15 @@ class Car:
             "parked_hook": None,
             "unparked_hook": None,
         }
+
+        self.accelerate_sound = SoundPlayer(
+            "assets/sounds/accelerate.wav", 0.0, loop=True, ignore_update=True
+        )
+        self.drift_sound = SoundPlayer(
+            "assets/sounds/drift.wav", 0.0, loop=True, ignore_update=True
+        )
+
+        SoundPlayer("assets/sounds/engine-start.wav", 1.0 * get_sound_level())
 
         self.sync()
 
@@ -160,6 +171,11 @@ class Car:
                 if self.hooks["unparked_hook"] and not self.is_car_parked:
                     self.hooks["unparked_hook"](self)
 
+        self.accelerate_sound.set_volume(
+            self.car_model.body.velocity.get_length_sqrd() / 10000 * get_sound_level(),
+            update=False,
+        )
+
         if self.tyre_state != 0 and (
             not self.is_hand_braking
             or self.car_model.body.velocity.get_length_sqrd() < 10
@@ -171,6 +187,16 @@ class Car:
             and self.car_model.body.velocity.get_length_sqrd() > 10
         ):
             self._start_tyring()
+
+        if self.tyre_state != 0:
+            self.drift_sound.set_volume(
+                self.car_model.body.velocity.get_length_sqrd()
+                / 10000
+                * get_sound_level(),
+                update=False,
+            )
+        else:
+            self.drift_sound.set_volume(0.0, update=False)
 
         self.is_hand_braking = False
 
@@ -208,7 +234,9 @@ class Car:
 
         self.health += delta
         self.health = min(max(self.health, 0), 100)
-        # self.sync()
+
+        if self.health == 0:
+            SoundPlayer("assets/sounds/crash.wav", 1.2 * get_sound_level())
 
         if self.hooks["dead_hook"] and self.health <= 0:
             self.hooks["dead_hook"](self)

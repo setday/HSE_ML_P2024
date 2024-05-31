@@ -9,9 +9,11 @@ from pymunk import CollisionHandler
 
 import src.game_engine.controllers.Controller as Controller
 import src.game_engine.scenes.game_scene.CollisionHandlers as CollisionHandlers
+from src.game_engine.entities.MusicPlayer import MusicPlayer
 from src.game_engine.entities.ParkingPlace import ParkingPlace
 from src.game_engine.scenes.game_scene.SceneSetup import setup_scene
 from src.game_engine.scenes.layouts.EscapeLayout import EscapeMenuLayout
+from src.game_engine.scenes.layouts.SettingLayout import get_sound_level
 from src.render.RenderGroup import RenderGroup
 from src.render.Window import IOController
 from src.render.particle.ParticleShow import ParticleShow
@@ -163,6 +165,9 @@ class GameScene:
 
         self.is_end_state = False
 
+    def init_music_player(self, window):
+        self.music_player = MusicPlayer(window, 1.0 * get_sound_level())
+
     def update(self, io_controller: IOController, delta_time: float) -> None:
         self.effect_animator.update(delta_time)
 
@@ -299,6 +304,7 @@ class GameScene:
         self.screen_group.camera.use()
         self.screen_group.draw()
         self.score_board.draw()
+        self.music_player.draw()
 
         ######################
         # Shaders Draw
@@ -347,7 +353,7 @@ class GameScene:
             FadeEffect(
                 1,
                 0,
-                lambda: self.core_instance.set_scene(None),
+                lambda: [self.music_player.pause(), self.core_instance.set_scene(None)],
                 (255, 255, 255, 255),
                 True,
                 True,
