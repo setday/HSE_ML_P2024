@@ -262,6 +262,6 @@
     0,
     -100
   ],
-  "background": "assets/pic/map/Map.jpg",
-  "scale": 10
+  "background": "assets/pic/extra/concreate.png",
+  "scale": 4
 }

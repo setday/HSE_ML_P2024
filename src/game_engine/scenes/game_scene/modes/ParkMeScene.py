@@ -1,3 +1,4 @@
+import arcade
 import numpy as np
 from pyglet.math import Vec2 as Vector2D
 
@@ -36,7 +37,15 @@ class ParkMeScene(GameSceneCore):
         )
         self.screen_group.add(self.score_board.sprite_list)
 
+        self.pause = False
+
     def update(self, io_controller: IOController, delta_time: float) -> None:
+        if io_controller.is_key_clicked(arcade.key.P):
+            self.pause = not self.pause
+
+        if self.pause:
+            return
+
         super().update(io_controller, delta_time)
         if self.car_m.is_car_parked and not self.is_end_state:
             self.do_victory()

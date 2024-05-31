@@ -155,19 +155,10 @@ class StartScene:
         )
         back_button.on_click = self.go_main
 
-        game_one_button = arcade.gui.UIFlatButton(
-            text="PARK ME",
-            width=300,
-            height=100,
-            font_size=30,
-            style={
-                "font_color": arcade.color.WHITE,
-                "bg_color": arcade.color.BLUE,
-                "hover_font_color": arcade.color.WHITE,
-                "hover_bg_color": arcade.color.BLUE,
-                "clicked_font_color": arcade.color.WHITE,
-                "clicked_bg_color": arcade.color.BLUE,
-            },
+        game_one_button = arcade.gui.UITextureButton(
+            texture=load_texture("assets/pic/buttons/GameSelection/PMS/normal.png"),
+            texture_hovered=load_texture("assets/pic/buttons/GameSelection/PMS/hovered.png"),
+            texture_pressed=load_texture("assets/pic/buttons/GameSelection/PMS/pressed.png"),
         )
         game_one_button.on_click = lambda _: self.start_game(self, "park")
 
