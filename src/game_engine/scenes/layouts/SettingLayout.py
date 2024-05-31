@@ -59,13 +59,21 @@ class SettingLayout(UIFullScreenLayout):
             change_callback=self.set_sound_level,
         )
 
-        self.particles_button = UIFlatButton(
-            text="",
-            width=300,
-            height=100,
-            font_size=30,
+        self.particles_button = UICheckButton(
+            textures_checked=(
+                load_texture("assets/pic/buttons/Effects/normal_on.png"),
+                load_texture("assets/pic/buttons/Effects/hovered_on.png"),
+                load_texture("assets/pic/buttons/Effects/pressed_on.png"),
+            ),
+            textures_unchecked=(
+                load_texture("assets/pic/buttons/Effects/normal_off.png"),
+                load_texture("assets/pic/buttons/Effects/hovered_off.png"),
+                load_texture("assets/pic/buttons/Effects/pressed_off.png"),
+            ),
+            scale=6,
+            checked=_sound_level != 0,
+            on_change=self.switch_particles,
         )
-        self.particles_button.on_click = self.switch_particles
 
         self.redraw_buttons()
 
@@ -116,9 +124,9 @@ class SettingLayout(UIFullScreenLayout):
         self.redraw_buttons()
         update_all_players(get_sound_level())
 
-    def switch_particles(self, _):
+    def switch_particles(self, state: bool):
         global _is_particles_on
-        _is_particles_on = not _is_particles_on
+        _is_particles_on = state
         change_particles_state(_is_particles_on)
 
         self.redraw_buttons()
@@ -128,15 +136,3 @@ class SettingLayout(UIFullScreenLayout):
 
         self.sound_button.switch_state(_sound_level != 0)
         self.sound_slider.value = _sound_level
-
-        self.particles_button.text = (
-            "Particles On" if _is_particles_on else "Particles Off"
-        )
-        self.particles_button._style = {
-            "font_color": WHITE,
-            "bg_color": GREEN if _is_particles_on else RED,
-            "hover_font_color": WHITE,
-            "hover_bg_color": GREEN if _is_particles_on else RED,
-            "clicked_font_color": WHITE,
-            "clicked_bg_color": GREEN if _is_particles_on else RED,
-        }

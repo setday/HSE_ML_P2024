@@ -2,7 +2,9 @@ import arcade
 import arcade.gui
 
 from src.game_engine.entities.MusicPlayer import SoundPlayer
-from .game_scene.GameScene import GameScene
+from src.game_engine.scenes.game_scene.modes.A2BScene import A2BScene
+from src.game_engine.scenes.game_scene.modes.SurvivalScene import SurvivalScene
+from src.game_engine.scenes.game_scene.modes.ParkMeScene import ParkMeScene
 from .layouts import CreditsLayout, SettingLayout, get_sound_level
 from src.render.animator import FloatingAnimator, WanderAnimator
 from src.render.screen_elements.effect_animator import EffectAnimator, FadeEffect
@@ -163,19 +165,10 @@ class StartScene:
         )
         game_two_button.on_click = lambda _: self.start_game(self, "survive")
 
-        game_three_button = arcade.gui.UIFlatButton(
-            text="A => B",
-            width=300,
-            height=100,
-            font_size=30,
-            style={
-                "font_color": arcade.color.WHITE,
-                "bg_color": arcade.color.BLUE,
-                "hover_font_color": arcade.color.WHITE,
-                "hover_bg_color": arcade.color.BLUE,
-                "clicked_font_color": arcade.color.WHITE,
-                "clicked_bg_color": arcade.color.BLUE,
-            },
+        game_three_button = arcade.gui.UITextureButton(
+            texture=load_texture("assets/pic/buttons/GameSelection/A2B/normal.png"),
+            texture_hovered=load_texture("assets/pic/buttons/GameSelection/A2B/hovered.png"),
+            texture_pressed=load_texture("assets/pic/buttons/GameSelection/A2B/pressed.png"),
         )
         game_three_button.on_click = lambda _: self.start_game(self, "a2b")
 
@@ -293,7 +286,7 @@ class StartScene:
                 fade_color=(255, 255, 255),
                 finish_callback=lambda: [
                     self.player.pause(),
-                    self.core_instance.set_scene(GameScene),
+                    self.core_instance.set_scene(scene),
                 ],
             )
         )

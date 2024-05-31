@@ -3,8 +3,7 @@ from pyglet.math import Vec2 as Vector2D
 
 from src.game_engine.scenes.game_scene.GameSceneCore import GameSceneCore
 from src.render.Window import IOController
-from src.render.screen_elements.Indicator import Indicator
-from src.render.screen_elements.ScoreDisplay import ScoreDisplay
+from src.render.screen_elements.ui_components import Indicator, ScoreDisplay
 from src.game_engine.scenes.game_scene.SceneSetup import setup_scene
 
 

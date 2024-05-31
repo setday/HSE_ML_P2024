@@ -3,8 +3,12 @@ import random
 
 from pyglet.math import Vec2 as Vector2D
 
-from src.game_engine.controllers import KeyboardController
-from assets.maps.EnvGeneration import read_positions
+from src.game_engine.controllers import (
+    KeyboardController,
+    RandomController,
+    AIController,
+    BrakeController,
+)
 from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.entities.ParkingPlace import ParkingPlace
 from src.render.sprites import BasicSprite
@@ -73,13 +77,13 @@ def setup_scene(scene, path, is_survive=False):
     ]
     for car in scene.cars[1:]:
         car.switch_controller(
-            Controller.AIController(controllers[-1])
+            AIController(controllers[-1])
             if is_survive
             else random.choice(
                 [
-                    Controller.RandomController(),
-                    Controller.AIController(random.choice(controllers)),
-                    Controller.BrakeController(),
+                    RandomController(),
+                    AIController(random.choice(controllers)),
+                    BrakeController(),
                 ]
             )
         )
@@ -87,7 +91,7 @@ def setup_scene(scene, path, is_survive=False):
             car.health = 1000
     # Чтобы была хотя бы одна умная модель
     if len(scene.cars) > 1:
-        scene.cars[-1].switch_controller(Controller.AIController(controllers[-1]))
+        scene.cars[-1].switch_controller(AIController(controllers[-1]))
     for x, y, angle in config.get("barriers_positions", []):
         ObjectFactory.create_object(
             render_group=scene.render_group,
@@ -116,6 +120,6 @@ def setup_scene(scene, path, is_survive=False):
             space=scene.space,
             object_type="movable_obstacle",
             position=scene.car_m.car_model.body.position
-            + (random.randint(-200, 200), random.randint(-800, 800)),
+                     + (random.randint(-200, 200), random.randint(-800, 800)),
             movable_obstacle_model="coin",
         )
