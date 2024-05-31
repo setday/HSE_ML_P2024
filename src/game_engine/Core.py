@@ -43,14 +43,12 @@ class Core:
         arcade.exit()
 
     def on_update(self, io_controller: IOController, delta_time: float) -> None:
-        self.window.set_caption("Park me" + " " + f"FPS: {round(arcade.get_fps(), 2)}")
+        if self.scene is not None:
+            self.scene.update(io_controller, delta_time)
 
         if io_controller.is_key_clicked(arcade.key.F6):
             image = arcade.get_image()
             image.save(f"data/screenshots/{time.time()}.png")
-
-        if self.scene is not None:
-            self.scene.update(io_controller, delta_time)
 
     def on_draw(self) -> None:
         if self.scene is not None:

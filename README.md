@@ -9,6 +9,8 @@ HSE second course final project about teaching AI to play parking game.
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/setday/HSE_ML_P2024)
 
 ![Game screenshot](./data/screenshots/1709931940.2689118.png)
+![Game screenshot](./data/screenshots/1709931940.2689118.png)
+![Game screenshot](./data/screenshots/1709931940.2689118.png)
 
 ## Description
 
