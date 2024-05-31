@@ -8,6 +8,8 @@ HSE second course final project about teaching AI to play parking game.
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/setday/HSE_ML_P2024)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/setday/HSE_ML_P2024)
 
+![Game screenshot](./data/screenshots/1717189211.4341767.png)
+![Game screenshot](./data/screenshots/1717189215.5558665.png)
 ![Game screenshot](./data/screenshots/1709931940.2689118.png)
 
 ## Description
@@ -19,18 +21,13 @@ parking spot.
 
 Special features:
 
-- The car has a limited amount of fuel. The fuel is consumed when the car is moving. The fuel can be refilled by picking
-  up fuel canisters.
-- The car has a limited amount of health. The health is reduced when the car hits an obstacle. The health can be
-  refilled by picking up health canisters.
-- The car has a limited amount of time to park. The time is reduced when the car is moving. The time can be refilled by
-  picking up time canisters.
+- Park Me: make parking to parking slot with the most amount of points.
+- Survival: be the last car alive, don't give bots make you crash.
+- A->B: make the car go from point A to point B.
 
 Special keys:
 
-- r - super-slowdown
 - f6 - screenshot
-- f7 - reset health
 
 ## Installation
 
