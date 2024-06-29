@@ -1,3 +1,5 @@
+import gc
+
 import arcade
 import numpy as np
 from pyglet.math import Vec2 as Vector2D
@@ -38,6 +40,12 @@ class ParkMeScene(GameSceneCore):
 
         self.pause = False
 
+    def do_destroy(self):
+        super().do_destroy()
+
+        self.indicator = None
+        self.score_board = None
+
     def update(self, io_controller: IOController, delta_time: float) -> None:
         if io_controller.is_key_clicked(arcade.key.P):
             self.pause = not self.pause
@@ -46,9 +54,9 @@ class ParkMeScene(GameSceneCore):
             return
 
         super().update(io_controller, delta_time)
-        if self.car_m.is_car_parked and not self.is_end_state:
+        if self.car_m and self.car_m.is_car_parked and not self.is_end_state:
             self.do_victory()
-        if self.car_m.health <= 0 and not self.is_end_state:
+        if self.car_m and self.car_m.health <= 0 and not self.is_end_state:
             self.do_lose()
 
     def update_env(self, io_controller: IOController, delta_time: float) -> None:

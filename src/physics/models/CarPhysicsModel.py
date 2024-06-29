@@ -18,10 +18,12 @@ class CarPhysicsModel:
         )
         self.body.position = position
 
+        self.shape: pymunk.Poly | None = None
+
         if collision_points_set is not None:
-            self.shape: pymunk.Poly = pymunk.Poly(self.body, collision_points_set)
+            self.shape = pymunk.Poly(self.body, collision_points_set)
         else:
-            self.shape: pymunk.Poly = pymunk.Poly.create_box(self.body, (45, 87))
+            self.shape = pymunk.Poly.create_box(self.body, (45, 87))
         self.shape.elasticity = 0.5
         self.shape.friction = 1
         self.shape.collision_type = 10
@@ -30,7 +32,7 @@ class CarPhysicsModel:
         self, friction_f: float = 1.02, friction_s: float = 1.06
     ) -> None:
         local_velocity: Vec2d = self.body.velocity.rotated(-self.body.angle)
-        local_velocity: Vec2d = pymunk.Vec2d(
+        local_velocity = pymunk.Vec2d(
             local_velocity.x / friction_s, local_velocity.y / friction_f
         )
         self.body.velocity = local_velocity.rotated(self.body.angle)

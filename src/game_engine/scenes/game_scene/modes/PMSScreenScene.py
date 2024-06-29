@@ -6,10 +6,7 @@ from pyglet.math import Vec2 as Vector2D
 
 from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.scenes.game_scene.GameSceneCore import GameSceneCore
-from src.game_engine.scenes.game_scene.SceneSetup import setup_scene
 from src.render.Window import IOController
-from src.render.screen_elements.Indicator import Indicator
-from src.render.screen_elements.ScoreDisplay import ScoreDisplay
 from src.render.sprites.BasicSprite import BasicSprite
 
 

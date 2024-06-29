@@ -1,7 +1,6 @@
-from arcade.color import RED, GREEN, WHITE
-from arcade.gui import UIFlatButton, UITextureButton, UIAnchorWidget, UIBoxLayout
+from arcade.gui import UITextureButton, UIAnchorWidget, UIBoxLayout
 
-from src.game_engine.entities.MusicPlayer import update_all_players
+from src.game_engine.entities.MusicPlayer import set_sound_level, get_sound_level
 from src.render.particle import change_particles_state, get_particles_state
 from src.render.screen_elements.ui_components import (
     UICheckButton,
@@ -10,18 +9,13 @@ from src.render.screen_elements.ui_components import (
 )
 from src.utils import load_texture
 
-_sound_level = 9
 _is_particles_on = True
-
-
-def get_sound_level() -> float:
-    global _sound_level
-
-    return _sound_level / 9
 
 
 class SettingLayout(UIFullScreenLayout):
     def __init__(self, back_callback: callable):
+        self._sound_level = int(get_sound_level() * 10)
+
         ###
         # Settings
         ###
@@ -38,7 +32,7 @@ class SettingLayout(UIFullScreenLayout):
                 load_texture("assets/pic/buttons/Sound/pressed_off.png"),
             ),
             scale=6,
-            checked=_sound_level != 0,
+            checked=(self._sound_level != 0),
             on_change=lambda _: self.set_sound_level(),
         )
 
@@ -71,7 +65,7 @@ class SettingLayout(UIFullScreenLayout):
                 load_texture("assets/pic/buttons/Effects/pressed_off.png"),
             ),
             scale=6,
-            checked=_sound_level != 0,
+            checked=(self._sound_level != 0),
             on_change=self.switch_particles,
         )
 
@@ -115,14 +109,14 @@ class SettingLayout(UIFullScreenLayout):
         _is_particles_on = get_particles_state()
 
     def set_sound_level(self, level: float | None = None):
-        global _sound_level
         if not level:
-            _sound_level = 0 if _sound_level else 9
+            self._sound_level = 0 if self._sound_level else 9
         else:
-            _sound_level = level
+            self._sound_level = level
 
         self.redraw_buttons()
-        update_all_players(get_sound_level())
+
+        set_sound_level(self._sound_level / 10)
 
     def switch_particles(self, state: bool):
         global _is_particles_on
@@ -132,7 +126,5 @@ class SettingLayout(UIFullScreenLayout):
         self.redraw_buttons()
 
     def redraw_buttons(self):
-        global _sound_level, _is_particles_on
-
-        self.sound_button.switch_state(_sound_level != 0)
-        self.sound_slider.value = _sound_level
+        self.sound_button.switch_state(self._sound_level != 0)
+        self.sound_slider.value = self._sound_level

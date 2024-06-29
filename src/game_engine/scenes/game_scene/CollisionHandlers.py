@@ -5,8 +5,6 @@ import pymunk
 from src.game_engine.entities.Car import Car
 from src.game_engine.entities.ParkingPlace import ParkingPlace
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
-from src.game_engine.scenes.layouts.SettingLayout import get_sound_level
-from src.game_engine.entities.MusicPlayer import SoundPlayer
 
 
 def skip_collision(___, _, __) -> bool:
@@ -14,8 +12,6 @@ def skip_collision(___, _, __) -> bool:
 
 
 def collision_car_with_car(arbiter: pymunk.Arbiter, _, data: dict) -> bool:
-    SoundPlayer("assets/sounds/hurt.mp3", 0.8 * get_sound_level())
-
     car1: Car = arbiter.shapes[0].super
     car2: Car = arbiter.shapes[1].super
 
@@ -25,7 +21,13 @@ def collision_car_with_car(arbiter: pymunk.Arbiter, _, data: dict) -> bool:
     if car1.is_main_car or car2.is_main_car:
         data["score"][0] -= delta_score
 
-    if car1.car_model.body.velocity.get_length_sqrd() > 10:
+    if delta_score > 3:
+        data["sound_maker"](
+            "assets/sounds/sfx/collide.mp3",
+            random.choice(arbiter.contact_point_set.points).point_a,
+            0.5,
+        )
+
         data["debris_emitter"].add_burst(
             random.choice(arbiter.contact_point_set.points).point_a,
             [
@@ -85,9 +87,7 @@ def end_collision_car_with_dead_parking_place(arbiter: pymunk.Arbiter, _, __) ->
     return False
 
 
-def collision_car_with_obstacle(arbiter: pymunk.Arbiter, _, data: dict) -> None:
-    SoundPlayer("assets/sounds/horn.wav", 0.7 * get_sound_level())
-
+def collision_car_with_obstacle(arbiter: pymunk.Arbiter, _, data: dict) -> bool:
     car = arbiter.shapes[0].super
     cone = arbiter.shapes[1].super
 
@@ -95,27 +95,37 @@ def collision_car_with_obstacle(arbiter: pymunk.Arbiter, _, data: dict) -> None:
         car, cone = cone, car
 
     if isinstance(cone, StaticObstacle):
-        delta_score = health_decreation = (
-            car.car_model.body.velocity.get_length_sqrd() / 50
-        )
+        delta_score: float = car.car_model.body.velocity.get_length_sqrd() / 50
+        health_decreation: float = delta_score
+
         if car.is_main_car:
             data["score"][0] -= delta_score
-        data["debris_emitter"].add_burst(
-            random.choice(arbiter.contact_point_set.points).point_a,
-            [
-                ":resources:images/pinball/pool_cue_ball.png",
-                ":resources:images/space_shooter/meteorGrey_big2.png",
-            ],
-        )
+
+        if delta_score > 2:
+            data["sound_maker"](
+                "assets/sounds/sfx/collide.mp3",
+                random.choice(arbiter.contact_point_set.points).point_a,
+                0.5,
+            )
+
+            data["debris_emitter"].add_burst(
+                random.choice(arbiter.contact_point_set.points).point_a,
+                [
+                    ":resources:images/pinball/pool_cue_ball.png",
+                    ":resources:images/space_shooter/meteorGrey_big2.png",
+                ],
+            )
 
         car.change_health(-health_decreation)
 
         return True
+
     if cone.type == "coin":
         if car.is_main_car:
             data["score"][0] += 100
         cone.remove()
         return True
+
     health_decreation: int = 33
     delta_score: int = 5
     if car.is_main_car:

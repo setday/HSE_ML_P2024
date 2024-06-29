@@ -13,7 +13,7 @@ class TextPrinter(BasicEffect):
         color: tuple[int, int, int] = arcade.color.WHITE,
         font_size: int = 100,
         appear: bool = True,
-        text_object: arcade.Text = None,
+        text_object: arcade.Text | None = None,
         offset: tuple[int, int] = (0, 0),
         stay_after_finish: bool = False,
     ):

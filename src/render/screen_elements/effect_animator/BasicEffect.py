@@ -16,7 +16,7 @@ class BasicEffect:
         """
         self.duration = duration
         self.delay = delay
-        self.time_elapsed = 0
+        self.time_elapsed: float = 0.0
         self.finish_callback = finish_callback
         self.stay_after_finish = stay_after_finish
 

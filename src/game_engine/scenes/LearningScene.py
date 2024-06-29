@@ -6,6 +6,9 @@ import pymunk
 from src.game_engine.controllers import AIController
 from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.entities.ParkingPlace import ParkingPlace
+from src.render.particle import ParticleShow
+from src.render.scene_elements import RenderGroup
+from src.render.sprites import BasicSprite
 from .game_scene.CollisionHandlers import (
     skip_collision,
     collision_car_with_base_parking_place,
@@ -13,9 +16,6 @@ from .game_scene.CollisionHandlers import (
     end_collision_car_with_base_parking_place,
     end_collision_car_with_dead_parking_place,
 )
-from src.render.scene_elements import RenderGroup
-from src.render.particle import ParticleShow
-from src.render.sprites import BasicSprite
 
 
 class LearningScene:

@@ -20,10 +20,10 @@ def lerp_ease_in_out(a: Any, b: Any, t: float) -> Any:
 
 
 class BasicAnimator:
-    def __init__(self, instance: Any, duration: float = -1) -> None:
+    def __init__(self, instance: Any, duration: float = -1.0) -> None:
         self._instance = instance
         self._duration = duration
-        self._time = 0
+        self._time: float = 0.0
 
     def update(self, dt: float) -> None:
         self._time += dt

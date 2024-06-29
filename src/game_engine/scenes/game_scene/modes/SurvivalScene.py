@@ -33,12 +33,18 @@ class SurvivalScene(GameSceneCore):
         )
         self.screen_group.add(self.score_board.sprite_list)
 
+    def do_destroy(self):
+        super().do_destroy()
+
+        del self.indicator
+        del self.score_board
+
     def update(self, io_controller: IOController, delta_time: float) -> None:
         super().update(io_controller, delta_time)
 
-        if all([car.health <= 0 for car in self.cars[1:]]):
+        if self.cars and all([car.health <= 0 for car in self.cars[1:]]):
             self.do_victory()
-        if self.car_m.health <= 0 and not self.is_end_state:
+        if not self.is_end_state and self.car_m and self.car_m.health <= 0:
             self.do_lose()
 
     def update_env(self, io_controller: IOController, delta_time: float) -> None:

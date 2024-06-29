@@ -1,7 +1,9 @@
+import gc
 import time
 
 import arcade
 
+from src.game_engine.entities.MusicPlayer import MusicManager
 from src.game_engine.scenes import StartScene
 from src.render.Window import Window, IOController
 from src.utils import load_font
@@ -18,19 +20,22 @@ class Core:
 
         self.is_active: bool = False
 
-        self.set_scene(StartScene)
-
         self.window.set_update_hook(self.on_update)
         self.window.set_draw_hook(self.on_draw)
+
+        self.music_manager: MusicManager = MusicManager()
 
         if not arcade.timings_enabled():
             arcade.enable_timings()
 
+        self.set_scene(StartScene)
+
     def set_scene(self, scene) -> None:
+        if self.scene is not None:
+            self.scene.do_destroy()
         if scene is None:
             scene = StartScene
         self.scene = scene(self)
-        self.scene.init_music_player(self.window)
 
     def run(self) -> None:
         self.is_active = True
@@ -45,6 +50,8 @@ class Core:
     def on_update(self, io_controller: IOController, delta_time: float) -> None:
         if self.scene is not None:
             self.scene.update(io_controller, delta_time)
+
+        self.music_manager.update(delta_time)
 
         if io_controller.is_key_clicked(arcade.key.F6):
             image = arcade.get_image()

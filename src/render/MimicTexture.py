@@ -13,7 +13,7 @@ class MimicTexture(Texture):
     def __init__(
         self,
         name: str,
-        image: PIL.Image.Image = None,
+        image: PIL.Image.Image | None = None,
         hit_box_algorithm: Optional[str] = "Simple",
         hit_box_detail: float = 4.5,
         pixelated: bool = True,

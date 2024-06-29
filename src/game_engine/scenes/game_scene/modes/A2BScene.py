@@ -2,9 +2,9 @@ import numpy as np
 from pyglet.math import Vec2 as Vector2D
 
 from src.game_engine.scenes.game_scene.GameSceneCore import GameSceneCore
+from src.game_engine.scenes.game_scene.SceneSetup import setup_scene
 from src.render.Window import IOController
 from src.render.screen_elements.ui_components import Indicator, ScoreDisplay
-from src.game_engine.scenes.game_scene.SceneSetup import setup_scene
 
 
 class A2BScene(GameSceneCore):
@@ -33,12 +33,18 @@ class A2BScene(GameSceneCore):
         )
         self.screen_group.add(self.score_board.sprite_list)
 
+    def do_destroy(self):
+        super().do_destroy()
+
+        del self.indicator
+        del self.score_board
+
     def update(self, io_controller: IOController, delta_time: float) -> None:
         super().update(io_controller, delta_time)
 
-        if self.car_m.is_car_parked and not self.is_end_state:
+        if not self.is_end_state and self.car_m and self.car_m.is_car_parked:
             self.do_victory()
-        if self.car_m.health <= 0 and not self.is_end_state:
+        if not self.is_end_state and self.car_m and self.car_m.health <= 0:
             self.do_lose()
 
     def update_env(self, io_controller: IOController, delta_time: float) -> None:

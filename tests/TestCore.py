@@ -6,13 +6,11 @@ from src.game_engine.Core import Core
 from src.game_engine.controllers.Controller import (
     BrakeController,
     RandomController,
-    AIController,
 )
 from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.entities.ParkingPlace import ParkingPlace
-from src.render.Window import IOController
-
 from src.game_engine.scenes import GameScene
+from src.render.Window import IOController
 
 
 class TestCore(Core):
@@ -90,7 +88,7 @@ class TestCore(Core):
         if not arcade.timings_enabled():
             arcade.enable_timings()
         with open(
-            "data/load/" + f"{self.type}_" + "-".join(self.test_objects) + ".csv", "a"
+                "data/load/" + f"{self.type}_" + "-".join(self.test_objects) + ".csv", "a"
         ) as out:
             print(f"{self.num_obj}, {arcade.get_fps()}", file=out)
 

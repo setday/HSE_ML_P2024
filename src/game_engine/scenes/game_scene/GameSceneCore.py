@@ -1,25 +1,24 @@
+import gc
+
 import arcade.key
 import numpy as np
 import pymunk
 from arcade.experimental import Shadertoy
-from pymunk import CollisionHandler
+from pymunk import CollisionHandler, Vec2d
 
-from src.game_engine.controllers import RandomController, AIController, BrakeController
 import src.game_engine.scenes.game_scene.CollisionHandlers as CollisionHandlers
-from src.game_engine.entities.MusicPlayer import MusicPlayer
-from src.game_engine.entities.ParkingPlace import ParkingPlace
-from .SceneSetup import setup_scene
-from ..layouts import EscapeMenuLayout
-from src.game_engine.scenes.layouts.SettingLayout import get_sound_level
-from src.render.scene_elements import RenderGroup
+from src.game_engine.controllers import AIController
 from src.render.Window import IOController
 from src.render.particle import ParticleShow
+from src.render.scene_elements import RenderGroup
 from src.render.screen_elements.effect_animator import (
     EffectAnimator,
     FadeEffect,
     TextPrinter,
 )
-from src.render.screen_elements.ui_components import Indicator, ScoreDisplay
+from ..layouts import EscapeMenuLayout
+
+from src.game_engine.entities.MusicPlayer import stop_all_players, SoundPlayer
 
 
 class GameSceneCore:
@@ -82,6 +81,10 @@ class GameSceneCore:
         self.traffic_cones = []
         self.parking_place = None
 
+        h_10_10.data["sound_maker"] = h_10_20.data["sound_maker"] = h_10_30.data[
+            "sound_maker"
+        ] = self.make_sound_effect
+
         ######################
         # Screen Elements
         ######################
@@ -116,20 +119,68 @@ class GameSceneCore:
 
         self.effect_animator = EffectAnimator()
         self.effect_animator.add_effect(
-            FadeEffect(1, 0, None, (255, 255, 255, 255), False)
+            FadeEffect(
+                1,
+                0,
+                lambda: SoundPlayer("assets/sounds/engine-start.wav", 5.0),
+                (255, 255, 255, 255),
+                False,
+            )
         )
 
         self.upper_effect_animator = EffectAnimator()
 
         self.is_end_state = False
 
-    def init_music_player(self, window):
-        self.music_player = MusicPlayer(window, 1.0 * get_sound_level())
+        self.core_instance.music_manager.change_track_list(
+            [
+                # "assets/sounds/music/game_calm.mp3",
+                "assets/sounds/music/game_energy.mp3",
+            ]
+        )
+
+        self.is_destroyed = False
+
+    def do_destroy(self):
+        self.core_instance = None
+
+        self.space = None
+
+        self.score = None
+
+        self.particle_show = None
+        self.down_render_group = None
+        self.render_group = None
+        self.top_render_group = None
+        self.screen_group = None
+
+        self.car_m = None
+        self.cars = None
+        self.traffic_cones = None
+        self.parking_place = None
+
+        self.escape_layout = None
+        self.shader_vin = None
+
+        self.effect_animator = None
+        self.upper_effect_animator = None
+
+        self.background = None
+
+        self.is_destroyed = True
+
+        stop_all_players()
 
     def update(self, io_controller: IOController, delta_time: float) -> None:
+        if self.is_destroyed:
+            raise Exception("Scene is destroyed")
+
         delta_time = min(delta_time, 0.1)
 
         self.effect_animator.update(delta_time)
+
+        if self.is_destroyed:
+            return
 
         if self.is_escape_layout_renders:
             self.escape_layout.update(io_controller, delta_time)
@@ -209,6 +260,9 @@ class GameSceneCore:
         pass
 
     def draw(self) -> None:
+        if self.is_destroyed:
+            raise Exception("Scene is destroyed")
+
         self.draw_env()
         self.draw_screen_elements()
         self.draw_effects()
@@ -235,7 +289,6 @@ class GameSceneCore:
         self.screen_group.camera.use()
         self.screen_group.draw()
         self.score_board.draw()
-        self.music_player.draw()
 
     def draw_effects(self):
         ######################
@@ -258,7 +311,17 @@ class GameSceneCore:
         self.is_end_state = True
 
         self.effect_animator.add_effect(
-            FadeEffect(1, 0, None, (0, 0, 0, 200), True, True)
+            FadeEffect(
+                1,
+                0,
+                lambda: [
+                    SoundPlayer("assets/sounds/sfx/game_over.mp3", 10.0),
+                    self.core_instance.music_manager.change_track_list([]),
+                ],
+                (0, 0, 0, 200),
+                True,
+                True,
+            )
         )
         self.effect_animator.add_effect(
             TextPrinter(
@@ -289,7 +352,17 @@ class GameSceneCore:
         self.is_end_state = True
 
         self.effect_animator.add_effect(
-            FadeEffect(1, 0, None, (0, 0, 0, 200), True, True)
+            FadeEffect(
+                1,
+                0,
+                lambda: [
+                    SoundPlayer("assets/sounds/sfx/game_victory.mp3", 10.0),
+                    self.core_instance.music_manager.change_track_list([]),
+                ],
+                (0, 0, 0, 200),
+                True,
+                True,
+            )
         )
         self.effect_animator.add_effect(
             TextPrinter(
@@ -362,7 +435,7 @@ class GameSceneCore:
             FadeEffect(
                 1,
                 0,
-                lambda: [self.music_player.pause(), self.core_instance.set_scene(None)],
+                lambda: self.core_instance.set_scene(None),
                 (255, 255, 255, 255),
                 True,
                 True,
@@ -371,3 +444,22 @@ class GameSceneCore:
 
     def show_escape_layout(self, show: bool):
         self.is_escape_layout_renders = show
+
+    def get_sound_multiplier(
+        self, position: tuple[float, float] | Vec2d | None = None
+    ) -> float:
+        if not position:
+            return 2.0
+
+        x, y = position
+        dist = (Vec2d(x, y) - self.car_m.car_model.body.position).get_length_sqrd()
+
+        return 2.0 / (1 + dist / 300000)
+
+    def make_sound_effect(
+        self,
+        sound_path: str,
+        position: tuple[float, float] | Vec2d | None = None,
+        volume: float = 1.0,
+    ):
+        SoundPlayer(sound_path, volume * self.get_sound_multiplier(position))

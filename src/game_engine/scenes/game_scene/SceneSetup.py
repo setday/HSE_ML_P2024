@@ -87,6 +87,7 @@ def setup_scene(scene, path, is_survive=False):
                 ]
             )
         )
+        car.set_sound_multiplier_getter(scene.get_sound_multiplier)
         if is_survive:
             car.health = 1000
     # Чтобы была хотя бы одна умная модель

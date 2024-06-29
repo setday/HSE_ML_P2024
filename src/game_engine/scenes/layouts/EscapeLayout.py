@@ -1,13 +1,13 @@
 from arcade.gui import UITextureButton, UIBoxLayout, UIAnchorWidget, UIManager
 from arcade.key import ESCAPE, BACKSPACE
 
-from .SettingLayout import SettingLayout
 from src.render.screen_elements.ui_components import (
     UIFullScreenLayout,
     UISuperAnchorWidget,
     UITexture,
 )
 from src.utils import load_texture
+from .SettingLayout import SettingLayout
 
 
 class EscapeMenuLayout:

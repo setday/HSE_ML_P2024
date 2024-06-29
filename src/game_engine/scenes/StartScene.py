@@ -1,11 +1,9 @@
 import arcade
 import arcade.gui
 
-from src.game_engine.entities.MusicPlayer import SoundPlayer
 from src.game_engine.scenes.game_scene.modes.A2BScene import A2BScene
-from src.game_engine.scenes.game_scene.modes.SurvivalScene import SurvivalScene
 from src.game_engine.scenes.game_scene.modes.ParkMeScene import ParkMeScene
-from .layouts import CreditsLayout, SettingLayout, get_sound_level
+from src.game_engine.scenes.game_scene.modes.SurvivalScene import SurvivalScene
 from src.render.animator import FloatingAnimator, WanderAnimator
 from src.render.screen_elements.effect_animator import EffectAnimator, FadeEffect
 from src.render.screen_elements.ui_components import (
@@ -15,6 +13,7 @@ from src.render.screen_elements.ui_components import (
     UITexture,
 )
 from src.utils import load_texture
+from .layouts import CreditsLayout, SettingLayout
 
 
 def no_game(_):
@@ -252,12 +251,28 @@ class StartScene:
             )
         )
 
-    def init_music_player(self, window):
-        self.player = SoundPlayer(
-            "assets/sounds/main_menu.mp3", 1.0 * get_sound_level(), loop=True
+        self.core_instance.music_manager.change_track_list(
+            ["assets/sounds/music/lobby.mp3"], loop=True
         )
 
+        self.is_destroyed = False
+
+    def do_destroy(self):
+        self.manager.disable()
+        del self.manager
+
+        del self.background_animator
+        del self.title_animator
+        del self.button_animator
+        del self.screen_layout
+        del self._effect_animator
+
+        self.is_destroyed = True
+
     def update(self, io_controller, delta_time):
+        if self.is_destroyed:
+            raise Exception("This scene has been destroyed.")
+
         self.background_animator.update_animation(delta_time)
 
         self.button_animator.update_animation(delta_time)
@@ -281,12 +296,19 @@ class StartScene:
         self._effect_animator.update(delta_time)
 
     def draw(self):
+        if self.is_destroyed:
+            raise Exception("This scene has been destroyed.")
+
         self.manager.draw()
 
         self._effect_animator.draw()
 
     def start_game(self, _, mode: str):
-        scene = None
+        if self.is_destroyed:
+            raise Exception("This scene has been destroyed.")
+
+        scene: type[ParkMeScene] | type[SurvivalScene] | type[A2BScene] | None = None
+
         if mode == "park":
             scene = ParkMeScene
         elif mode == "survive":
@@ -298,10 +320,7 @@ class StartScene:
             FadeEffect(
                 duration=1,
                 fade_color=(255, 255, 255),
-                finish_callback=lambda: [
-                    self.player.pause(),
-                    self.core_instance.set_scene(scene),
-                ],
+                finish_callback=lambda: self.core_instance.set_scene(scene),
             )
         )
 
