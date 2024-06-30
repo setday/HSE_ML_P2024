@@ -111,10 +111,12 @@ def setup_scene(scene, path, is_survive=False):
             angle=angle,
             static_obstacle_model="big_bush",
         )
+    scene.parking_places = []
     for x, y, angle in config.get("parking_positions", []):
         scene.parking_place = ParkingPlace(
             scene.down_render_group, scene.space, (x, y), angle=angle
         )
+        scene.parking_places.append(scene.parking_place)
     for _ in range(20):
         ObjectFactory.create_object(
             render_group=scene.render_group,

@@ -5,6 +5,7 @@ from src.game_engine.scenes.game_scene.GameSceneCore import GameSceneCore
 from src.game_engine.scenes.game_scene.SceneSetup import setup_scene
 from src.render.Window import IOController
 from src.render.screen_elements.ui_components import Indicator, ScoreDisplay
+from src.render.screen_elements.ui_components.ui_sprites.NavCircle import NavCircle
 
 
 class SurvivalScene(GameSceneCore):
@@ -33,11 +34,19 @@ class SurvivalScene(GameSceneCore):
         )
         self.screen_group.add(self.score_board.sprite_list)
 
+        self.nav_circle = NavCircle(self.render_group.camera.current_position)
+        for car in self.cars:
+            if car == self.car_m:
+                continue
+            self.nav_circle.add_target(car.car_view, "enemy")
+        self.screen_group.add(self.nav_circle.sprite_list)
+
     def do_destroy(self):
         super().do_destroy()
 
         del self.indicator
         del self.score_board
+        del self.nav_circle
 
     def update(self, io_controller: IOController, delta_time: float) -> None:
         super().update(io_controller, delta_time)
@@ -70,10 +79,11 @@ class SurvivalScene(GameSceneCore):
 
         super().update_env(io_controller, delta_time)
 
-    def update_screen(self):
-        super().update_screen()
+    def update_screen(self, delta_time: float) -> None:
+        super().update_screen(delta_time)
         self.indicator.update_bar()
         self.score_board.update_score(self.score[0])
+        self.nav_circle.update(delta_time)
 
     def draw_screen_elements(self):
         super().draw_screen_elements()

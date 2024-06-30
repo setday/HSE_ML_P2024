@@ -19,10 +19,10 @@ class CustomEnv(gym.Env):
         )
 
     def reset(
-            self,
-            *,
-            seed=None,
-            options=None,
+        self,
+        *,
+        seed=None,
+        options=None,
     ):
         if not hasattr(self, "game"):
             self.game = Game()

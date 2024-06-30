@@ -1,5 +1,6 @@
 from .ui_sprites.Indicator import Indicator
 from .ui_sprites.ScoreDisplay import ScoreDisplay
+from .ui_sprites.NavCircle import NavCircle
 
 from .ui_widgets.UIAnimatorWidget import UIAnimatableWidget
 from .ui_widgets.UICheckButton import UICheckButton

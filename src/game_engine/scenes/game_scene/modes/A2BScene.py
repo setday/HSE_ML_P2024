@@ -70,8 +70,8 @@ class A2BScene(GameSceneCore):
 
         super().update_env(io_controller, delta_time)
 
-    def update_screen(self):
-        super().update_screen()
+    def update_screen(self, delta_time: float) -> None:
+        super().update_screen(delta_time)
         self.indicator.update_bar()
         self.score_board.update_score(self.score[0])
 

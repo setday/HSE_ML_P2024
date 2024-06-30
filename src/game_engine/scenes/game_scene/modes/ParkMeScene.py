@@ -1,5 +1,3 @@
-import gc
-
 import arcade
 import numpy as np
 from pyglet.math import Vec2 as Vector2D
@@ -7,7 +5,7 @@ from pyglet.math import Vec2 as Vector2D
 from src.game_engine.scenes.game_scene.GameSceneCore import GameSceneCore
 from src.game_engine.scenes.game_scene.SceneSetup import setup_scene
 from src.render.Window import IOController
-from src.render.screen_elements.ui_components import Indicator, ScoreDisplay
+from src.render.screen_elements.ui_components import Indicator, ScoreDisplay, NavCircle
 
 
 class ParkMeScene(GameSceneCore):
@@ -38,21 +36,19 @@ class ParkMeScene(GameSceneCore):
         )
         self.screen_group.add(self.score_board.sprite_list)
 
-        self.pause = False
+        self.nav_circle = NavCircle(self.render_group.camera.current_position)
+        for parking_place in self.parking_places:
+            self.nav_circle.add_target(parking_place.border_box, "parking_place", True)
+        self.screen_group.add(self.nav_circle.sprite_list)
 
     def do_destroy(self):
         super().do_destroy()
 
-        self.indicator = None
-        self.score_board = None
+        del self.indicator
+        del self.score_board
+        del self.nav_circle
 
     def update(self, io_controller: IOController, delta_time: float) -> None:
-        if io_controller.is_key_clicked(arcade.key.P):
-            self.pause = not self.pause
-
-        if self.pause:
-            return
-
         super().update(io_controller, delta_time)
         if self.car_m and self.car_m.is_car_parked and not self.is_end_state:
             self.do_victory()
@@ -86,10 +82,11 @@ class ParkMeScene(GameSceneCore):
 
         super().update_env(io_controller, delta_time)
 
-    def update_screen(self):
-        super().update_screen()
+    def update_screen(self, delta_time: float) -> None:
+        super().update_screen(delta_time)
         self.indicator.update_bar()
         self.score_board.update_score(self.score[0])
+        self.nav_circle.update(delta_time)
 
     def draw_screen_elements(self):
         super().draw_screen_elements()

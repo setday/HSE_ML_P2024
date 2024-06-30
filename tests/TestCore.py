@@ -88,7 +88,7 @@ class TestCore(Core):
         if not arcade.timings_enabled():
             arcade.enable_timings()
         with open(
-                "data/load/" + f"{self.type}_" + "-".join(self.test_objects) + ".csv", "a"
+            "data/load/" + f"{self.type}_" + "-".join(self.test_objects) + ".csv", "a"
         ) as out:
             print(f"{self.num_obj}, {arcade.get_fps()}", file=out)
 

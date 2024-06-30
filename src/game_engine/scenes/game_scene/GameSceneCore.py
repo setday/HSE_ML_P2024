@@ -1,5 +1,3 @@
-import gc
-
 import arcade.key
 import numpy as np
 import pymunk
@@ -198,7 +196,7 @@ class GameSceneCore:
         #     self.car_m.change_health(1000)
 
         self.update_env(io_controller, delta_time)
-        self.update_screen()
+        self.update_screen(delta_time)
 
     def update_env(self, io_controller: IOController, delta_time: float) -> None:
         keys: dict = io_controller.keyboard
@@ -252,7 +250,7 @@ class GameSceneCore:
 
         self.particle_show.update()
 
-    def update_screen(self):
+    def update_screen(self, delta_time: float) -> None:
         ######################
         # Screen Elements Update
         ######################
@@ -288,7 +286,6 @@ class GameSceneCore:
 
         self.screen_group.camera.use()
         self.screen_group.draw()
-        self.score_board.draw()
 
     def draw_effects(self):
         ######################

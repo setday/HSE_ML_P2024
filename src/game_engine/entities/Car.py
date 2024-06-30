@@ -1,4 +1,3 @@
-import gc
 import random
 from math import radians, degrees
 
@@ -7,7 +6,6 @@ import numpy as np
 from pymunk import Vec2d, Space
 
 from src.game_engine.entities.MusicPlayer import SoundPlayer
-from src.game_engine.scenes.layouts.SettingLayout import get_sound_level
 from src.physics.models.CarPhysicsModel import CarPhysicsModel
 from src.render.particle import get_particles_state
 from src.render.scene_elements import RenderGroup
