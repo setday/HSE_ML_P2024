@@ -2,7 +2,7 @@ import random
 
 import arcade
 import numpy as np
-from pyglet.math import Vec2 as Vector2D
+from pyglet.math import Vec2 as Vector2D  # type: ignore[import-untyped]
 
 from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.scenes.game_scene.GameSceneCore import GameSceneCore

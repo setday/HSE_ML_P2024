@@ -1,7 +1,7 @@
 import json
 import random
 
-from pyglet.math import Vec2 as Vector2D
+from pyglet.math import Vec2 as Vector2D  # type: ignore[import-untyped]
 
 from src.game_engine.controllers import (
     KeyboardController,

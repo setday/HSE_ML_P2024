@@ -1,7 +1,7 @@
 from typing import Tuple
 
 from arcade import Texture
-from pyglet.math import Vec2 as Vector2D
+from pyglet.math import Vec2 as Vector2D  # type: ignore[import-untyped]
 from pymunk import Vec2d
 
 from .BasicDrawable import BasicDrawable

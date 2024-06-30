@@ -1,3 +1,5 @@
+import typing
+
 from arcade.color import WHITE
 from arcade.gui import UITextureButton, UIAnchorWidget, UIBoxLayout
 
@@ -10,7 +12,7 @@ from src.utils import load_texture
 
 
 class CreditsLayout(UIFullScreenLayout):
-    def __init__(self, back_callback: callable):
+    def __init__(self, back_callback: typing.Callable):
         ###
         # Credits
         ###

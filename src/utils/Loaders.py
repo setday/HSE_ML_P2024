@@ -1,7 +1,7 @@
 from arcade import load_font as arcade_load_font
 from arcade import load_texture as arcade_load_texture
 from arcade.texture import Texture
-from pyglet.image import AbstractImage
+from pyglet.image import AbstractImage  # type: ignore[import-untyped]
 from pyglet.image import load as pyglet_load_image
 
 from src.render.MimicTexture import texture_to_mimic

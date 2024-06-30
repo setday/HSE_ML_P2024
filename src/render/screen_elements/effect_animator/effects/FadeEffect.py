@@ -31,7 +31,7 @@ class FadeEffect(BasicEffect):
             self.alpha_multiplier = fade_color[3]
         self.fade_color = fade_color[:3]
         self.fade_in = fade_in
-        self.fade_progress = 0
+        self.fade_progress = 0.0
 
     def update(self, delta_time: float) -> None:
         super().update(delta_time)

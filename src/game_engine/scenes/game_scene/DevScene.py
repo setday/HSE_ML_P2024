@@ -3,7 +3,7 @@ import random
 
 import pymunk
 from pymunk import CollisionHandler, Vec2d
-from pyglet.math import Vec2 as Vector2D
+from pyglet.math import Vec2 as Vector2D  # type: ignore[import-untyped]
 
 import src.game_engine.scenes.game_scene.CollisionHandlers as CollisionHandlers
 from src.game_engine.controllers import KeyboardController
@@ -119,8 +119,8 @@ class DevScene:
 
         self.render_group.add(self.nc.sprite_list)
 
-        self.time = 0
-        self.prev_time = 0
+        self.time = 0.0
+        self.prev_time = 0.0
 
     def do_destroy(self):
         self.core_instance = None

@@ -1,5 +1,5 @@
 import arcade
-import pyglet
+import pyglet  # type: ignore[import-untyped]
 from arcade.gui import UILabel
 
 

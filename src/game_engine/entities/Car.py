@@ -1,4 +1,5 @@
 import random
+import typing
 from math import radians, degrees
 
 import arcade
@@ -50,7 +51,7 @@ class Car:
 
         self.health: int = 100
 
-        self.tyre_emitters: list[arcade.emitter] = [
+        self.tyre_emitters: list[arcade.Emitter] = [
             arcade.make_interval_emitter(
                 center_xy=center,
                 filenames_and_textures=[
@@ -75,7 +76,7 @@ class Car:
         self.inside_parking_place: float = 0
         self.is_car_parked: bool = False
 
-        self.hooks: dict[str, callable] = {
+        self.hooks: dict[str, typing.Callable or None] = {
             "dead_hook": None,
             "parked_hook": None,
             "unparked_hook": None,
@@ -112,7 +113,7 @@ class Car:
         self.controller = controller
         controller.connect_car(self)
 
-    def set_sound_multiplier_getter(self, getter: callable) -> None:
+    def set_sound_multiplier_getter(self, getter: typing.Callable) -> None:
         self._sound_multiplier_getter = getter
 
     def apply_friction(self) -> None:
@@ -163,7 +164,7 @@ class Car:
         if self.hooks["parked_hook"] or self.hooks["unparked_hook"]:
             parked_state = (
                 self.car_model.body.velocity.get_length_sqrd() <= 0.2
-                and self.inside_parking_place
+                and self.inside_parking_place != 0
                 and self.dead_zones_intersect == 0
             )
             # print(self.dead_zones_intersect)
@@ -244,6 +245,6 @@ class Car:
         if self.hooks["dead_hook"] and self.health <= 0:
             self.hooks["dead_hook"](self)
 
-    def set_hook(self, hook_name: str, hook: callable):
+    def set_hook(self, hook_name: str, hook: typing.Callable):
         self.hooks[hook_name] = hook
         return self

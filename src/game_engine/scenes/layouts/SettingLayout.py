@@ -1,3 +1,5 @@
+import typing
+
 from arcade.gui import UITextureButton, UIAnchorWidget, UIBoxLayout
 
 from src.game_engine.entities.MusicPlayer import set_sound_level, get_sound_level
@@ -13,7 +15,7 @@ _is_particles_on = True
 
 
 class SettingLayout(UIFullScreenLayout):
-    def __init__(self, back_callback: callable):
+    def __init__(self, back_callback: typing.Callable):
         self._sound_level = int(get_sound_level() * 10)
 
         ###
@@ -108,7 +110,7 @@ class SettingLayout(UIFullScreenLayout):
         global _is_particles_on
         _is_particles_on = get_particles_state()
 
-    def set_sound_level(self, level: float | None = None):
+    def set_sound_level(self, level: int | None = None):
         if not level:
             self._sound_level = 0 if self._sound_level else 9
         else:

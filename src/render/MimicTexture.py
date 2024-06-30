@@ -13,7 +13,7 @@ class MimicTexture(Texture):
     def __init__(
         self,
         name: str,
-        image: PIL.Image.Image | None = None,
+        image: PIL.Image.Image,
         hit_box_algorithm: Optional[str] = "Simple",
         hit_box_detail: float = 4.5,
         pixelated: bool = True,
@@ -65,7 +65,7 @@ class MimicTexture(Texture):
         if self._sprite and self._sprite_list:
             self._sprite.center_x = center_x
             self._sprite.center_y = center_y
-            self._sprite.scale = scale
+            self._sprite.texture_scale = scale
             self._sprite.angle = angle
             self._sprite.alpha = alpha
             self._sprite_list.draw(pixelated=self.pixelated)

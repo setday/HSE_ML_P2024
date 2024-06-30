@@ -1,3 +1,5 @@
+import typing
+
 from arcade import Texture
 from arcade.gui import (
     UIInteractiveWidget,
@@ -47,7 +49,7 @@ class UISlider(UIInteractiveWidget):
         height: float | None = None,
         scale: float | None = None,
         value: int = 0,
-        change_callback: callable or None = None,
+        change_callback: typing.Callable or None = None,
         **kwargs
     ):
 
@@ -68,11 +70,11 @@ class UISlider(UIInteractiveWidget):
         self.value: int = value
         self.textures = textures
 
-        self.scale = scale
+        self.texture_scale = scale
 
         self._change_callback = change_callback
 
-    def on_event(self, event: UIEvent) -> bool:
+    def on_event(self, event: UIEvent) -> bool | None:
         if self.pressed and isinstance(event, UIMouseDragEvent):
             self.try_update_value(event.x)
 
@@ -95,8 +97,8 @@ class UISlider(UIInteractiveWidget):
         return False
 
     def calc_new_value(self, x: float) -> int:
-        x -= self.x + 8 * self.scale
-        x /= self.width - 16 * self.scale
+        x -= self.x + 8 * self.texture_scale
+        x /= self.width - 16 * self.texture_scale
         x *= 9
 
         new_value = round(x)

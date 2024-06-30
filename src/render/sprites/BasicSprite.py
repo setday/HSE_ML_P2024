@@ -1,4 +1,4 @@
-from pyglet.math import Vec2 as Vector2D
+from pyglet.math import Vec2 as Vector2D  # type: ignore[import-untyped]
 
 from src.utils import load_texture
 from .BasicDrawable import BasicDrawable

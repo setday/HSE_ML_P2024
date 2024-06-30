@@ -28,6 +28,9 @@ class KeyboardController(Controller):
     def handle_input(
         self, keys: dict = None, observation: list[float] | np.ndarray = None
     ) -> None:
+        if self.car is None:
+            raise ValueError("Trying to control a car without a car connected")
+
         if keys.get(arcade.key.LEFT, False) or keys.get(arcade.key.A, False):
             self.car.turn_left(keys.get(arcade.key.SPACE, False))
         if keys.get(arcade.key.RIGHT, False) or keys.get(arcade.key.D, False):
@@ -48,23 +51,26 @@ class RandomController(Controller):
         super().__init__()
         self.timer: float = 0
         self.action_kind: int = 0
-        self.probabilities: list[int] = [
+        self.probabilities: list[float] = [
             10,  # accelerate
             5,  # turn left
             15,  # turn right
             0,  # brake
             5,  # hand_break
         ]
-        self.probabilities: list[float] = list(
+        self.probabilities = list(
             map(lambda x: x / sum(self.probabilities), self.probabilities)
         )
-        self.probabilities: list[float] = [
+        self.probabilities = [
             sum(self.probabilities[:i]) for i in range(len(self.probabilities) + 1)
         ]
 
     def handle_input(
         self, keys: dict = None, observation: list[float] | np.ndarray = None
     ) -> None:
+        if self.car is None:
+            raise ValueError("Trying to control a car without a car connected")
+
         if self.timer == 0:
             self.action_kind = random.random()
             self.timer = 30
@@ -88,6 +94,9 @@ class BrakeController(Controller):
     def handle_input(
         self, keys: dict = None, observation: list[float] | np.ndarray = None
     ) -> None:
+        if self.car is None:
+            raise ValueError("Trying to control a car without a car connected")
+
         self.car.hand_brake()
 
 
@@ -121,6 +130,9 @@ class AIController(Controller):
     def handle_input(
         self, keys: dict = None, observation: list[float] | np.ndarray = None
     ) -> None:
+        if self.car is None:
+            raise ValueError("Trying to control a car without a car connected")
+
         action: int = -1
 
         if self.type == "neat":
@@ -149,9 +161,9 @@ class AIController(Controller):
         elif self.type == "stable_baselines":
             action, _ = self.model.predict(observation)
 
-        self.perform_action(action)
+        self._perform_action(action)
 
-    def perform_action(self, action):
+    def _perform_action(self, action):
         if action == 0:
             self.car.turn_left()
         if action == 1:

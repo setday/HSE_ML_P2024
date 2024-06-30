@@ -24,13 +24,13 @@ class UITexture(UIWidget):
 
     def __init__(
         self,
-        child: UIWidget = None,
-        x: float = 0,
-        y: float = 0,
+        child: UIWidget | None = None,
+        x: float = 0.0,
+        y: float = 0.0,
         width: float = None,
         height: float = None,
-        texture: Texture = None,
-        scale: float = None,
+        texture: Texture | None = None,
+        scale: float | None = None,
         **kwargs
     ):
 

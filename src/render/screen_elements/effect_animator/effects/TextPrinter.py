@@ -34,7 +34,7 @@ class TextPrinter(BasicEffect):
         self.alpha_multiplier = 255
         self.text_to_print = text_to_print
         self.appear = appear
-        self.appear_progress = 0
+        self.appear_progress = 0.0
 
         window_size = arcade.get_window().get_size()
 

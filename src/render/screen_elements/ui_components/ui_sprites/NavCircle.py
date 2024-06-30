@@ -1,7 +1,5 @@
-from typing import Any
-
 import arcade
-from pyglet.math import Vec2 as Vector2D
+from pyglet.math import Vec2 as Vector2D  # type: ignore[import-untyped]
 
 from src.render.sprites import BasicSprite
 
@@ -69,15 +67,19 @@ class NavCircleArrow(BasicSprite):
         if self.is_dead():
             return
         if self._is_disappearing:
-            self.alpha /= self._life_timer
+            prev_alpha: float = self.alpha
+
+            prev_alpha /= self._life_timer
             self._life_timer = max(0.0, self._life_timer - delta_time)
-            self.alpha *= self._life_timer
+            prev_alpha *= self._life_timer
+
+            self.alpha = int(prev_alpha)
             return
 
         self.update_angle(self._get_arrow_angle() * 180 / 3.141592653589793)
         self.update_position(self._get_arrow_position())
 
-        self.alpha = self._get_arrow_opacity() * 0.8
+        self.alpha = int(self._get_arrow_opacity() * 0.8)
 
     def kill(self):
         self._is_disappearing = True
@@ -97,7 +99,7 @@ class NavCircle:
             owner = ObjBunch(position=owner)
         self._owner = owner
 
-        self._virtual_position = self._owner.position
+        self._virtual_position = Vector2D(*owner.position)
 
         self._owner = owner
         self._radius = radius

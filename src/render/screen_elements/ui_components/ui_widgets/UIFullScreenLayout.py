@@ -12,7 +12,7 @@ class UIFullScreenLayout(UILayout):
     :param style: not used
     """
 
-    def __init__(self, children: List[UIWidget], style: dict = None):
+    def __init__(self, children: List[UIWidget], style: dict | None = None):
         window = arcade.get_window()
         super().__init__(
             x=0,

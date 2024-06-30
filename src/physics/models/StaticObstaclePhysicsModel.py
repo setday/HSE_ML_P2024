@@ -13,7 +13,7 @@ class StaticObstaclePhysicsModel:
         self.body = pymunk.Body(body_type=pymunk.Body.STATIC)
         self.body.position = position
 
-        self.shape: pymunk.shapes.Shape | None = None
+        self.shape: pymunk.shapes.Shape
 
         if shape_type == "circle":
             self.shape = pymunk.shapes.Circle(self.body, size)

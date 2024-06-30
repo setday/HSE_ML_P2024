@@ -1,6 +1,6 @@
 import arcade
 
-from pyglet.math import Vec2 as Vector2D
+from pyglet.math import Vec2 as Vector2D  # type: ignore[import-untyped]
 from pymunk import Vec2d as Vector2DP
 
 

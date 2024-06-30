@@ -9,7 +9,7 @@ class MovableObstaclePhysicsModel:
         self.body: pymunk.Body = pymunk.Body(5, pymunk.moment_for_box(5, (16, 16)))
         self.body.position = position
 
-        self.shape: pymunk.Poly | None = None
+        self.shape: pymunk.Poly
 
         if collision_points_set is not None:
             self.shape = pymunk.Poly(self.body, collision_points_set)

@@ -1,6 +1,6 @@
 import arcade
 import arcade.gui
-import pyglet
+import pyglet  # type: ignore[import-untyped]
 
 PLAYERS: set = set()
 
@@ -118,9 +118,15 @@ class MusicManager:
         self.paused = not self.paused
 
         if self.paused:
-            self.player.pause()
+            if self.player:
+                self.player.pause()
+            if self.cross_change_player:
+                self.cross_change_player.pause()
         else:
-            self.player.play()
+            if self.player:
+                self.player.play()
+            if self.cross_change_player:
+                self.cross_change_player.play()
 
 
 class SoundPlayer:

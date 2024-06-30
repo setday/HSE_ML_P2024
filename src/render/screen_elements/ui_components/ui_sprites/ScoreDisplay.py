@@ -1,5 +1,5 @@
 import arcade
-from pyglet.math import Vec2 as Vector2D
+from pyglet.math import Vec2 as Vector2D  # type: ignore[import-untyped]
 
 from src.render.sprites import BasicSprite
 from src.utils import load_font
@@ -12,7 +12,7 @@ class ScoreDisplay:
         position: Vector2D = Vector2D(300, 300),
         font_path: str = "assets/fnt/ka1.ttf",
         font_name: str = "Karmatic Arcade",
-        color: arcade.color = arcade.color.WHITE,
+        color: arcade.Color = arcade.color.WHITE,
         size: int = 25,
         width: int = 200,
         icon: str = "assets/pic/icon/coin_2.png",
@@ -71,9 +71,9 @@ class ScoreDisplay:
         self.sprite_list.move(center_x, center_y)
         self.text.position = (center_x, center_y + 5)
 
-    def update_score(self, new_score: float) -> None:
+    def update_score(self, new_score: int) -> None:
         self.target_score = new_score
         self.current_score -= (
             self.current_score - self.target_score
         ) * self.change_speed
-        self.text.text = int(self.current_score)
+        self.text.text = str(int(self.current_score))

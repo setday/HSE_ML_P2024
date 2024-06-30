@@ -1,3 +1,5 @@
+import typing
+
 from arcade.gui import UITextureButton, UIBoxLayout, UIAnchorWidget, UIManager
 from arcade.key import ESCAPE, BACKSPACE
 
@@ -11,7 +13,7 @@ from .SettingLayout import SettingLayout
 
 
 class EscapeMenuLayout:
-    def __init__(self, close_callback: callable, home_callback: callable):
+    def __init__(self, close_callback: typing.Callable, home_callback: typing.Callable):
         ###
         # EscapeMenu
         ###

@@ -1,6 +1,6 @@
 from math import radians
 
-from pyglet.math import Vec2 as Vector2D
+from pyglet.math import Vec2 as Vector2D  # type: ignore[import-untyped]
 from pymunk import Space
 
 from src.game_engine.entities.Car import Car

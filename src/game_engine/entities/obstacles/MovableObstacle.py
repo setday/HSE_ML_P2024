@@ -1,6 +1,6 @@
 from math import degrees
 
-from pyglet.math import Vec2 as Vector2D
+from pyglet.math import Vec2 as Vector2D  # type: ignore[import-untyped]
 from pymunk import Space
 
 from src.physics.models.MovableObstaclePhysicsModel import MovableObstaclePhysicsModel
@@ -34,12 +34,15 @@ class MovableObstacle:
         self.obstacle_model.shape.super = self
         self.space.add(self.obstacle_model.body, self.obstacle_model.shape)
 
+        self.type: str
+        self.health: int
+
         if image_path == "assets/coin.png":
-            self.type: str = "coin"
-            self.health: int = 1
+            self.type = "coin"
+            self.health = 1
         else:
-            self.type: str = "cone"
-            self.health: int = 100
+            self.type = "cone"
+            self.health = 100
 
         self.sync()
 

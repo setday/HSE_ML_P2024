@@ -2,7 +2,7 @@ from typing import Any
 
 from typing_extensions import Protocol
 
-from pyglet.math import Vec2 as Vector2D
+from pyglet.math import Vec2 as Vector2D  # type: ignore[import-untyped]
 
 
 class ObjBunch:

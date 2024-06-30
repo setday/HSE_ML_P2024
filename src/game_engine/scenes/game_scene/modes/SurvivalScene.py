@@ -1,5 +1,5 @@
 import numpy as np
-from pyglet.math import Vec2 as Vector2D
+from pyglet.math import Vec2 as Vector2D  # type: ignore[import-untyped]
 
 from src.game_engine.scenes.game_scene.GameSceneCore import GameSceneCore
 from src.game_engine.scenes.game_scene.SceneSetup import setup_scene

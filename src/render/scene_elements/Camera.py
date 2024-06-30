@@ -1,5 +1,5 @@
 import arcade
-from pyglet.math import Vec2 as Vector2D
+from pyglet.math import Vec2 as Vector2D  # type: ignore[import-untyped]
 
 
 class Camera(arcade.Camera):
@@ -16,7 +16,7 @@ class Camera(arcade.Camera):
 
         self.position: Vector2D = self._target_position - self._screen_shift
 
-        self._snapped_sprite = None
+        self._snapped_sprite: arcade.Sprite | None = None
 
     def snap_to_sprite(self, sprite: arcade.Sprite) -> None:
         self._snapped_sprite = sprite

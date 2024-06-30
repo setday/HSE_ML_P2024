@@ -1,6 +1,6 @@
 from math import degrees
 
-from pyglet.math import Vec2 as Vector2D
+from pyglet.math import Vec2 as Vector2D  # type: ignore[import-untyped]
 from pymunk import Space
 
 from src.physics.models.StaticObstaclePhysicsModel import StaticObstaclePhysicsModel

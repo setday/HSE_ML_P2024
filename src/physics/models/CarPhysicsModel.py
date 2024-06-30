@@ -18,7 +18,7 @@ class CarPhysicsModel:
         )
         self.body.position = position
 
-        self.shape: pymunk.Poly | None = None
+        self.shape: pymunk.Poly
 
         if collision_points_set is not None:
             self.shape = pymunk.Poly(self.body, collision_points_set)

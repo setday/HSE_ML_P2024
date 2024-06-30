@@ -1,4 +1,5 @@
 import time
+import typing
 
 import arcade
 
@@ -49,17 +50,17 @@ class Window(arcade.Window):
         self._update_hook = None
         self._draw_hook = None
 
-        self.background_color: arcade.color = (90, 150, 225)
+        self.background_color: arcade.Color = (90, 150, 225)
 
         self._controller: IOController = IOController()
         self._controller.keyboard = {}
 
         self._previous_time = time.time()
 
-    def set_update_hook(self, hook: callable) -> None:
+    def set_update_hook(self, hook: typing.Callable) -> None:
         self._update_hook = hook
 
-    def set_draw_hook(self, hook: callable) -> None:
+    def set_draw_hook(self, hook: typing.Callable) -> None:
         self._draw_hook = hook
 
     def on_draw(self) -> None:

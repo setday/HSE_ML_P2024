@@ -1,3 +1,5 @@
+import typing
+
 from arcade import Texture
 from arcade.gui import UITextureButton, UIOnClickEvent
 
@@ -28,10 +30,15 @@ class UICheckButton(UITextureButton):
         textures_unchecked: tuple[Texture, Texture, Texture] | None = None,
         scale: float = None,
         style=None,
-        on_change: callable = None,
+        on_change: typing.Callable or None = None,
         checked: bool = False,
         **kwargs
     ):
+        if textures_checked is None:
+            textures_checked = (None, None, None)
+        if textures_unchecked is None:
+            textures_unchecked = (None, None, None)
+
         self.textures_checked = textures_checked
         self.textures_unchecked = textures_unchecked
         self.checked = checked
