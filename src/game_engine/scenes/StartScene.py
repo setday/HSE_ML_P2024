@@ -16,10 +16,6 @@ from src.utils import load_texture
 from .layouts import CreditsLayout, SettingLayout
 
 
-def no_game(_):
-    print("No game found.")
-
-
 class StartScene:
     def __init__(self, core_instance):
         self.core_instance = core_instance

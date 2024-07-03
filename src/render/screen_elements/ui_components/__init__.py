@@ -3,7 +3,7 @@ from .ui_sprites.ScoreDisplay import ScoreDisplay
 from .ui_sprites.NavCircle import NavCircle
 
 from .ui_widgets.UIAnimatorWidget import UIAnimatableWidget
-from .ui_widgets.UICheckButton import UICheckButton
+from .ui_widgets.UICheckButton import UICheckButton, make_radio_from_check_buttons
 from .ui_widgets.UIFullScreenLayout import UIFullScreenLayout
 from .ui_widgets.UISlider import UISlider
 from .ui_widgets.UISuperAnchorWidget import UISuperAnchorWidget

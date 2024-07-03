@@ -59,6 +59,9 @@ class UICheckButton(UITextureButton):
         self.on_change = on_change
 
     def switch_state(self, state: bool):
+        if self.checked == state:
+            return
+
         self.checked = state
 
         self._tex = (
@@ -76,3 +79,23 @@ class UICheckButton(UITextureButton):
 
         if self.on_change:
             self.on_change(self.checked)
+
+
+def make_radio_from_check_buttons(
+    buttons: list[UICheckButton], on_change: typing.Callable
+):
+    def unchecker(index: int) -> bool:
+        if not buttons[index].checked:
+            buttons[index].switch_state(True)
+            return False
+        for j, check_button in enumerate(buttons):
+            check_button.switch_state(j == index)
+        return True
+
+    def create_lambda(index: int) -> typing.Callable:
+        return lambda _: on_change(index) if unchecker(index) else None
+
+    for i, button in enumerate(buttons):
+        button.on_change = create_lambda(i)
+        button.switch_state(False)
+    buttons[0].switch_state(True)

@@ -10,119 +10,203 @@ from src.game_engine.controllers import (
     BrakeController,
 )
 from src.game_engine.entities.ObjectFactory import ObjectFactory
-from src.game_engine.entities.ParkingPlace import ParkingPlace
 from src.render.sprites import BasicSprite
 
 
-def setup_scene(scene, path, is_survive=False):
+def scene_v1_to_v2(scene_path):
+    """
+    Upgrade scene from version 1 to version 2
+    """
+    with open(scene_path) as file:
+        scene_v1 = json.load(file)
+
+    cars = []
+    if "cars_positions" in scene_v1:
+        for car in scene_v1["cars_positions"]:
+            cars.append({"pos": car[:2], "ang": car[2], "mdl": "red_car"})
+    if "main_car_pos" in scene_v1:
+        cars.append(
+            {
+                "pos": scene_v1["main_car_pos"],
+                "is_main_car": True,
+            }
+        )
+
+    for car in cars:
+        if "ang" in car and car["ang"] == 0:
+            car.pop("ang")
+
+    static_obstacles = []
+    if "barriers_positions" in scene_v1:
+        for obstacle in scene_v1["barriers_positions"]:
+            static_obstacles.append(
+                {"pos": obstacle[:2], "ang": obstacle[2], "mdl": "metal_pipe"}
+            )
+    if "big_barriers_positions" in scene_v1:
+        for obstacle in scene_v1["big_barriers_positions"]:
+            static_obstacles.append(
+                {"pos": obstacle[:2], "ang": obstacle[2], "mdl": "big_bush"}
+            )
+    if "trees_positions" in scene_v1:
+        for obstacle in scene_v1["trees_positions"]:
+            static_obstacles.append({"pos": obstacle[:2], "mdl": "tree"})
+    for obstacle in static_obstacles:
+        if "ang" in obstacle and obstacle["ang"] == 0:
+            obstacle.pop("ang")
+
+    parking_places = []
+    if "parking_positions" in scene_v1:
+        for place in scene_v1["parking_positions"]:
+            parking_places.append({"pos": place[:2], "ang": place[2]})
+    for place in parking_places:
+        if "ang" in place and place["ang"] == 0:
+            place.pop("ang")
+
+    movable_obstacles = []
+    if "cones_positions" in scene_v1:
+        for obstacle in scene_v1["cones_positions"]:
+            movable_obstacles.append({"pos": obstacle, "mdl": "cone"})
+    if "coins_positions" in scene_v1:
+        for obstacle in scene_v1["coins_positions"]:
+            movable_obstacles.append({"pos": obstacle, "mdl": "coin"})
+    for obstacle in movable_obstacles:
+        if "ang" in obstacle and obstacle["ang"] == 0:
+            obstacle.pop("ang")
+
+    scene_v2 = {
+        "version": "2.0",
+        "background": {
+            "path": scene_v1["background"],
+            "pos": (0, 0),
+            "scl": scene_v1["scale"],
+        },
+    }
+    if parking_places:
+        scene_v2["parking_places"] = parking_places
+    if movable_obstacles:
+        scene_v2["movable_obstacles"] = movable_obstacles
+    if cars:
+        scene_v2["cars"] = cars
+    if static_obstacles:
+        scene_v2["static_obstacles"] = static_obstacles
+
+    with open(scene_path[:-5] + "_v2.json", "w") as file:
+        json.dump(scene_v2, file, indent=2)
+
+
+def setup_scene_v2(scene, path, is_survive=False):
     with open(path) as file:
         config = json.load(file)
-    scene.background = BasicSprite(config["background"], Vector2D(0, 0))
-    scene.background.update_scale(config["scale"])
+
+    if "version" not in config and config["version"] != "2.0":
+        raise ValueError(
+            "Can't setup scene with not version 2.0 config with setup_scene_v2"
+        )
+
+    config.pop("version")
+
+    bg = config["background"]
+    scene.background = BasicSprite(bg["path"], bg["pos"], bg["scl"])
     scene.down_render_group.add(scene.background)
-    scene.car_m = ObjectFactory.create_object(
-        render_group=scene.render_group,
-        space=scene.space,
-        object_type="car",
-        position=config.get("main_car_pos"),
-        car_model="blue_car",
-        is_main_car=True,
-    )
 
-    scene.car_m.switch_controller(KeyboardController())
-    scene.render_group.camera.snap_to_sprite(scene.car_m.car_view)
+    config.pop("background")
 
-    scene.cars = [scene.car_m]
-    trees = [tuple(elem) for elem in config.get("trees_positions", [])]
-    for position in set(trees):
-        ObjectFactory.create_object(
-            scene.top_render_group,
-            scene.space,
-            object_type="static_obstacle",
-            position=position,
-            static_obstacle_model="tree",
-        )
-    cones = [tuple(elem) for elem in config.get("cones_positions", [])]
-    for position in set(random.choices(cones, k=random.randint(0, len(cones)))):
-        scene.traffic_cones.append(
-            ObjectFactory.create_object(
-                render_group=scene.render_group,
-                space=scene.space,
-                object_type="movable_obstacle",
-                position=position,
-                movable_obstacle_model="cone",
+    param_translator = {
+        "pos": "position",
+        "ang": "angle",
+        "mdl": "car_model",
+        "is_main_car": "is_main_car",
+    }
+
+    objs = []
+
+    for model in config:
+        model_type = model[:-1]
+        for elem in config[model]:
+            model_params = {"object_type": model_type}
+
+            for key, value in elem.items():
+                model_params[param_translator[key]] = value
+            if "car_model" in model_params:
+                model_params["movable_obstacle_model"] = model_params["car_model"]
+                model_params["static_obstacle_model"] = model_params["car_model"]
+
+            # Skip some models to make scene more interesting
+            if model_type == "movable_obstacle" and random.random() < 0.5:
+                continue
+            if (
+                model_type == "car"
+                and not model_params.get("is_main_car", False)
+                and random.random() < 0.1
+            ):
+                continue
+
+            # Trees should be in top render group
+            rg = scene.render_group
+            if model_type == "tree":
+                rg = scene.top_render_group
+            if model_type == "parking_place":
+                rg = scene.marking_group
+
+            obj = ObjectFactory.create_object(
+                render_group=rg, space=scene.space, **model_params
             )
-        )
-        scene.traffic_cones[-1].apply_friction()
-        scene.traffic_cones[-1].sync()
-    cars = config.get("cars_positions", [])
-    cars = random.choices(cars, k=min(len(cars), 10))
-    for x, y, angle in set([tuple(car) for car in cars]):
-        scene.cars.append(
-            ObjectFactory.create_object(
-                render_group=scene.render_group,
-                space=scene.space,
-                object_type="car",
-                position=(x, y),
-                car_model="red_car",
-                angle=angle,
-            )
-        )
-    controllers = [
+
+            objs.append(obj)
+
+            if model_type == "car":
+                scene.cars.append(obj)
+
+            if model_type == "parking_place":
+                scene.parking_places.append(obj)
+
+            if (
+                model_type == "movable_obstacle"
+                and model_params["movable_obstacle_model"] == "cone"
+            ):
+                scene.traffic_cones.append(obj)
+
+    ai_controllers = [
         {"type": "sklearn", "path": "models_bin/CEM.pkl"},
         {"type": "pytorch", "path": "models_bin/torch.pt"},
         {"type": "stable_baselines", "policy": "DQN", "path": "models_bin/DQN"},
         {"type": "stable_baselines", "policy": "A2C", "path": "models_bin/A2C"},
         {"type": "stable_baselines", "policy": "PPO", "path": "models_bin/PPO"},
     ]
-    for car in scene.cars[1:]:
-        car.switch_controller(
-            AIController(controllers[-1])
-            if is_survive
-            else random.choice(
-                [
-                    RandomController(),
-                    AIController(random.choice(controllers)),
-                    BrakeController(),
-                ]
-            )
-        )
+
+    # Special logic for cars
+    for car in scene.cars:
         car.set_sound_multiplier_getter(scene.get_sound_multiplier)
-        if is_survive:
-            car.health = 1000
-    # Чтобы была хотя бы одна умная модель
+
+        if car.is_main_car:
+            scene.car_m = car
+            scene.car_m.switch_controller(KeyboardController())
+            scene.render_group.camera.snap_to_sprite(scene.car_m.car_view)
+        else:
+            car.switch_controller(
+                AIController(ai_controllers[-1])
+                if is_survive
+                else random.choice(
+                    [
+                        RandomController(),
+                        AIController(random.choice(ai_controllers)),
+                        BrakeController(),
+                    ]
+                )
+            )
+            if is_survive:
+                car.health = 1000
+
+    for obj in objs:
+        if hasattr(obj, "apply_friction"):
+            obj.apply_friction()
+        if hasattr(obj, "sync"):
+            obj.sync()
+
+    # To make at least one smart model
     if len(scene.cars) > 1:
-        scene.cars[-1].switch_controller(AIController(controllers[-1]))
-    for x, y, angle in config.get("barriers_positions", []):
-        ObjectFactory.create_object(
-            render_group=scene.render_group,
-            space=scene.space,
-            object_type="static_obstacle",
-            position=(x, y),
-            angle=angle,
-            static_obstacle_model="metal_pipe",
-        )
-    for x, y, angle in config.get("big_barriers_positions", []):
-        ObjectFactory.create_object(
-            render_group=scene.render_group,
-            space=scene.space,
-            object_type="static_obstacle",
-            position=(x, y),
-            angle=angle,
-            static_obstacle_model="big_bush",
-        )
-    scene.parking_places = []
-    for x, y, angle in config.get("parking_positions", []):
-        scene.parking_place = ParkingPlace(
-            scene.down_render_group, scene.space, (x, y), angle=angle
-        )
-        scene.parking_places.append(scene.parking_place)
-    for _ in range(20):
-        ObjectFactory.create_object(
-            render_group=scene.render_group,
-            space=scene.space,
-            object_type="movable_obstacle",
-            position=scene.car_m.car_model.body.position
-            + (random.randint(-200, 200), random.randint(-800, 800)),
-            movable_obstacle_model="coin",
-        )
+        for car in scene.cars:
+            if car.is_main_car:
+                continue
+            car.switch_controller(AIController(ai_controllers[-1]))
+            break

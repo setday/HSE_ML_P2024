@@ -29,6 +29,8 @@ class UITexture(UIWidget):
         y: float = 0.0,
         width: float = None,
         height: float = None,
+        max_width: float = None,
+        max_height: float = None,
         texture: Texture | None = None,
         scale: float | None = None,
         **kwargs
@@ -36,13 +38,21 @@ class UITexture(UIWidget):
 
         if width is None and texture is not None:
             width = texture.width
-
         if height is None and texture is not None:
             height = texture.height
 
         if scale is not None and texture is not None:
             height = texture.height * scale
             width = texture.width * scale
+
+        if max_width is not None and width > max_width:
+            scale = max_width / width
+            width = max_width
+            height *= scale
+        if max_height is not None and height > max_height:
+            scale = max_height / height
+            height = max_height
+            width *= scale
 
         children = []
         if child:

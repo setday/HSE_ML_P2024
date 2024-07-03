@@ -4,6 +4,7 @@ from pyglet.math import Vec2 as Vector2D  # type: ignore[import-untyped]
 from pymunk import Space
 
 from src.game_engine.entities.Car import Car
+from src.game_engine.entities.ParkingPlace import ParkingPlace
 from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
 from src.render.scene_elements import RenderGroup
@@ -18,7 +19,7 @@ class ObjectFactory:
         position: Vector2D | tuple[float, float] = (0, 0),
         angle: float = 0,
         **kwargs,
-    ) -> Car | MovableObstacle | StaticObstacle:
+    ) -> Car | ParkingPlace | MovableObstacle | StaticObstacle:
         if object_type == "car":
             return ObjectFactory.create_car(
                 render_group,
@@ -27,6 +28,13 @@ class ObjectFactory:
                 angle,
                 kwargs.get("car_model", "blue_car"),
                 kwargs.get("is_main_car", False),
+            )
+        elif object_type == "parking_place":
+            return ObjectFactory.create_parking_place(
+                render_group,
+                space,
+                position,
+                angle,
             )
         elif object_type == "movable_obstacle":
             return ObjectFactory.create_movable_obstacle(
@@ -53,7 +61,7 @@ class ObjectFactory:
         space: Space,
         position: Vector2D | tuple[float, float] = (0, 0),
         angle: float = 0,
-        car_model: str = "blue_car",
+        car_model: str | int = "blue_car",
         is_main_car: bool = False,
     ) -> Car:
         car_model_dict = {
@@ -67,9 +75,18 @@ class ObjectFactory:
             space,
             position,
             radians(angle),
-            car_model_dict[car_model],
+            car_model_dict[car_model] if isinstance(car_model, str) else car_model,
             is_main_car,
         )
+
+    @staticmethod
+    def create_parking_place(
+        render_group: RenderGroup,
+        space: Space,
+        position: Vector2D | tuple[float, float] = (0, 0),
+        angle: float = 0,
+    ) -> ParkingPlace:
+        return ParkingPlace(render_group, space, position, angle=radians(angle))
 
     @staticmethod
     def create_movable_obstacle(
@@ -103,6 +120,7 @@ class ObjectFactory:
             "bush": "assets/pic/obstacles/Bush.png",
             "metal_pipe": "assets/pic/obstacles/parking_barrier_1.png",
             "rubbish_line": "assets/pic/obstacles/parking_barrier_2.png",
+            "really_long_pipe": "assets/pic/obstacles/parking_barrier_3.png",
             "tree": "assets/pic/obstacles/Tree_1.png",
             "x_barrier": None,
             "y_barrier": None,

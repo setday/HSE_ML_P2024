@@ -2,7 +2,7 @@ import numpy as np
 from pyglet.math import Vec2 as Vector2D  # type: ignore[import-untyped]
 
 from src.game_engine.scenes.game_scene.GameSceneCore import GameSceneCore
-from src.game_engine.scenes.game_scene.SceneSetup import setup_scene
+from src.game_engine.scenes.game_scene.SceneSetup import setup_scene_v2
 from src.render.Window import IOController
 from src.render.screen_elements.ui_components import Indicator, ScoreDisplay
 
@@ -11,7 +11,7 @@ class A2BScene(GameSceneCore):
     def __init__(self, core_instance):
         super().__init__(core_instance, False)
 
-        setup_scene(self, "assets/maps/A2B.json")
+        setup_scene_v2(self, "assets/maps/A2B_v2.json")
 
         ######################
         # Screen Elements

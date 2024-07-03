@@ -2,7 +2,7 @@ import numpy as np
 from pyglet.math import Vec2 as Vector2D  # type: ignore[import-untyped]
 
 from src.game_engine.scenes.game_scene.GameSceneCore import GameSceneCore
-from src.game_engine.scenes.game_scene.SceneSetup import setup_scene
+from src.game_engine.scenes.game_scene.SceneSetup import setup_scene_v2
 from src.render.Window import IOController
 from src.render.screen_elements.ui_components import Indicator, ScoreDisplay, NavCircle
 
@@ -11,7 +11,7 @@ class ParkMeScene(GameSceneCore):
     def __init__(self, core_instance):
         super().__init__(core_instance, False)
 
-        setup_scene(self, "assets/maps/ParkMe.json")
+        setup_scene_v2(self, "assets/maps/ParkMe_v2.json")
 
         self.car_m.set_hook("parked_hook", lambda _: self.do_victory())
 
@@ -53,33 +53,6 @@ class ParkMeScene(GameSceneCore):
             self.do_victory()
         if self.car_m and self.car_m.health <= 0 and not self.is_end_state:
             self.do_lose()
-
-    def update_env(self, io_controller: IOController, delta_time: float) -> None:
-        keys: dict = io_controller.keyboard
-
-        for car in self.cars:
-            if car == self.car_m:
-                continue
-            car.controlling(
-                keys,
-                np.array(
-                    [
-                        car.car_model.body.position[0]
-                        - self.parking_place.parking_model.inner_body.position[0],
-                        car.car_model.body.position[1]
-                        - self.parking_place.parking_model.inner_body.position[1],
-                        abs(
-                            car.car_model.body.angle
-                            - self.parking_place.parking_model.inner_body.angle
-                            + 90
-                        )
-                        % 180,
-                        car.car_model.body.velocity.get_length_sqrd() ** 0.5,
-                    ]
-                ),
-            )
-
-        super().update_env(io_controller, delta_time)
 
     def update_screen(self, delta_time: float) -> None:
         super().update_screen(delta_time)

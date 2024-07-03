@@ -9,7 +9,7 @@ from src.render.Window import IOController
 class Game:
     def __init__(self):
         self.core = Core()
-        self.core.set_scene(GameSceneCore(True))
+        self.core.set_scene(GameSceneCore)
         self.state = self.observe()
 
     def observe(self):

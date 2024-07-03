@@ -71,13 +71,14 @@ class GameSceneCore:
         # Setup scene if needed
         ######################
         self.down_render_group: RenderGroup = RenderGroup()
+        self.marking_group: RenderGroup = RenderGroup()
         self.render_group: RenderGroup = RenderGroup()
         self.top_render_group: RenderGroup = RenderGroup()
 
         self.car_m = None
         self.cars = []
         self.traffic_cones = []
-        self.parking_place = None
+        self.parking_places = []
 
         h_10_10.data["sound_maker"] = h_10_20.data["sound_maker"] = h_10_30.data[
             "sound_maker"
@@ -148,6 +149,7 @@ class GameSceneCore:
 
         self.particle_show = None
         self.down_render_group = None
+        self.marking_group = None
         self.render_group = None
         self.top_render_group = None
         self.screen_group = None
@@ -155,7 +157,7 @@ class GameSceneCore:
         self.car_m = None
         self.cars = None
         self.traffic_cones = None
-        self.parking_place = None
+        self.parking_places = None
 
         self.escape_layout = None
         self.shader_vin = None
@@ -207,12 +209,12 @@ class GameSceneCore:
                 np.array(
                     [
                         self.car_m.car_model.body.position[0]
-                        - self.parking_place.parking_model.inner_body.position[0],
+                        - self.parking_places[0].parking_model.inner_body.position[0],
                         self.car_m.car_model.body.position[1]
-                        - self.parking_place.parking_model.inner_body.position[1],
+                        - self.parking_places[0].parking_model.inner_body.position[1],
                         abs(
                             self.car_m.car_model.body.angle
-                            - self.parking_place.parking_model.inner_body.angle
+                            - self.parking_places[0].parking_model.inner_body.angle
                         )
                         % 180,
                         self.car_m.car_model.body.velocity.length,
@@ -272,6 +274,7 @@ class GameSceneCore:
 
         self.render_group.camera.use()
         self.down_render_group.draw()
+        self.marking_group.draw()
         for car in self.cars:
             for emitter in car.tyre_emitters:
                 emitter.draw()

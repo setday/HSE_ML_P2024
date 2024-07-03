@@ -1,6 +1,9 @@
 from .LearningScene import LearningScene
 from .StartScene import StartScene
+from .BuildScene import BuildScene
+
 from .game_scene.GameSceneCore import GameSceneCore
+
 from .game_scene.modes.A2BScene import A2BScene
 from .game_scene.modes.ParkMeScene import ParkMeScene
 from .game_scene.modes.SurvivalScene import SurvivalScene

@@ -3,7 +3,7 @@ import time
 import arcade
 
 from src.game_engine.entities.MusicPlayer import MusicManager
-from src.game_engine.scenes import StartScene
+from src.game_engine.scenes import StartScene, BuildScene
 from src.render.Window import Window, IOController
 from src.utils import load_font
 

@@ -45,12 +45,11 @@ def collision_car_with_car(arbiter: pymunk.Arbiter, _, data: dict) -> bool:
 
 def collision_car_with_base_parking_place(arbiter: pymunk.Arbiter, _, __) -> bool:
     car: Car
-    parking_place: ParkingPlace
 
     if isinstance(arbiter.shapes[0].super, Car):
-        car, parking_place = arbiter.shapes[0].super, arbiter.shapes[1].super
+        car = arbiter.shapes[0].super
     else:
-        car, parking_place = arbiter.shapes[1].super, arbiter.shapes[0].super
+        car = arbiter.shapes[1].super
 
     car.inside_parking_place += 1
     return False
@@ -58,12 +57,11 @@ def collision_car_with_base_parking_place(arbiter: pymunk.Arbiter, _, __) -> boo
 
 def end_collision_car_with_base_parking_place(arbiter: pymunk.Arbiter, _, __) -> bool:
     car: Car
-    parking_place: ParkingPlace
 
     if isinstance(arbiter.shapes[0].super, Car):
-        car, parking_place = arbiter.shapes[0].super, arbiter.shapes[1].super
+        car = arbiter.shapes[0].super
     else:
-        car, parking_place = arbiter.shapes[1].super, arbiter.shapes[0].super
+        car = arbiter.shapes[1].super
 
     car.inside_parking_place -= 1
     return False
@@ -71,12 +69,11 @@ def end_collision_car_with_base_parking_place(arbiter: pymunk.Arbiter, _, __) ->
 
 def collision_car_with_dead_parking_place(arbiter: pymunk.Arbiter, _, __) -> bool:
     car: Car
-    parking_place: ParkingPlace
 
     if isinstance(arbiter.shapes[0].super, Car):
-        car, parking_place = arbiter.shapes[0].super, arbiter.shapes[1].super
+        car = arbiter.shapes[0].super
     else:
-        car, parking_place = arbiter.shapes[1].super, arbiter.shapes[0].super
+        car = arbiter.shapes[1].super
 
     car.dead_zones_intersect += 1
     return False
@@ -84,12 +81,11 @@ def collision_car_with_dead_parking_place(arbiter: pymunk.Arbiter, _, __) -> boo
 
 def end_collision_car_with_dead_parking_place(arbiter: pymunk.Arbiter, _, __) -> bool:
     car: Car
-    parking_place: ParkingPlace
 
     if isinstance(arbiter.shapes[0].super, Car):
-        car, parking_place = arbiter.shapes[0].super, arbiter.shapes[1].super
+        car = arbiter.shapes[0].super
     else:
-        car, parking_place = arbiter.shapes[1].super, arbiter.shapes[0].super
+        car = arbiter.shapes[1].super
 
     car.dead_zones_intersect -= 1
     return False

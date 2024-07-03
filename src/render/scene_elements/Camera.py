@@ -24,38 +24,65 @@ class Camera(arcade.Camera):
     def set_position(self, position: Vector2D) -> None:
         self._target_position = position
 
+    def slide(self, offset: Vector2D) -> None:
+        self._target_position += offset
+
     def get_position_offset(
-        self, vertical_state: int = 0, horizontal_state: int = 0
+        self,
+        vertical_state: int = 0,
+        horizontal_state: int = 0,
+        apply_scale: bool = False,
     ) -> Vector2D:
         """
         Returns the position of the camera.
-        vertical_state: -1 for bottom, 0 for middle, 1 for topw.
+        vertical_state: -1 for bottom, 0 for middle, 1 for top.
         horizontal_state: -1 for left, 0 for middle, 1 for right.
+        apply_scale: If True, the scale of the camera will be applied to the offset.
         """
 
         vertical_offset = (1 + vertical_state) * self.viewport_height / 2
         horizontal_offset = (1 + horizontal_state) * self.viewport_width / 2
 
+        if apply_scale:
+            vertical_offset *= self.scale
+            horizontal_offset *= self.scale
+
         return Vector2D(horizontal_offset, vertical_offset)
 
     def get_position(
-        self, vertical_state: int = 0, horizontal_state: int = 0
+        self,
+        vertical_state: int = 0,
+        horizontal_state: int = 0,
+        apply_scale: bool = False,
     ) -> Vector2D:
         """
         Returns the position of the camera.
-        vertical_state: -1 for bottom, 0 for middle, 1 for topw.
+        vertical_state: -1 for bottom, 0 for middle, 1 for top.
         horizontal_state: -1 for left, 0 for middle, 1 for right.
+        apply_scale: If True, the scale of the camera will be applied to the offset
         """
 
-        return self.position + self.get_position_offset(
-            vertical_state, horizontal_state
-        )
+        result = self.position
+
+        if apply_scale:
+            result += (
+                self.get_position_offset(0, 0, False)
+                - self.get_position_offset(0, 0, True)
+                + self.get_position_offset(vertical_state, horizontal_state, True)
+            )
+        else:
+            result += self.get_position_offset(vertical_state, horizontal_state, False)
+
+        return result
 
     def set_zoom(self, zoom: float) -> None:
         self._target_zoom = zoom
 
     def get_zoom(self) -> float:
-        return self._target_zoom
+        return self.scale
+
+    def zoom_times(self, zoom: float) -> None:
+        self._target_zoom *= zoom
 
     def update(self) -> None:
         if self._snapped_sprite is not None:

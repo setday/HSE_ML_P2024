@@ -2,7 +2,7 @@ import numpy as np
 from pyglet.math import Vec2 as Vector2D  # type: ignore[import-untyped]
 
 from src.game_engine.scenes.game_scene.GameSceneCore import GameSceneCore
-from src.game_engine.scenes.game_scene.SceneSetup import setup_scene
+from src.game_engine.scenes.game_scene.SceneSetup import setup_scene_v2
 from src.render.Window import IOController
 from src.render.screen_elements.ui_components import Indicator, ScoreDisplay
 from src.render.screen_elements.ui_components.ui_sprites.NavCircle import NavCircle
@@ -12,7 +12,7 @@ class SurvivalScene(GameSceneCore):
     def __init__(self, core_instance):
         super().__init__(core_instance, False)
 
-        setup_scene(self, "assets/maps/Survive.json", is_survive=True)
+        setup_scene_v2(self, "assets/maps/Survive_v2.json", is_survive=True)
 
         ######################
         # Screen Elements

@@ -13,7 +13,7 @@ class StaticObstacle:
         self,
         render_group: RenderGroup,
         space: Space,
-        position: Vector2D = (0, 0),
+        position: Vector2D | tuple[float, float] = (0, 0),
         angle: float = 0,
         image_path: str | None = "assets/pic/obstacles/Tree_1.png",
         shape_type: str = None,
