@@ -16,6 +16,7 @@ from src.game_engine.entities.ObjectFactory import ObjectFactory
 from src.game_engine.entities.ParkingPlace import ParkingPlace
 from src.game_engine.entities.obstacles.MovableObstacle import MovableObstacle
 from src.game_engine.entities.obstacles.StaticObstacle import StaticObstacle
+from src.game_engine.scenes.game_scene.SceneSetup import setup_scene_v2
 from src.render.Window import IOController
 from src.render.particle import ParticleShow
 from src.render.scene_elements import RenderGroup
@@ -51,13 +52,14 @@ class BuildScene:
         ######################
 
         self.down_render_group: RenderGroup = RenderGroup()
+        self.marking_group: RenderGroup = RenderGroup()
         self.render_group: RenderGroup = RenderGroup()
         self.top_render_group: RenderGroup = RenderGroup()
 
         self.car_m = None
         self.cars = []
         self.traffic_cones = []
-        self.parking_place = None
+        self.parking_places = []
 
         self.objects = []
 
@@ -191,6 +193,7 @@ class BuildScene:
         self.manager = None
 
         self.down_render_group = None
+        self.marking_group = None
         self.render_group = None
         self.top_render_group = None
         self.screen_group = None
@@ -220,6 +223,10 @@ class BuildScene:
         m_x *= self.render_group.camera.scale
         m_y *= self.render_group.camera.scale
 
+        if io_controller.is_key_pressed(arcade.key.RSHIFT):
+            m_x = int((m_x + 8) / 16) * 16
+            m_y = int((m_y + 8) / 16) * 16
+
         c_x, c_y = self.render_group.camera.get_position(-1, -1, True)
         s_x, s_y = io_controller.mouse_scroll_delta
 
@@ -232,6 +239,11 @@ class BuildScene:
             if io_controller.is_key_pressed(arcade.key.LSHIFT):
                 s_x, s_y = s_y, s_x
             self.render_group.camera.slide(Vec2(s_x * 30, s_y * 30))
+
+        if io_controller.is_key_clicked(arcade.key.N):
+            self.current_object.angle = (self.current_object.angle // 45 + 1) * 45
+        if io_controller.is_key_clicked(arcade.key.M):
+            self.current_object.angle = (self.current_object.angle // 45 - 1) * 45
 
         if io_controller.is_key_pressed(arcade.key.W):
             self.render_group.camera.slide(Vec2(0, 30))
@@ -264,6 +276,8 @@ class BuildScene:
 
         if io_controller.is_key_clicked(arcade.key.U):
             self.dump_scene(f"assets/maps/scene_{int(self.time * 1000)}.json")
+        if io_controller.is_key_clicked(arcade.key.I):
+            self.load_scene("assets/maps/ParkMe_v2.json")
 
         self.current_object.alpha = int(170 + 64 * math.sin(self.time * 4))
 
@@ -278,9 +292,9 @@ class BuildScene:
         data = {
             "version": "2.0",
             "background": {
-                "path": "!!! Unknown !!!",
-                "pos": (0, 0),
-                "scl": 0.0,
+                "path": self.background.texture.name,
+                "pos": self.background.position,
+                "scl": self.background.scale,
             },
             "cars": [],
             "parking_places": [],
@@ -301,6 +315,10 @@ class BuildScene:
 
         with open(path, "w") as file:
             file.write(json.dumps(data, indent=2))
+
+    def load_scene(self, path: str):
+        setup_scene_v2(self, path, random_remove=False)
+        self.render_group.camera.snap_to_sprite(None)
 
     def update_env(self, io_controller: IOController, delta_time: float) -> None:
         pass
@@ -338,3 +356,6 @@ class BuildScene:
 
         self.manager.draw()
         self.screen_group.draw()
+
+    def get_sound_multiplier(self, _) -> float:
+        return 0.0

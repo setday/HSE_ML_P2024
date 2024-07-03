@@ -18,7 +18,7 @@ class Camera(arcade.Camera):
 
         self._snapped_sprite: arcade.Sprite | None = None
 
-    def snap_to_sprite(self, sprite: arcade.Sprite) -> None:
+    def snap_to_sprite(self, sprite: arcade.Sprite | None) -> None:
         self._snapped_sprite = sprite
 
     def set_position(self, position: Vector2D) -> None:

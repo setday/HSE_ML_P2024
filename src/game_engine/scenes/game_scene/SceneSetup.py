@@ -94,7 +94,7 @@ def scene_v1_to_v2(scene_path):
         json.dump(scene_v2, file, indent=2)
 
 
-def setup_scene_v2(scene, path, is_survive=False):
+def setup_scene_v2(scene, path, is_survive=False, random_remove=True):
     with open(path) as file:
         config = json.load(file)
 
@@ -132,10 +132,15 @@ def setup_scene_v2(scene, path, is_survive=False):
                 model_params["static_obstacle_model"] = model_params["car_model"]
 
             # Skip some models to make scene more interesting
-            if model_type == "movable_obstacle" and random.random() < 0.5:
+            if (
+                random_remove
+                and model_type == "movable_obstacle"
+                and random.random() < 0.5
+            ):
                 continue
             if (
-                model_type == "car"
+                random_remove
+                and model_type == "car"
                 and not model_params.get("is_main_car", False)
                 and random.random() < 0.1
             ):
