@@ -6,7 +6,7 @@ PLAYERS: set = set()
 
 MUSIC_MANAGER: list = []
 
-VOLUME_LEVEL: float = 0.0
+VOLUME_LEVEL: float = 0.5
 
 
 def get_sound_level() -> float:

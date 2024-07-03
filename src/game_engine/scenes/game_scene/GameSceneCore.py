@@ -105,8 +105,7 @@ class GameSceneCore:
         # Shaders Setup
         ######################
 
-        # file = open("src/shaders/toy/fractal_pyramid.glsl")
-        file = open("src/shaders/vignette/vignette.glsl")
+        file = open("assets/shaders/vignette.glsl")
         shader_sourcecode = file.read()
         self.shader_vin = Shadertoy((1920, 1080), shader_sourcecode)
 
